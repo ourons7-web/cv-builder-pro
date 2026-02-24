@@ -8,41 +8,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="CV Builder Pro"/>
 <meta name="description" content="Build professional CVs — works offline, no internet needed"/>
-<title>CV Builder Pro</title>
+<title>CV Builder — Free</title>
 <!-- jsPDF + html2canvas for watermark PDF download -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <!-- QR Code generator -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<!-- Firebase SDK -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, push, onValue, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-  // ── REPLACE with your Firebase project config ──
-  const firebaseConfig = {
-    apiKey: "REPLACE_apiKey",
-    authDomain: "REPLACE.firebaseapp.com",
-    databaseURL: "https://REPLACE-default-rtdb.firebaseio.com",
-    projectId: "REPLACE",
-    storageBucket: "REPLACE.appspot.com",
-    messagingSenderId: "000000",
-    appId: "REPLACE"
-  };
-  try {
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    window._db = db;
-    window._ref = ref;
-    window._push = push;
-    window._onValue = onValue;
-    window._set = set;
-    window._get = get;
-    window._fbReady = true;
-  } catch(e) {
-    window._fbReady = false;
-    console.warn('Firebase not configured, using localStorage', e.message);
-  }
-</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -305,89 +276,72 @@ input:checked+.slider::after{transform:translateX(22px);}
 #print-overlay{display:none;}
 
 /* ═══════════════════════════════════════════════════════
-   PAYMENT MODAL — Clean, mobile-first, no emoji
+   DOWNLOAD CODE MODAL — Free version, no payment
 ═══════════════════════════════════════════════════════ */
-/* Backdrop */
-#pay-modal{display:none;position:fixed;inset:0;z-index:10000;background:rgba(15,23,42,.8);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;}
+#pay-modal{display:none;position:fixed;inset:0;z-index:10000;background:rgba(15,23,42,.75);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;}
 #pay-modal.show{display:flex;}
 @media(min-width:540px){#pay-modal{align-items:center;padding:20px;}}
-
-/* Sheet */
-#pay-box{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:440px;overflow:hidden;box-shadow:0 -4px 40px rgba(0,0,0,.22);animation:paySlide .28s cubic-bezier(.25,1,.5,1);}
-@media(min-width:540px){#pay-box{border-radius:20px;animation:payPop .25s cubic-bezier(.25,1,.5,1);}}
-@keyframes paySlide{from{transform:translateY(50px);opacity:.5}to{transform:none;opacity:1}}
-@keyframes payPop{from{transform:scale(.95);opacity:0}to{transform:none;opacity:1}}
-
-/* Header bar */
-#pay-header{background:#1E293B;padding:16px 20px 20px;position:relative;}
-.pay-pill{width:34px;height:4px;background:rgba(255,255,255,.16);border-radius:99px;margin:0 auto 14px;}
-.pay-close-x{position:absolute;top:12px;right:14px;width:28px;height:28px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:rgba(255,255,255,.65);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
-.pay-close-x:hover{background:rgba(255,255,255,.2);color:#fff;}
-.pay-lock-icon{width:40px;height:40px;background:rgba(255,255,255,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
-#pay-header h2{color:#fff;font-size:17px;font-weight:900;margin-bottom:4px;letter-spacing:-.2px;}
-#pay-header .pay-sub{color:rgba(255,255,255,.5);font-size:11.5px;line-height:1.55;}
-.pay-price-tag{display:inline-flex;align-items:baseline;gap:1px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:99px;padding:4px 14px 5px;margin-top:11px;}
-.pay-price-tag .sym{color:rgba(255,255,255,.7);font-size:12px;font-weight:700;}
-.pay-price-tag .num{color:#fff;font-size:22px;font-weight:900;letter-spacing:-.5px;line-height:1;}
-.pay-price-tag .lbl{color:rgba(255,255,255,.4);font-size:10.5px;margin-left:4px;}
-
+#pay-box{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:460px;overflow:hidden;box-shadow:0 -6px 40px rgba(0,0,0,.22);animation:paySlide .3s cubic-bezier(.25,1,.5,1);}
+@media(min-width:540px){#pay-box{border-radius:22px;animation:payPop .25s cubic-bezier(.25,1,.5,1);}}
+@keyframes paySlide{from{transform:translateY(60px);opacity:.4}to{transform:none;opacity:1}}
+@keyframes payPop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+/* Header */
+#pay-header{background:linear-gradient(135deg,#0F766E 0%,#0D6B63 100%);padding:20px 20px 22px;position:relative;}
+.pay-pill{width:36px;height:4px;background:rgba(255,255,255,.22);border-radius:99px;margin:0 auto 16px;}
+.pay-close-x{position:absolute;top:14px;right:16px;width:30px;height:30px;border-radius:50%;border:none;background:rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.pay-close-x:hover{background:rgba(255,255,255,.22);color:#fff;}
+.pay-dl-icon{width:44px;height:44px;background:rgba(255,255,255,.14);border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:11px;}
+#pay-header h2{color:#fff;font-size:18px;font-weight:900;margin-bottom:5px;letter-spacing:-.3px;}
+#pay-header .pay-sub{color:rgba(255,255,255,.65);font-size:12px;line-height:1.6;}
+.free-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);border-radius:99px;padding:4px 13px 5px;margin-top:12px;color:#fff;font-size:11px;font-weight:800;letter-spacing:.4px;}
 /* Body */
-#pay-body{padding:18px 18px 24px;}
-@media(min-width:540px){#pay-body{padding:20px 22px 28px;}}
-
-/* Two choice cards */
-#pay-chooser{}
-.pay-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.pay-card{border:2px solid #E2E8F0;border-radius:16px;padding:16px 10px 14px;text-align:center;cursor:pointer;background:#FAFCFF;transition:border-color .15s,background .15s;-webkit-tap-highlight-color:transparent;user-select:none;}
-.pay-card:active{transform:scale(.97);}
-.pay-card:hover{border-color:#1E293B;background:#F1F5F9;}
-.pay-card-ico{width:42px;height:42px;border-radius:12px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;}
-.pay-card-ico.c-blue{background:#EFF6FF;}
+#pay-body{padding:20px 20px 26px;}
+@media(min-width:540px){#pay-body{padding:22px 24px 30px;}}
+/* Choice cards */
+.pay-cards{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:4px;}
+.pay-card{border:2px solid #E2E8F0;border-radius:18px;padding:18px 12px 16px;text-align:center;cursor:pointer;background:#FAFCFF;transition:all .18s;-webkit-tap-highlight-color:transparent;user-select:none;}
+.pay-card:active{transform:scale(.96);}
+.pay-card:hover{border-color:#0F766E;background:#F0FDFA;box-shadow:0 4px 20px rgba(15,118,110,.1);}
+.pay-card-ico{width:46px;height:46px;border-radius:13px;margin:0 auto 11px;display:flex;align-items:center;justify-content:center;}
 .pay-card-ico.c-green{background:#F0FDF4;}
-.pay-card h3{font-size:13px;font-weight:800;color:#1E293B;margin-bottom:3px;}
-.pay-card p{font-size:11px;color:#64748B;line-height:1.4;}
-
-/* UPI section */
+.pay-card-ico.c-teal{background:#F0FDFA;}
+.pay-card h3{font-size:13.5px;font-weight:800;color:#1E293B;margin-bottom:4px;}
+.pay-card p{font-size:11px;color:#64748B;line-height:1.45;}
+/* WhatsApp section */
 #pay-upi-sec{display:none;}
-.qr-wrap{background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:16px;padding:16px;display:flex;flex-direction:column;align-items:center;margin-bottom:12px;}
-.qr-wrap canvas,.qr-wrap img{border-radius:8px;}
-.qr-hint{font-size:11px;color:#94A3B8;font-weight:600;margin-top:8px;text-align:center;}
-.upi-row{display:flex;align-items:center;gap:8px;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:12px;padding:11px 14px;margin-bottom:10px;}
-.upi-text{flex:1;min-width:0;}
-.upi-lbl{font-size:9.5px;color:#94A3B8;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px;}
-.upi-val{font-size:13px;font-weight:800;color:#1E293B;word-break:break-all;letter-spacing:.2px;}
-.copy-btn{padding:9px 14px;background:#1E293B;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;}
-.copy-btn:active{opacity:.8;}
-.send-note{background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:10px;padding:10px 14px;font-size:12px;color:#166534;font-weight:700;text-align:center;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:6px;}
-.wa-btn{width:100%;padding:15px;background:#22C55E;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-tap-highlight-color:transparent;}
-.wa-btn:active{background:#16A34A;}
-.back-lnk{text-align:center;margin-top:14px;font-size:12px;color:#94A3B8;cursor:pointer;padding:6px;}
+.wa-info-box{background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:14px;padding:14px 16px;margin-bottom:14px;}
+.wa-info-title{font-size:13px;font-weight:800;color:#166534;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.wa-info-step{font-size:12px;color:#15803D;line-height:1.8;display:flex;gap:8px;align-items:flex-start;}
+.wa-step-num{min-width:20px;height:20px;border-radius:50%;background:#22C55E;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.wa-btn{width:100%;padding:16px;background:#25D366;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-tap-highlight-color:transparent;box-shadow:0 4px 16px rgba(37,211,102,.3);}
+.wa-btn:active{background:#1ebe5a;}
+.back-lnk{text-align:center;margin-top:14px;font-size:12.5px;color:#94A3B8;cursor:pointer;padding:6px;font-weight:600;}
 .back-lnk:hover{color:#475569;}
-
 /* Code entry section */
 #pay-code-sec{display:none;}
-.code-steps{font-size:12px;color:#475569;margin-bottom:14px;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:12px;padding:12px 14px;line-height:1.8;}
-.code-steps strong{color:#1E293B;}
+.code-how-box{background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:13px;padding:13px 15px;margin-bottom:14px;}
+.code-how-title{font-size:12px;font-weight:800;color:#1E293B;margin-bottom:8px;}
+.code-how-step{font-size:11.5px;color:#475569;line-height:1.75;display:flex;gap:8px;}
+.code-how-num{min-width:18px;height:18px;border-radius:50%;background:#0F766E;color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
 .code-lbl{font-size:12px;font-weight:700;color:#1E293B;margin-bottom:8px;display:block;}
-.code-dots{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:12px;}
-.cdot{width:11px;height:11px;border-radius:50%;background:#E2E8F0;transition:background .2s;}
+.code-dots{display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:13px;}
+.cdot{width:12px;height:12px;border-radius:50%;background:#E2E8F0;transition:background .2s;}
 .cdot.used{background:#EF4444;}
-.cdot-lbl{font-size:11px;color:#94A3B8;margin-left:2px;}
-.code-field{width:100%;padding:18px 10px;border:2.5px solid #E2E8F0;border-radius:14px;font-size:28px;font-weight:900;text-align:center;letter-spacing:10px;text-transform:uppercase;outline:none;font-family:'Courier New',monospace;color:#1E293B;background:#FAFCFF;transition:border-color .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;margin-bottom:8px;}
-.code-field:focus{border-color:#334155;box-shadow:0 0 0 4px rgba(30,41,59,.07);}
+.cdot-lbl{font-size:11px;color:#94A3B8;margin-left:3px;font-weight:600;}
+.code-field{width:100%;padding:18px 10px;border:2.5px solid #E2E8F0;border-radius:14px;font-size:30px;font-weight:900;text-align:center;letter-spacing:12px;text-transform:uppercase;outline:none;font-family:'Courier New',monospace;color:#1E293B;background:#FAFCFF;transition:border-color .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;margin-bottom:8px;}
+.code-field:focus{border-color:#0F766E;box-shadow:0 0 0 4px rgba(15,118,110,.1);}
 .code-field.err{border-color:#EF4444;box-shadow:0 0 0 4px rgba(239,68,68,.08);animation:cshake .35s;}
-.code-field.ok{border-color:#22C55E;box-shadow:0 0 0 4px rgba(34,197,94,.09);}
+.code-field.ok{border-color:#22C55E;box-shadow:0 0 0 4px rgba(34,197,94,.1);}
 @keyframes cshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}50%{transform:translateX(4px)}}
-.code-pool-hint{font-size:11px;color:#94A3B8;text-align:center;margin-bottom:14px;line-height:1.6;}
-.code-pool-hint b{color:#64748B;letter-spacing:.5px;}
+.code-pool-hint{font-size:11px;color:#94A3B8;text-align:center;margin-bottom:14px;}
 .err-box{background:#FEF2F2;border:1.5px solid #FECACA;border-radius:10px;padding:10px 14px;font-size:12px;color:#991B1B;font-weight:600;margin-bottom:12px;display:none;text-align:center;line-height:1.5;}
 .lock-box{background:#FFF7ED;border:1.5px solid #FED7AA;border-radius:12px;padding:14px;display:none;text-align:center;margin-bottom:12px;}
 .lock-title{font-size:13px;color:#9A3412;font-weight:800;margin-bottom:6px;}
 .lock-time{font-size:28px;font-weight:900;color:#C2410C;letter-spacing:3px;line-height:1;}
 .lock-sub{font-size:11px;color:#9A3412;margin-top:5px;}
-.unlock-btn{width:100%;padding:15px;background:#1E293B;color:#fff;border:none;border-radius:14px;font-weight:900;font-size:15px;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;gap:8px;}
-.unlock-btn:active{background:#374151;}
-.unlock-btn:disabled{background:#CBD5E1;cursor:not-allowed;}
+.unlock-btn{width:100%;padding:16px;background:#0F766E;color:#fff;border:none;border-radius:14px;font-weight:900;font-size:15px;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 4px 16px rgba(15,118,110,.25);}
+.unlock-btn:active{background:#0D6B63;}
+.unlock-btn:disabled{background:#CBD5E1;cursor:not-allowed;box-shadow:none;}
 
 /* Admin panel */
 #admin-panel{display:none;position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:20px;}
@@ -410,23 +364,7 @@ input:checked+.slider::after{transform:translateX(22px);}
 .a-rule b{color:#94A3B8;}
 
 
-/* ── SIGNUP MODAL ── */
-#signup-overlay{display:none;position:fixed;inset:0;z-index:20000;background:rgba(15,23,42,.95);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;}
-#signup-overlay.show{display:flex;}
-#signup-box{background:#fff;border-radius:20px;width:100%;max-width:380px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.4);}
-#signup-header{background:linear-gradient(135deg,#0F766E,#0D6B63);padding:28px 24px 22px;text-align:center;}
-#signup-header h2{color:#fff;font-size:20px;font-weight:900;margin-bottom:4px;}
-#signup-header p{color:rgba(255,255,255,.8);font-size:12px;}
-#signup-body{padding:22px 24px 28px;}
-.su-field{margin-bottom:14px;}
-.su-field label{display:block;font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;}
-.su-field input{width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:9px;font-size:14px;color:#1E293B;outline:none;font-family:inherit;transition:border-color .15s;}
-.su-field input:focus{border-color:#0F766E;box-shadow:0 0 0 3px rgba(15,118,110,.1);}
-.su-btn{width:100%;padding:14px;background:linear-gradient(135deg,#0F766E,#0D6B63);color:#fff;border:none;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer;margin-top:4px;}
-.su-btn:hover{opacity:.9;}
-.su-note{font-size:11px;color:#94A3B8;text-align:center;margin-top:10px;line-height:1.5;}
-.su-login-link{font-size:12px;color:#0F766E;text-align:center;margin-top:12px;cursor:pointer;font-weight:700;}
-#su-err{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:8px 12px;font-size:12px;color:#991B1B;font-weight:600;margin-bottom:10px;display:none;}
+
 
 /* ── ENHANCED ADMIN PANEL ── */
 .admin-tabs{display:flex;border-bottom:1px solid #1E293B;margin-bottom:12px;}
@@ -434,15 +372,11 @@ input:checked+.slider::after{transform:translateX(22px);}
 .admin-tab.active{color:#60A5FA;border-bottom-color:#60A5FA;}
 .admin-tab-pane{display:none;}
 .admin-tab-pane.active{display:block;}
-.a-user-row{background:#1E293B;border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:11px;}
-.a-user-name{color:#E2E8F0;font-weight:700;font-size:12px;}
-.a-user-detail{color:#64748B;margin-top:2px;line-height:1.6;}
 .a-gen-btn{width:100%;padding:11px;background:#10B981;color:#fff;border:none;border-radius:8px;font-weight:800;font-size:13px;cursor:pointer;margin-top:8px;}
 .a-gen-btn:hover{background:#059669;}
 .a-code-out{background:#1E293B;border-radius:8px;padding:12px;text-align:center;margin-top:8px;}
 .a-code-big{font-size:28px;font-weight:900;color:#34D399;letter-spacing:8px;font-family:'Courier New',monospace;}
 .a-code-copy{margin-top:6px;padding:6px 16px;background:#3B82F6;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;}
-.a-no-users{color:#475569;font-size:12px;text-align:center;padding:20px 0;font-style:italic;}
 
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;}
@@ -477,7 +411,7 @@ input:checked+.slider::after{transform:translateX(22px);}
   </div>
   <div>
     <div class="logo-text"><span style="background:#1E293B;color:#fff;padding:1px 5px;border-radius:4px;font-size:13px;margin-right:3px;">CV</span>Builder Pro</div>
-    <div class="logo-sub">Offline · Auto-saves</div>
+    <div class="logo-sub">Free · Offline · Auto-saves</div>
   </div>
   <select id="slot-select" onchange="loadSlot(+this.value)">
     <option value="0">📄 CV 1</option>
@@ -488,7 +422,7 @@ input:checked+.slider::after{transform:translateX(22px);}
     <button class="tbtn tbtn-danger" onclick="confirmHardReset()" title="Hard reset all data">🗑 <span>Reset</span></button>
     <button class="tbtn tbtn-light" onclick="backupData()">💾 <span>Backup</span></button>
     <button class="tbtn tbtn-wm" onclick="downloadWatermarkPDF()" title="Download preview with One Net Solution watermark">🔒 <span>Preview PDF</span></button>
-    <button class="tbtn tbtn-dark" onclick="downloadPDF()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Download PDF&nbsp;<span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;font-size:10px;font-weight:800;padding:2px 8px;letter-spacing:.2px;">&#x20B9;5</span></button>
+    <button class="tbtn tbtn-dark" onclick="downloadPDF()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Download PDF</button>
   </div>
 </div>
 
@@ -506,7 +440,7 @@ input:checked+.slider::after{transform:translateX(22px);}
   <div class="nav-item" onclick="backupData()"><span class="icon">💾</span>Download Backup</div>
   <div class="nav-item" onclick="document.getElementById('restore-input').click()"><span class="icon">⬆</span>Restore Backup</div>
   <input type="file" id="restore-input" accept=".json" style="display:none" onchange="restoreData(this)"/>
-  <div class="nav-footer">Auto-saved · Works Offline<br/>No internet needed</div>
+  <div class="nav-footer">Free · Auto-saved · Works Offline<br/>No internet needed</div>
 </div>
 
 <!-- MAIN APP -->
@@ -787,7 +721,7 @@ input:checked+.slider::after{transform:translateX(22px);}
     </div>
     <div style="display:flex;gap:8px;margin-top:10px;">
       <button onclick="downloadWatermarkPDF()" class="tbtn tbtn-wm" style="flex:1;justify-content:center;font-size:12px;">🔒 Preview PDF</button>
-      <button onclick="downloadPDF()" class="tbtn tbtn-dark" style="flex:1;justify-content:center;font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Download PDF&nbsp;<span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);border-radius:20px;font-size:9px;font-weight:800;padding:2px 7px;">&#x20B9;5</span></button>
+      <button onclick="downloadPDF()" class="tbtn tbtn-dark" style="flex:1;justify-content:center;font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Download PDF</button>
     </div>
   </div>
 </div>
@@ -800,7 +734,7 @@ input:checked+.slider::after{transform:translateX(22px);}
     <span>📄 CV Preview</span>
     <div style="display:flex;gap:6px;">
       <button class="export-btn" style="background:#7C3AED;" onclick="downloadWatermarkPDF()">🔒 Preview</button>
-      <button class="export-btn" onclick="downloadPDF()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Download PDF&nbsp;<span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:16px;font-size:9px;font-weight:800;padding:1px 7px;">&#x20B9;5</span></button>
+      <button class="export-btn" onclick="downloadPDF()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Download PDF</button>
       <button class="close-btn" onclick="toggleMobilePreview()">✕ Close</button>
     </div>
   </div>
@@ -910,7 +844,7 @@ input:checked+.slider::after{transform:translateX(22px);}
   </div>
 </div>
 
-<!-- PAYMENT MODAL -->
+<!-- DOWNLOAD CODE MODAL — Free Version -->
 <div id="pay-modal">
   <div id="pay-box">
 
@@ -918,18 +852,18 @@ input:checked+.slider::after{transform:translateX(22px);}
     <div id="pay-header">
       <div class="pay-pill"></div>
       <button class="pay-close-x" onclick="closePayModal()" aria-label="Close">&#x2715;</button>
-      <div class="pay-lock-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-          <path d="M7 11V7a5 5 0 0110 0v4"/>
+      <div class="pay-dl-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
         </svg>
       </div>
-      <h2>Download Clean PDF</h2>
-      <p class="pay-sub">Pay &#x20B9;5 &rarr; Message us on WhatsApp &rarr; Get a code &rarr; 1-Day Access</p>
-      <div class="pay-price-tag">
-        <span class="sym">&#x20B9;</span>
-        <span class="num">5</span>
-        <span class="lbl">1-day access</span>
+      <h2>Download Your CV</h2>
+      <p class="pay-sub">Your CV is ready! Get a free download code from admin to unlock it.</p>
+      <div class="free-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        FREE — No Payment Required
       </div>
     </div>
 
@@ -937,80 +871,78 @@ input:checked+.slider::after{transform:translateX(22px);}
 
       <!-- Screen 1: Choose path -->
       <div id="pay-chooser">
+        <p style="font-size:12px;color:#64748B;text-align:center;margin-bottom:14px;line-height:1.6;">Choose how you want to get your download code from admin:</p>
         <div class="pay-cards">
+          <!-- Option A: WhatsApp admin -->
           <div class="pay-card" onclick="showUPISec()" tabindex="0">
-            <div class="pay-card-ico c-blue">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="5" width="20" height="14" rx="2"/>
-                <line x1="2" y1="10" x2="22" y2="10"/>
+            <div class="pay-card-ico c-green">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#22C55E">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.099.539 4.073 1.482 5.796L0 24l6.371-1.461A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.655-.508-5.183-1.393l-.371-.22-3.781.866.896-3.683-.242-.381A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
               </svg>
             </div>
-            <h3>Pay &#x20B9;5</h3>
-            <p>New here? Pay &#x20B9;5 for full-day access</p>
+            <h3>Ask Admin</h3>
+            <p>Message admin on WhatsApp to get your code</p>
           </div>
+          <!-- Option B: Already have code -->
           <div class="pay-card" onclick="showCodeSec()" tabindex="0">
-            <div class="pay-card-ico c-green">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="pay-card-ico c-teal">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="11" width="18" height="11" rx="2"/>
                 <path d="M7 11V7a5 5 0 0110 0v4"/>
               </svg>
             </div>
-            <h3>Enter Code</h3>
-            <p>Already paid? Type the code we sent you</p>
+            <h3>I Have a Code</h3>
+            <p>Already got your code? Enter it and download</p>
           </div>
         </div>
       </div>
 
-      <!-- Screen 2a: UPI Payment -->
+      <!-- Screen 2a: WhatsApp Admin -->
       <div id="pay-upi-sec">
-        <div class="qr-wrap">
-          <div id="pay-qr-canvas"></div>
-          <p class="qr-hint">Scan with GPay, PhonePe, Paytm — or copy ID below</p>
-        </div>
-        <div class="upi-row">
-          <div class="upi-text">
-            <div class="upi-lbl">UPI ID</div>
-            <div class="upi-val" id="upi-display">&#8226; &#8226; &#8226; &#8226; &#8226; &#8226;</div>
+        <div class="wa-info-box">
+          <div class="wa-info-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#22C55E"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.099.539 4.073 1.482 5.796L0 24l6.371-1.461A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.655-.508-5.183-1.393l-.371-.22-3.781.866.896-3.683-.242-.381A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            How to get your code
           </div>
-          <button class="copy-btn" onclick="copyUPI()" id="copy-upi-btn">Copy</button>
-        </div>
-        <div class="send-note">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          Send exactly <strong style="margin:0 3px;">&#x20B9;5</strong> — then press the button below
+          <div style="display:flex;flex-direction:column;gap:7px;">
+            <div class="wa-info-step"><div class="wa-step-num">1</div><span>Click the WhatsApp button below to message admin</span></div>
+            <div class="wa-info-step"><div class="wa-step-num">2</div><span>Tell admin your name and that your CV is ready</span></div>
+            <div class="wa-info-step"><div class="wa-step-num">3</div><span>Admin will send you a 6-character download code</span></div>
+            <div class="wa-info-step"><div class="wa-step-num">4</div><span>Come back, click "I Have a Code" and enter it to download</span></div>
+          </div>
         </div>
         <button class="wa-btn" onclick="openWhatsApp()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
             <path d="M12 0C5.373 0 0 5.373 0 12c0 2.099.539 4.073 1.482 5.796L0 24l6.371-1.461A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.655-.508-5.183-1.393l-.371-.22-3.781.866.896-3.683-.242-.381A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
           </svg>
-          I Paid — Message Us for Code
+          💬 Message Admin on WhatsApp
         </button>
-        <div class="back-lnk" onclick="backToChooser()">&#8592; Go back</div>
+        <div class="back-lnk" onclick="backToChooser()">&#8592; Back &nbsp;&middot;&nbsp; <span onclick="showCodeSec()" style="color:#0F766E;font-weight:700;">I already have a code</span></div>
       </div>
 
       <!-- Screen 2b: Enter Code -->
       <div id="pay-code-sec">
 
-        <!-- Error box -->
         <div class="err-box" id="err-box"></div>
 
-        <!-- Lockout box -->
         <div class="lock-box" id="lock-box">
           <div class="lock-title">Too many wrong attempts</div>
           <div class="lock-time" id="lock-timer">10:00</div>
           <div class="lock-sub">Please wait, then try again</div>
         </div>
 
-        <!-- How the code works (simple explanation) -->
-        <div class="code-steps">
-          <strong>How to get your code:</strong><br/>
-          1. Pay &#x20B9;5 to our UPI ID<br/>
-          2. Send us the payment screenshot on WhatsApp<br/>
-          3. We will send you a 6-letter code<br/>
-          4. Type the code below and download your CV
+        <div class="code-how-box">
+          <div class="code-how-title">📋 How to get your code</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div class="code-how-step"><div class="code-how-num">1</div><span>Go back and click <strong>Ask Admin</strong></span></div>
+            <div class="code-how-step"><div class="code-how-num">2</div><span>Message admin on WhatsApp to request your code</span></div>
+            <div class="code-how-step"><div class="code-how-num">3</div><span>Admin sends you a 6-character code</span></div>
+            <div class="code-how-step"><div class="code-how-num">4</div><span>Enter the code below and download your CV</span></div>
+          </div>
         </div>
 
-        <!-- Attempt dots -->
         <div class="code-dots">
           <div class="cdot" id="cd1"></div>
           <div class="cdot" id="cd2"></div>
@@ -1018,7 +950,7 @@ input:checked+.slider::after{transform:translateX(22px);}
           <span class="cdot-lbl">attempts remaining</span>
         </div>
 
-        <label class="code-lbl" for="code-field">Enter your code here</label>
+        <label class="code-lbl" for="code-field">Enter your 6-character code</label>
         <input
           class="code-field"
           id="code-field"
@@ -1030,21 +962,20 @@ input:checked+.slider::after{transform:translateX(22px);}
           spellcheck="false"
           inputmode="text"
         />
-        <div class="code-pool-hint">
-          Enter the 6-character code exactly as received
-        </div>
+        <div class="code-pool-hint">Enter the 6-character code sent by admin</div>
 
         <button class="unlock-btn" id="unlock-btn" onclick="doSubmitCode()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2"/>
-            <path d="M7 11V7a5 5 0 0110 0v4"/>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
-          Unlock &amp; Download
+          Download My CV
         </button>
 
         <div class="back-lnk" onclick="backToChooser()">
-          &#8592; Go back &nbsp;&middot;&nbsp;
-          <span onclick="showUPISec()" style="color:#3B82F6;font-weight:700;cursor:pointer;">Pay &#x20B9;5</span>
+          &#8592; Back &nbsp;&middot;&nbsp;
+          <span onclick="showUPISec()" style="color:#22C55E;font-weight:700;cursor:pointer;">Ask admin for code</span>
         </div>
       </div>
 
@@ -1053,31 +984,6 @@ input:checked+.slider::after{transform:translateX(22px);}
 </div>
 
 
-<!-- SIGNUP / LOGIN GATE -->
-<div id="signup-overlay">
-  <div id="signup-box">
-    <div id="signup-header">
-      <h2>👤 Create Free Account</h2>
-      <p>Sign up free — pay only ₹5 when downloading your CV</p>
-    </div>
-    <div id="signup-body">
-      <div id="su-err"></div>
-      <div id="signup-form-view">
-        <div class="su-field"><label>Full Name *</label><input id="su-name" placeholder="Your full name" autocomplete="name"/></div>
-        <div class="su-field"><label>Phone Number *</label><input id="su-phone" type="tel" placeholder="e.g. 9876543210" autocomplete="tel"/></div>
-        <div class="su-field"><label>Email (optional)</label><input id="su-email" type="email" placeholder="your@email.com" autocomplete="email"/></div>
-        <button class="su-btn" onclick="doSignup()">🚀 Create Free Account</button>
-        <div class="su-note">Free to build. ₹5 only when you download clean PDF.</div>
-        <div class="su-login-link" onclick="showLoginView()">Already registered? Click here →</div>
-      </div>
-      <div id="login-form-view" style="display:none;">
-        <div class="su-field"><label>Phone Number *</label><input id="li-phone" type="tel" placeholder="Enter registered phone number" autocomplete="tel"/></div>
-        <button class="su-btn" onclick="doLogin()">✅ Continue to CV Builder</button>
-        <div class="su-login-link" style="margin-top:12px;" onclick="showSignupView()">New user? Sign up here →</div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- ADMIN PANEL — open by clicking logo 5 times fast -->
 <div id="admin-panel">
@@ -1096,7 +1002,6 @@ input:checked+.slider::after{transform:translateX(22px);}
       <div id="admin-content">
         <div class="admin-tabs">
           <button class="admin-tab active" onclick="switchAdminTab('codes',this)">🔑 Codes</button>
-          <button class="admin-tab" onclick="switchAdminTab('users',this)">👥 Users</button>
           <button class="admin-tab" onclick="switchAdminTab('generate',this)">⚡ Generate</button>
         </div>
 
@@ -1111,18 +1016,11 @@ input:checked+.slider::after{transform:translateX(22px);}
           </div>
         </div>
 
-        <!-- USERS TAB -->
-        <div class="admin-tab-pane" id="atab-users">
-          <div class="a-lbl" style="margin-bottom:8px;">Registered Users</div>
-          <div id="a-users-list"><div class="a-no-users">Loading users...</div></div>
-          <div style="margin-top:8px;padding:8px;background:#1E293B;border-radius:6px;font-size:10px;color:#475569;text-align:center;" id="a-user-count">–</div>
-        </div>
-
         <!-- GENERATE TAB -->
         <div class="admin-tab-pane" id="atab-generate">
           <div class="a-lbl" style="margin-bottom:8px;">Auto-Generate Code</div>
           <div class="a-rule" style="margin-bottom:10px;">
-            Give this code to users who have paid ₹5. Code is valid for <b style="color:#34D399;">today only</b>.
+            Give this code to users who request a download. Code is valid for <b style="color:#34D399;">today only</b>.
           </div>
           <button class="a-gen-btn" onclick="adminGenCode()">⚡ Generate New Code</button>
           <div class="a-code-out" id="a-gen-out" style="display:none;">
@@ -3336,7 +3234,6 @@ function closeMoreMenu() {
 }
 
 window.addEventListener('load', () => {
-  checkSignupGate();
   loadSlot(0);
   renderColorGrid();
   renderTemplateGrid();
@@ -3367,193 +3264,16 @@ window.addEventListener('load', () => {
 });
 
 // ══════════════════════════════════════════════════════════
-// SIGNUP / LOGIN SYSTEM
-// ══════════════════════════════════════════════════════════
-const SIGNUP_KEY = 'cvb_user_registered';
-const USERS_KEY = 'cvb_all_users';
-const ISSUED_CODES_KEY = 'cvb_issued_codes';
-
-function checkSignupGate() {
-  const overlay = document.getElementById('signup-overlay');
-  if (!overlay) return;
-  const user = getLocalUser();
-  if (!user) overlay.classList.add('show');
-}
-
-function getLocalUser() {
-  try { return JSON.parse(localStorage.getItem(SIGNUP_KEY)); } catch(e) { return null; }
-}
-
-function saveLocalUser(user) {
-  localStorage.setItem(SIGNUP_KEY, JSON.stringify(user));
-}
-
-function getAllUsers() {
-  try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; } catch(e) { return []; }
-}
-
-function saveAllUsers(users) {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
-function showSignupView() {
-  document.getElementById('signup-form-view').style.display = 'block';
-  document.getElementById('login-form-view').style.display = 'none';
-  document.getElementById('su-err').style.display = 'none';
-}
-
-function showLoginView() {
-  document.getElementById('signup-form-view').style.display = 'none';
-  document.getElementById('login-form-view').style.display = 'block';
-  document.getElementById('su-err').style.display = 'none';
-}
-
-function showSuErr(msg) {
-  const el = document.getElementById('su-err');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-function doSignup() {
-  const name = document.getElementById('su-name').value.trim();
-  const phone = document.getElementById('su-phone').value.trim().replace(/\s/g,'');
-  const email = document.getElementById('su-email').value.trim();
-
-  if (!name) return showSuErr('Please enter your full name.');
-  if (!phone || phone.length < 10) return showSuErr('Please enter a valid 10-digit phone number.');
-
-  const existing = getAllUsers().find(u => u.phone === phone);
-  if (existing) return showSuErr('This phone is already registered. Use "Already registered" to login.');
-
-  const user = {
-    name, phone, email,
-    signedUp: new Date().toISOString(),
-    device: navigator.userAgent.substring(0, 60)
-  };
-
-  // Save current user
-  saveLocalUser(user);
-
-  // Save to all-users list
-  const all = getAllUsers();
-  all.unshift(user);
-  saveAllUsers(all);
-
-  // Try Firebase if ready
-  if (window._fbReady && window._db) {
-    try {
-      const usersRef = window._ref(window._db, 'users');
-      window._push(usersRef, user);
-    } catch(e) { console.warn('Firebase save failed', e); }
-  }
-
-  const _o1 = document.getElementById('signup-overlay');
-  if (_o1) _o1.classList.remove('show');
-  showToast('✅ Welcome ' + name + '! Account created.');
-}
-
-function doLogin() {
-  const phone = document.getElementById('li-phone').value.trim().replace(/\s/g,'');
-  if (!phone || phone.length < 10) return showSuErr('Enter your registered phone number.');
-
-  const all = getAllUsers();
-  const user = all.find(u => u.phone === phone);
-  if (!user) return showSuErr('Phone not found. Please sign up first.');
-
-  saveLocalUser(user);
-  const _o2 = document.getElementById('signup-overlay');
-  if (_o2) _o2.classList.remove('show');
-  showToast('✅ Welcome back, ' + user.name + '!');
-}
-
-// ══════════════════════════════════════════════════════════
 // ADMIN PANEL ENHANCEMENTS
 // ══════════════════════════════════════════════════════════
+const ISSUED_CODES_KEY = 'cvb_issued_codes';
 function switchAdminTab(tab, el) {
   document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.admin-tab-pane').forEach(p => p.classList.remove('active'));
   if (el) el.classList.add('active');
   const pane = document.getElementById('atab-' + tab);
   if (pane) pane.classList.add('active');
-  if (tab === 'users')    loadAdminUsers();
   if (tab === 'generate') loadRecentCodes();
-  if (tab === 'codes')    adminRefreshStats();
-}
-
-function adminRefreshStats() {
-  // Update user count badge in codes tab whenever it's shown
-  const users = getAllUsers();
-  const countEl = document.getElementById('a-user-count');
-  if (countEl) countEl.textContent = users.length + ' user' + (users.length !== 1 ? 's' : '') + ' registered';
-}
-
-function loadAdminUsers() {
-  const listEl  = document.getElementById('a-users-list');
-  const countEl = document.getElementById('a-user-count');
-  if (!listEl) return;
-
-  // Always read from localStorage (Firebase not configured)
-  const users = getAllUsers();
-  renderUserList(users, listEl, countEl);
-
-  // Also try Firebase with a timeout safety net
-  if (window._fbReady && window._db) {
-    let fbTimedOut = false;
-    const timeout = setTimeout(() => {
-      fbTimedOut = true;
-      // Firebase never responded — localStorage already shown, nothing to do
-    }, 3000);
-    try {
-      const usersRef = window._ref(window._db, 'users');
-      window._onValue(usersRef, (snapshot) => {
-        if (fbTimedOut) return;
-        clearTimeout(timeout);
-        const data = snapshot.val();
-        if (data) {
-          const fbUsers = Object.values(data).reverse();
-          // Merge with localStorage users (avoid duplicates by phone)
-          const local = getAllUsers();
-          const merged = [...fbUsers];
-          local.forEach(u => {
-            if (!merged.find(m => m.phone === u.phone)) merged.push(u);
-          });
-          renderUserList(merged, listEl, countEl);
-        }
-      }, (err) => {
-        clearTimeout(timeout);
-        // Firebase error — localStorage already shown
-      });
-    } catch(e) { clearTimeout(timeout); }
-  }
-}
-
-function renderUserList(users, listEl, countEl) {
-  if (!users.length) {
-    listEl.innerHTML = '<div class="a-no-users" style="padding:20px 0;text-align:center;color:#64748B;font-size:12px;">📭 No registered users yet.<br/><span style="font-size:11px;">Users will appear here after they sign up on the site.</span></div>';
-    if (countEl) countEl.textContent = '0 users';
-    return;
-  }
-  if (countEl) countEl.textContent = users.length + ' user' + (users.length !== 1 ? 's' : '') + ' registered';
-  listEl.innerHTML = users.slice(0, 100).map((u, i) => {
-    const date = u.signedUp ? new Date(u.signedUp).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'}) : '?';
-    const time = u.signedUp ? new Date(u.signedUp).toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'}) : '';
-    const initials = (u.name||'?').charAt(0).toUpperCase();
-    return `<div class="a-user-row" style="gap:10px;">
-      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0F766E,#1D4ED8);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0;">${initials}</div>
-      <div style="flex:1;min-width:0;">
-        <div class="a-user-name">${escHtml(u.name || 'Unknown')}</div>
-        <div class="a-user-detail">
-          📞 ${escHtml(u.phone || '—')}
-          ${u.email ? ' &nbsp;·&nbsp; ✉ ' + escHtml(u.email) : ''}
-        </div>
-        <div style="font-size:10px;color:#334155;margin-top:2px;">📅 ${date} ${time ? '· ' + time : ''}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function escHtml(str) {
-  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 // ── AUTO CODE GENERATOR ──
