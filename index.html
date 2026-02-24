@@ -9,6 +9,9 @@
 <meta name="apple-mobile-web-app-title" content="CV Builder Pro"/>
 <meta name="description" content="Build professional CVs — works offline, no internet needed"/>
 <title>CV Builder — Free</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&family=Montserrat:wght@400;600;700&family=Raleway:wght@400;600;700&family=EB+Garamond:wght@400;500;600&family=Josefin+Sans:wght@300;400;600;700&family=Nunito+Sans:wght@400;600;700&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet"/>
 <!-- jsPDF + html2canvas for watermark PDF download -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -594,7 +597,175 @@ input:checked+.slider::after{transform:translateX(22px);}
       </div>
     </div>
 
-    <!-- PAGE LAYOUT MANAGER -->
+    <!-- FONT FAMILY SELECTOR -->
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-header-left"><span class="card-icon">🔤</span><span class="card-title">Font Style</span></div>
+        <span class="chevron up">▾</span>
+      </div>
+      <div class="card-body">
+        <style>
+          .font-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px;}
+          .font-card{border:2px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .15s;background:var(--card);position:relative;overflow:hidden;}
+          .font-card:hover{border-color:var(--primary);background:#FAFFFF;}
+          .font-card.active{border-color:var(--primary);background:var(--primary-light);}
+          .font-card.active::after{content:"✓";position:absolute;top:7px;right:9px;font-size:11px;font-weight:900;color:var(--primary);}
+          .font-card-name{font-weight:800;font-size:11px;color:var(--text);margin-bottom:3px;letter-spacing:.3px;}
+          .font-card-preview{font-size:15px;color:#444;line-height:1.3;margin-bottom:3px;}
+          .font-card-tag{font-size:9px;color:var(--muted);background:var(--bg);border-radius:4px;padding:2px 6px;display:inline-block;}
+        </style>
+        <p style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;">Choose a font style for your CV. Each family gives a different professional feel.</p>
+        <div class="font-grid">
+          <div class="font-card active" id="ff-default" onclick="applyFontFamily('default')">
+            <div class="font-card-name">Default</div>
+            <div class="font-card-preview" style="font-family:Georgia,serif;">Resume</div>
+            <span class="font-card-tag">Classic</span>
+          </div>
+          <div class="font-card" id="ff-playfair" onclick="applyFontFamily('playfair')">
+            <div class="font-card-name">Playfair Display</div>
+            <div class="font-card-preview" style="font-family:'Playfair Display',serif;">Resume</div>
+            <span class="font-card-tag">Elegant · Serif</span>
+          </div>
+          <div class="font-card" id="ff-montserrat" onclick="applyFontFamily('montserrat')">
+            <div class="font-card-name">Montserrat</div>
+            <div class="font-card-preview" style="font-family:'Montserrat',sans-serif;">Resume</div>
+            <span class="font-card-tag">Modern · Bold</span>
+          </div>
+          <div class="font-card" id="ff-raleway" onclick="applyFontFamily('raleway')">
+            <div class="font-card-name">Raleway</div>
+            <div class="font-card-preview" style="font-family:'Raleway',sans-serif;">Resume</div>
+            <span class="font-card-tag">Premium · Clean</span>
+          </div>
+          <div class="font-card" id="ff-garamond" onclick="applyFontFamily('garamond')">
+            <div class="font-card-name">EB Garamond</div>
+            <div class="font-card-preview" style="font-family:'EB Garamond',serif;">Resume</div>
+            <span class="font-card-tag">Literary · Refined</span>
+          </div>
+          <div class="font-card" id="ff-josefin" onclick="applyFontFamily('josefin')">
+            <div class="font-card-name">Josefin Sans</div>
+            <div class="font-card-preview" style="font-family:'Josefin Sans',sans-serif;">Resume</div>
+            <span class="font-card-tag">Geometric · Sharp</span>
+          </div>
+          <div class="font-card" id="ff-nunito" onclick="applyFontFamily('nunito')">
+            <div class="font-card-name">Nunito Sans</div>
+            <div class="font-card-preview" style="font-family:'Nunito Sans',sans-serif;">Resume</div>
+            <span class="font-card-tag">Friendly · Round</span>
+          </div>
+          <div class="font-card" id="ff-cormorant" onclick="applyFontFamily('cormorant')">
+            <div class="font-card-name">Cormorant</div>
+            <div class="font-card-preview" style="font-family:'Cormorant Garamond',serif;">Resume</div>
+            <span class="font-card-tag">Luxury · Editorial</span>
+          </div>
+          <div class="font-card" id="ff-lato" onclick="applyFontFamily('lato')" style="grid-column:1/-1;">
+            <div class="font-card-name">Lato</div>
+            <div class="font-card-preview" style="font-family:'Lato',sans-serif;font-size:18px;">Resume · Professional</div>
+            <span class="font-card-tag">Corporate · Trusted</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FONT SIZE CONTROLS -->
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-header-left"><span class="card-icon">🔡</span><span class="card-title">Typography Style</span></div>
+        <span class="chevron up">▾</span>
+      </div>
+      <div class="card-body">
+
+        <style>
+          .typo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px;}
+          .typo-preset{border:2px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .15s;background:var(--card);position:relative;overflow:hidden;}
+          .typo-preset:hover{border-color:var(--primary);background:#FAFFFF;}
+          .typo-preset.active{border-color:var(--primary);background:var(--primary-light);}
+          .typo-preset.active::after{content:"✓";position:absolute;top:7px;right:9px;font-size:11px;font-weight:900;color:var(--primary);}
+          .typo-name{font-weight:800;font-size:12px;color:var(--text);margin-bottom:3px;}
+          .typo-desc{font-size:10px;color:var(--muted);margin-bottom:7px;line-height:1.3;}
+          .typo-bars{display:flex;flex-direction:column;gap:2px;}
+          .typo-bar-row{display:flex;align-items:center;gap:5px;}
+          .typo-bar{background:var(--primary);border-radius:3px;opacity:.35;transition:opacity .15s;}
+          .typo-bar-lbl{font-size:8.5px;color:var(--muted);min-width:28px;}
+          .typo-preset.active .typo-bar{opacity:.75;}
+          .typo-preset:hover .typo-bar{opacity:.55;}
+        </style>
+
+        <!-- Hidden inputs keep save/load working -->
+        <input type="hidden" id="fs-name" value="24"/>
+        <input type="hidden" id="fs-toptitle" value="14"/>
+        <input type="hidden" id="fs-section" value="13"/>
+        <input type="hidden" id="fs-subheader" value="13"/>
+        <input type="hidden" id="fs-body" value="12"/>
+
+        <div class="typo-grid">
+
+          <!-- Preset 1: Professional -->
+          <div class="typo-preset active" id="typo-professional" onclick="applyTypoPreset('professional')">
+            <div class="typo-name">Professional</div>
+            <div class="typo-desc">Clean & balanced. Best for most jobs.</div>
+            <div class="typo-bars">
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Name</span><div class="typo-bar" style="height:5px;width:70px;"></div></div>
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Title</span><div class="typo-bar" style="height:4px;width:45px;"></div></div>
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Header</span><div class="typo-bar" style="height:3px;width:36px;"></div></div>
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Body</span><div class="typo-bar" style="height:2.5px;width:28px;"></div></div>
+            </div>
+          </div>
+
+          <!-- Preset 2: Compact -->
+          <div class="typo-preset" id="typo-compact" onclick="applyTypoPreset('compact')">
+            <div class="typo-name">Compact</div>
+            <div class="typo-desc">Fits more content. One page CVs.</div>
+            <div class="typo-bars">
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Name</span><div class="typo-bar" style="height:5px;width:55px;"></div></div>
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Title</span><div class="typo-bar" style="height:4px;width:36px;"></div></div>
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Header</span><div class="typo-bar" style="height:3px;width:28px;"></div></div>
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Body</span><div class="typo-bar" style="height:2px;width:22px;"></div></div>
+            </div>
+          </div>
+
+          <!-- Preset 3: Bold -->
+          <div class="typo-preset" id="typo-bold" onclick="applyTypoPreset('bold')">
+            <div class="typo-name">Bold & Modern</div>
+            <div class="typo-desc">Strong hierarchy. Makes a statement.</div>
+            <div class="typo-bars">
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Name</span><div class="typo-bar" style="height:6px;width:80px;"></div></div>
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Title</span><div class="typo-bar" style="height:4.5px;width:52px;"></div></div>
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Header</span><div class="typo-bar" style="height:3.5px;width:40px;"></div></div>
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Body</span><div class="typo-bar" style="height:3px;width:32px;"></div></div>
+            </div>
+          </div>
+
+          <!-- Preset 4: Executive -->
+          <div class="typo-preset" id="typo-executive" onclick="applyTypoPreset('executive')">
+            <div class="typo-name">Executive</div>
+            <div class="typo-desc">Premium feel. Senior & leadership roles.</div>
+            <div class="typo-bars">
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Name</span><div class="typo-bar" style="height:6px;width:72px;"></div></div>
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Title</span><div class="typo-bar" style="height:4.5px;width:50px;"></div></div>
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Header</span><div class="typo-bar" style="height:4px;width:44px;"></div></div>
+              <div class="typo-bar-row"><span class="typo-bar-lbl">Body</span><div class="typo-bar" style="height:3px;width:34px;"></div></div>
+            </div>
+          </div>
+
+          <!-- Preset 5: Ultra Compact (full width) -->
+          <div class="typo-preset" id="typo-ultra" onclick="applyTypoPreset('ultra')" style="grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <div class="typo-name">Ultra Compact</div>
+              <div class="typo-desc" style="margin-bottom:0;">Maximum content. Experienced professionals with lots to show.</div>
+            </div>
+            <div class="typo-bars" style="flex-direction:row;align-items:flex-end;gap:3px;flex-shrink:0;margin-left:10px;">
+              <div class="typo-bar" style="height:14px;width:7px;border-radius:2px;"></div>
+              <div class="typo-bar" style="height:10px;width:7px;border-radius:2px;"></div>
+              <div class="typo-bar" style="height:8px;width:7px;border-radius:2px;"></div>
+              <div class="typo-bar" style="height:7px;width:7px;border-radius:2px;"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+        <!-- PAGE LAYOUT MANAGER -->
     <div class="card">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-header-left"><span class="card-icon">📄</span><span class="card-title">Page Layout Control</span></div>
@@ -655,7 +826,7 @@ input:checked+.slider::after{transform:translateX(22px);}
           <label>Font Size</label>
           <div style="display:flex;align-items:center;gap:12px;">
             <span style="font-size:11px;color:var(--muted);">A</span>
-            <input type="range" id="font-size-slider" min="9" max="12" value="10.5" step="0.5" oninput="updateDesign()" style="flex:1;accent-color:var(--primary);"/>
+            <input type="range" id="font-size-slider" min="9" max="16" value="12" step="0.5" oninput="updateDesign()" style="flex:1;accent-color:var(--primary);"/>
             <span style="font-size:15px;color:var(--muted);">A</span>
           </div>
         </div>
@@ -1079,7 +1250,9 @@ const BULLET_LIB = {
 // STATE
 // ══════════════════════════════════════════════════════════
 let currentSlot = 0, currentTemplate = 2, currentColor = '#0F766E';
-let currentSpacing = 'compact', currentFontSize = 10.5;
+let currentSpacing = 'compact', currentFontSize = 12, currentNameSize = 24, currentSectionHeaderSize = 13;
+let currentTopTitleSize = 14, currentSubHeaderSize = 13;
+let currentFontFamily = 'default';
 let photoData = null;
 let jobs = [], edus = [], skills = [], certs = [];
 let libTargetJob = 0, libTargetField = 'responsibilities';
@@ -1106,6 +1279,12 @@ function saveSlot(slot) {
     color: currentColor,
     spacing: currentSpacing,
     fontSize: currentFontSize,
+    nameSize: currentNameSize,
+    sectionHeaderSize: currentSectionHeaderSize,
+    topTitleSize: currentTopTitleSize,
+    subHeaderSize: currentSubHeaderSize,
+    typoPreset: currentTypoPreset,
+    fontFamily: currentFontFamily,
   };
   try { localStorage.setItem('cv_slot_' + slot, JSON.stringify(data)); } catch(e) {}
 }
@@ -1126,7 +1305,13 @@ function loadSlot(slot) {
       currentTemplate = d.template || 2;
       currentColor = d.color || '#0F766E';
       currentSpacing = d.spacing || 'compact';
-      currentFontSize = d.fontSize || 10.5;
+      currentFontSize = d.fontSize || 12;
+      currentNameSize = d.nameSize || 24;
+      currentSectionHeaderSize = d.sectionHeaderSize || 13;
+      currentTopTitleSize = d.topTitleSize || 14;
+      currentSubHeaderSize = d.subHeaderSize || 13;
+      currentTypoPreset = d.typoPreset || 'professional';
+      currentFontFamily = d.fontFamily || 'default';
       if (d.extras) {
         const tog_decl = document.getElementById('tog_decl');
         const tog_personal = document.getElementById('tog_personal');
@@ -1146,6 +1331,18 @@ function loadSlot(slot) {
   syncTemplateUI();
   const fs = document.getElementById('font-size-slider');
   if (fs) fs.value = currentFontSize;
+  const bodyInput = document.getElementById('fs-body');
+  if (bodyInput) bodyInput.value = currentFontSize;
+  const nmInput = document.getElementById('fs-name');
+  if (nmInput) nmInput.value = currentNameSize;
+  const shInput = document.getElementById('fs-section');
+  if (shInput) shInput.value = currentSectionHeaderSize;
+  const ttInput = document.getElementById('fs-toptitle');
+  if (ttInput) ttInput.value = currentTopTitleSize;
+  const subInput = document.getElementById('fs-subheader');
+  if (subInput) subInput.value = currentSubHeaderSize;
+  syncTypoPresetUI();
+  syncFontFamilyUI();
   renderAll();
   updatePhotoUI();
   schedulePreview();
@@ -1157,7 +1354,9 @@ function resetState() {
   skills = [{name:'',level:'Advanced'}];
   certs = [];
   photoData = null;
-  currentTemplate = 2; currentColor = '#0F766E'; currentSpacing = 'compact'; currentFontSize = 10.5;
+  currentTemplate = 2; currentColor = '#0F766E'; currentSpacing = 'compact'; currentFontSize = 12;
+  currentNameSize = 24; currentSectionHeaderSize = 13; currentTopTitleSize = 14; currentSubHeaderSize = 13;
+  currentTypoPreset = 'professional';
   fillForm({});
 }
 
@@ -1480,7 +1679,107 @@ function setSpacingBtn(s) {
 function updateDesign() {
   const el = document.getElementById('font-size-slider');
   if (el) currentFontSize = parseFloat(el.value);
+  const bodyInput = document.getElementById('fs-body');
+  if (bodyInput) { bodyInput.value = currentFontSize; }
   autoSave();
+}
+
+// ══════════════════════════════════════════════════════════
+// TYPOGRAPHY PRESETS
+// ══════════════════════════════════════════════════════════
+const TYPO_PRESETS = {
+  // ─── Body 12pt = MS Word standard. Hierarchy: Name > TopTitle > Section > SubHeader > Body
+  professional: { name:24,  topTitle:14,   section:13,   subHeader:13,   body:12   },  // DEFAULT — Word 12pt
+  compact:      { name:20,  topTitle:12,   section:11,   subHeader:11,   body:10   },  // Tight, 1-page friendly
+  bold:         { name:28,  topTitle:15,   section:14,   subHeader:13.5, body:12.5 },  // Strong visual impact
+  executive:    { name:27,  topTitle:15,   section:14,   subHeader:14,   body:13   },  // Senior roles, spacious
+  ultra:        { name:18,  topTitle:11,   section:10,   subHeader:10.5, body:9    },  // Ultra compact, max content
+};
+
+let currentTypoPreset = 'professional';
+
+function applyTypoPreset(presetKey) {
+  const p = TYPO_PRESETS[presetKey];
+  if (!p) return;
+  currentTypoPreset = presetKey;
+
+  // Apply to globals
+  currentNameSize          = p.name;
+  currentTopTitleSize      = p.topTitle;
+  currentSectionHeaderSize = p.section;
+  currentSubHeaderSize     = p.subHeader;
+  currentFontSize          = p.body;
+
+  // Sync hidden inputs (for save/load)
+  const setHidden = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+  setHidden('fs-name',      p.name);
+  setHidden('fs-toptitle',  p.topTitle);
+  setHidden('fs-section',   p.section);
+  setHidden('fs-subheader', p.subHeader);
+  setHidden('fs-body',      p.body);
+
+  // Sync Design page slider
+  const slider = document.getElementById('font-size-slider');
+  if (slider) slider.value = p.body;
+
+  // Update active UI state
+  document.querySelectorAll('.typo-preset').forEach(el => el.classList.remove('active'));
+  const active = document.getElementById('typo-' + presetKey);
+  if (active) active.classList.add('active');
+
+  autoSave();
+}
+
+function syncTypoPresetUI() {
+  document.querySelectorAll('.typo-preset').forEach(el => el.classList.remove('active'));
+  const active = document.getElementById('typo-' + currentTypoPreset);
+  if (active) active.classList.add('active');
+}
+
+// ── FONT FAMILY MAP ──
+const FONT_FAMILY_MAP = {
+  'default':    { css: "Georgia, 'Times New Roman', serif", label: 'Default' },
+  'playfair':   { css: "'Playfair Display', Georgia, serif", label: 'Playfair Display' },
+  'montserrat': { css: "'Montserrat', 'Helvetica Neue', sans-serif", label: 'Montserrat' },
+  'raleway':    { css: "'Raleway', 'Helvetica Neue', sans-serif", label: 'Raleway' },
+  'garamond':   { css: "'EB Garamond', Georgia, serif", label: 'EB Garamond' },
+  'josefin':    { css: "'Josefin Sans', Arial, sans-serif", label: 'Josefin Sans' },
+  'nunito':     { css: "'Nunito Sans', Arial, sans-serif", label: 'Nunito Sans' },
+  'cormorant':  { css: "'Cormorant Garamond', Georgia, serif", label: 'Cormorant Garamond' },
+  'lato':       { css: "'Lato', 'Helvetica Neue', sans-serif", label: 'Lato' }
+};
+
+function applyFontFamily(key) {
+  currentFontFamily = key;
+  // Update active state in UI
+  document.querySelectorAll('.font-card').forEach(el => el.classList.remove('active'));
+  const active = document.getElementById('ff-' + key);
+  if (active) active.classList.add('active');
+  autoSave();
+  schedulePreview();
+}
+
+function syncFontFamilyUI() {
+  document.querySelectorAll('.font-card').forEach(el => el.classList.remove('active'));
+  const active = document.getElementById('ff-' + (currentFontFamily || 'default'));
+  if (active) active.classList.add('active');
+}
+
+function updateFontSizes() {
+  // Read from hidden inputs (used when loading saved data)
+  const get = (id, fallback) => { const el = document.getElementById(id); return el ? (parseFloat(el.value)||fallback) : fallback; };
+  currentNameSize          = get('fs-name',      24);
+  currentTopTitleSize      = get('fs-toptitle',  14);
+  currentSectionHeaderSize = get('fs-section',   13);
+  currentSubHeaderSize     = get('fs-subheader', 13);
+  currentFontSize          = get('fs-body',       12);
+  const slider = document.getElementById('font-size-slider');
+  if (slider) slider.value = currentFontSize;
+  autoSave();
+}
+
+function stepFontSize(inputId, delta) {
+  // Keep for compatibility, no-op now
 }
 
 // ══════════════════════════════════════════════════════════
@@ -2501,7 +2800,11 @@ function collectCVData() {
 function buildCV(data, tplNum, color, spacing, fontSize, sectionOrder) {
   const fns = [buildT1,buildT2,buildT3,buildT4,buildT5,buildT6,buildT7,buildT8,buildT9,buildT10];
   const fn = fns[Math.min(Math.max((tplNum||2)-1,0), fns.length-1)];
-  return fn(data, color||'#0F766E', spacing||'normal', fontSize||10.5, sectionOrder||null);
+  const nmSz  = (typeof currentNameSize          !=='undefined' ? currentNameSize          : 24);
+  const ttlSz = (typeof currentTopTitleSize       !=='undefined' ? currentTopTitleSize       : 14);
+  const shSz  = (typeof currentSectionHeaderSize  !=='undefined' ? currentSectionHeaderSize  : 13);
+  const subSz = (typeof currentSubHeaderSize      !=='undefined' ? currentSubHeaderSize      : 13);
+  return fn(data, color||'#0F766E', spacing||'normal', fontSize||12, sectionOrder||null, nmSz, ttlSz, shSz, subSz);
 }
 
 function getCVStyles(col) {
@@ -2637,15 +2940,41 @@ function getCVStyles(col) {
   .t10 .gr{display:grid;grid-template-columns:3fr 2fr;gap:20px;}
   .t10 .chip{background:#1e3a5f18;color:#1e3a5f;border:1px solid #1e3a5f33;padding:2px 9px;border-radius:4px;font-size:8.5px;font-weight:600;display:inline-block;margin:2px 2px 2px 0;}
   
-  /* Page break control */
+  /* ── Page break control */
   .t1 div[style*="margin-bottom:10px"],.t1 div[style*="margin-bottom:7px"]{page-break-inside:avoid;}
   .t2 .job,.t3 div,.t4 div,.t5 .job,.t6 .job,.t7 tr,.t8 .job,.t9 div,.t10 .job{page-break-inside:avoid;}
   .t1 .sh,.t2 .sh,.t3 .sh,.t4 .sh,.t5 .sh,.t6 .msh,.t7 .sh,.t8 .sh,.t9 .sh,.t10 .sh{page-break-after:avoid;}
+
+  /* ══ FONT FAMILY OVERRIDE ══ */
+  ${(()=>{
+    const ff = (typeof currentFontFamily!=='undefined' && currentFontFamily && currentFontFamily!=='default') ? (FONT_FAMILY_MAP[currentFontFamily]||{}).css : null;
+    return ff ? `.t1,.t2,.t3,.t4,.t5,.t6,.t7,.t8,.t9,.t10,.t1 *,.t2 *,.t3 *,.t4 *,.t5 *,.t6 *,.t7 *,.t8 *,.t9 *,.t10 *{font-family:${ff}!important;}` : '';
+  })()}
+
+  /* ══ LEVEL 1: NAME ══ */
+  .t1 .nm,.t2 .nm,.t3 .nm,.t4 .nm,.t5 .nm,.t7 .nm,.t8 .nm,.t9 .nm,.t10 .nm{font-size:${typeof currentNameSize!=='undefined'?currentNameSize:24}px!important;}
+  .t6 .snm{font-size:${typeof currentNameSize!=='undefined'?currentNameSize:24}px!important;}
+
+  /* ══ LEVEL 2: TOP TITLE (job title in header area) ══ */
+  .t1 .ttl,.t2 .ttl,.t3 .ttl,.t4 .ttl,.t5 .ttl,.t7 .ttl,.t8 .ttl,.t9 .ttl,.t10 .ttl{font-size:${typeof currentTopTitleSize!=='undefined'?currentTopTitleSize:14}px!important;}
+  .t6 .sttl{font-size:${typeof currentTopTitleSize!=='undefined'?currentTopTitleSize:14}px!important;}
+
+  /* ══ LEVEL 3: SECTION HEADERS ══ */
+  .t1 .sh,.t2 .sh,.t3 .sh,.t4 .sh,.t5 .sh,.t7 .sh,.t8 .sh,.t9 .sh,.t10 .sh{font-size:${typeof currentSectionHeaderSize!=='undefined'?currentSectionHeaderSize:13}px!important;}
+  .t6 .msh,.t6 .ssh{font-size:${typeof currentSectionHeaderSize!=='undefined'?currentSectionHeaderSize:13}px!important;}
+
+  /* ══ LEVEL 4: SUB-HEADERS (job titles & degree names within sections) ══ */
+  .cvjt,.t2 .jrl,.t6 .jt,.t8 .jt,.t10 .jt{font-size:${typeof currentSubHeaderSize!=='undefined'?currentSubHeaderSize:13}px!important;font-weight:700;}
+
+  /* ══ LEVEL 5: BODY / BULLET TEXT ══ */
+  .cvblt,.t1 .jb,.t1 .jo{font-size:${typeof currentFontSize!=='undefined'?currentFontSize:10}px!important;}
 `;
 }
 
 // ─── TEMPLATE 1: CLASSIC ────────────────────────────────
-function buildT1(data, col, spacing, fs, sectionOrder) {
+function buildT1(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz) {
+  nmSz=nmSz||24; ttlSz=ttlSz||14; shSz=shSz||13; subSz=subSz||13;
+  const sm=+(fs*0.88).toFixed(1), xs=+(fs*0.82).toFixed(1);
   const d = data.personal;
   const showFather = data.extras.father !== false;
   const ph = data.photo && data.extras.photo;
@@ -2654,37 +2983,39 @@ function buildT1(data, col, spacing, fs, sectionOrder) {
   const validS=data.skills.filter(sk=>sk.name), validC=data.certs.filter(c=>c.name);
   const secOrder = sectionOrder || ['summary','experience','education','skills','certs','personal','declaration'];
   const sections = {
-    summary: d.summary?`<div class="sh">Professional Summary</div><p style="margin:0 0 10px;color:#333;text-align:justify;">${s(d.summary)}</p>`:'',
-    experience: validJ.length?`<div class="sh">Work Experience</div>${validJ.map(j=>`
+    summary: d.summary?`<div class="sh" style="font-size:${shSz}px;">Professional Summary</div><p style="margin:0 0 10px;color:#333;text-align:justify;font-size:${fs}px;">${s(d.summary)}</p>`:'',
+    experience: validJ.length?`<div class="sh" style="font-size:${shSz}px;">Work Experience</div>${validJ.map(j=>`
       <div style="margin-bottom:10px;">
-        <div style="display:flex;justify-content:space-between;"><strong>${s(j.title)}</strong><span class="jp">${s(j.start)}${j.start?' — ':''}${j.current?'Present':s(j.end)}</span></div>
-        <div class="jo">${s(j.company)}${j.location?`, ${s(j.location)}`:''}</div>
-        ${j.responsibilities.filter(Boolean).map(r=>`<div class="jb">• ${s(r)}</div>`).join('')}
+        <div style="display:flex;justify-content:space-between;"><strong style="font-size:${subSz}px;">${s(j.title)}</strong><span style="color:#666;font-size:${xs}px;">${s(j.start)}${j.start?' — ':''}${j.current?'Present':s(j.end)}</span></div>
+        <div style="color:#444;font-style:italic;font-size:${sm}px;">${s(j.company)}${j.location?`, ${s(j.location)}`:''}</div>
+        ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:12px;color:#333;font-size:${fs}px;">• ${s(r)}</div>`).join('')}
       </div>`).join('')}`:'',
-    education: validE.length?`<div class="sh">Education</div>${validE.map(e=>`
+    education: validE.length?`<div class="sh" style="font-size:${shSz}px;">Education</div>${validE.map(e=>`
       <div style="display:flex;justify-content:space-between;margin-bottom:7px;">
-        <div><strong>${s(e.degree)}</strong><div class="jo">${s(e.institution)}${e.location?`, ${s(e.location)}`:''}</div></div>
-        <div style="text-align:right;color:#666;font-size:9px;">${s(e.endYear||e.startYear)}${e.grade?`<br/>Grade: ${s(e.grade)}`:''}</div>
+        <div><strong style="font-size:${subSz}px;">${s(e.degree)}</strong><div style="color:#444;font-style:italic;font-size:${sm}px;">${s(e.institution)}${e.location?`, ${s(e.location)}`:''}</div></div>
+        <div style="text-align:right;color:#666;font-size:${xs}px;">${s(e.endYear||e.startYear)}${e.grade?`<br/>Grade: ${s(e.grade)}`:''}</div>
       </div>`).join('')}`:'',
-    skills: validS.length?`<div class="sh">Skills</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${validS.map(sk=>`<span style="font-size:9.5px;margin-right:10px;">• ${s(sk.name)}</span>`).join('')}</div>`:'',
-    certs: validC.length?`<div class="sh">Certifications</div>${validC.map(c=>`<div style="font-size:9.5px;">• <strong>${s(c.name)}</strong>${c.issuedBy?` — ${s(c.issuedBy)}`:''} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:'',
-    personal: buildPersonalSection(data,'sh',col),
-    declaration: buildDeclaration(data,'sh',d.name,col),
+    skills: validS.length?`<div class="sh" style="font-size:${shSz}px;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${validS.map(sk=>`<span style="font-size:${sm}px;margin-right:10px;">• ${s(sk.name)}</span>`).join('')}</div>`:'',
+    certs: validC.length?`<div class="sh" style="font-size:${shSz}px;">Certifications</div>${validC.map(c=>`<div style="font-size:${sm}px;">• <strong>${s(c.name)}</strong>${c.issuedBy?` — ${s(c.issuedBy)}`:''} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:'',
+    personal: buildPersonalSection(data,'sh',col,fs,shSz),
+    declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
   return `<div class="t1" style="padding:${pad};font-size:${fs}px;">
     <div class="hdr">
       ${ph?`<img src="${data.photo}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;float:right;margin:0 0 8px 12px;"/>`:''}
-      <div class="nm">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="fn">S/O: ${s(d.father)}</div>`:''}
-      <div class="ttl">${s(d.title)}</div>
-      <div class="ct">${d.phone?`<span>📞 ${s(d.phone)}</span>`:''  }${d.email?`<span>✉ ${s(d.email)}</span>`:''}${d.location?`<span>📍 ${s(d.location)}</span>`:''}${d.linkedin?`<span>🔗 ${s(d.linkedin)}</span>`:''}</div>
+      <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
+      ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#666;">S/O: ${s(d.father)}</div>`:''}
+      <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
+      <div class="ct" style="font-size:${xs}px;">${d.phone?`<span>📞 ${s(d.phone)}</span>`:''}${d.email?`<span>✉ ${s(d.email)}</span>`:''}${d.location?`<span>📍 ${s(d.location)}</span>`:''}${d.linkedin?`<span>🔗 ${s(d.linkedin)}</span>`:''}</div>
     </div>
     ${secOrder.map(id=>sections[id]||'').join('')}
   </div>`;
 }
 
 // ─── TEMPLATE 2: MODERN BLUE ────────────────────────────
-function buildT2(data, col, spacing, fs, sectionOrder) {
+function buildT2(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz) {
+  nmSz=nmSz||24; ttlSz=ttlSz||14; shSz=shSz||13; subSz=subSz||13;
+  const sm=+(fs*0.88).toFixed(1), xs=+(fs*0.82).toFixed(1);
   const d = data.personal;
   const showFather = data.extras.father !== false;
   const ph = data.photo && data.extras.photo;
@@ -2693,29 +3024,29 @@ function buildT2(data, col, spacing, fs, sectionOrder) {
   const validS=data.skills.filter(sk=>sk.name), validC=data.certs.filter(c=>c.name);
   const secOrder = sectionOrder || ['summary','experience','education','skills','certs','personal','declaration'];
   const sections = {
-    summary: d.summary?`<div class="sh">Summary</div><p style="margin:0 0 10px;color:#333;line-height:1.5;">${s(d.summary)}</p>`:'',
-    experience: validJ.length?`<div class="sh">Work Experience</div>${validJ.map(j=>`
+    summary: d.summary?`<div class="sh" style="font-size:${shSz}px;">Summary</div><p style="margin:0 0 10px;color:#333;line-height:1.5;font-size:${fs}px;">${s(d.summary)}</p>`:'',
+    experience: validJ.length?`<div class="sh" style="font-size:${shSz}px;">Work Experience</div>${validJ.map(j=>`
         <div class="job">
-          <div class="jrow"><span class="jrl">${s(j.title)}</span><span class="jp">${s(j.start)}${j.start?' – ':''}${j.current?'Present':s(j.end)}</span></div>
-          <div class="jco">${s(j.company)}${j.location?` · ${s(j.location)}`:''}</div>
-          ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:10px;color:#555;font-size:9.5px;">• ${s(r)}</div>`).join('')}
+          <div class="jrow"><span style="font-weight:700;font-size:${subSz}px;">${s(j.title)}</span><span style="color:#888;font-size:${xs}px;font-style:italic;">${s(j.start)}${j.start?' – ':''}${j.current?'Present':s(j.end)}</span></div>
+          <div style="color:${col};font-weight:600;font-size:${sm}px;">${s(j.company)}${j.location?` · ${s(j.location)}`:''}</div>
+          ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:10px;color:#555;font-size:${fs}px;">• ${s(r)}</div>`).join('')}
         </div>`).join('')}`:'',
-    education: validE.length?`<div class="sh">Education</div>${validE.map(e=>`
-            <div style="margin-bottom:9px;"><strong>${s(e.degree)}</strong>
-            <div style="color:#888;font-size:9px;">${s(e.institution)}${e.location?`, ${s(e.location)}`:''} · ${s(e.endYear||e.startYear)}${e.grade?` · ${s(e.grade)}`:''}</div></div>`).join('')}`:'',
-    skills: validS.length?`<div class="sh">Skills</div>${validS.map(sk=>`<span class="tag">${s(sk.name)}</span>`).join('')}`:'',
-    certs: validC.length?`<div class="sh" style="margin-top:10px;">Certifications</div>${validC.map(c=>`<div style="font-size:9px;margin-bottom:3px;">• <strong>${s(c.name)}</strong>${c.year?` (${s(c.year)})`:''}</div>`).join('')}`:'',
-    personal: buildPersonalSection(data,'sh',col),
-    declaration: buildDeclaration(data,'sh',d.name,col),
+    education: validE.length?`<div class="sh" style="font-size:${shSz}px;">Education</div>${validE.map(e=>`
+            <div style="margin-bottom:9px;"><strong style="font-size:${subSz}px;">${s(e.degree)}</strong>
+            <div style="color:#888;font-size:${sm}px;">${s(e.institution)}${e.location?`, ${s(e.location)}`:''} · ${s(e.endYear||e.startYear)}${e.grade?` · ${s(e.grade)}`:''}</div></div>`).join('')}`:'',
+    skills: validS.length?`<div class="sh" style="font-size:${shSz}px;">Skills</div>${validS.map(sk=>`<span class="tag" style="font-size:${xs}px;">${s(sk.name)}</span>`).join('')}`:'',
+    certs: validC.length?`<div class="sh" style="margin-top:10px;font-size:${shSz}px;">Certifications</div>${validC.map(c=>`<div style="font-size:${sm}px;margin-bottom:3px;">• <strong>${s(c.name)}</strong>${c.year?` (${s(c.year)})`:''}</div>`).join('')}`:'',
+    personal: buildPersonalSection(data,'sh',col,fs,shSz),
+    declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
   return `<div class="t2" style="font-size:${fs}px;">
     <div class="hdr" style="background:${col};display:flex;align-items:flex-start;gap:16px;">
       ${ph?`<img src="${data.photo}" style="width:75px;height:75px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.4);flex-shrink:0;"/>`:''}
       <div>
-        <div class="nm">${s(d.name)||'YOUR NAME'}</div>
-        ${showFather&&d.father?`<div class="fn">S/O: ${s(d.father)}</div>`:''}
-        <div class="ttl">${s(d.title)}</div>
-        <div class="ct">
+        <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
+        ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;opacity:.85;">S/O: ${s(d.father)}</div>`:''}
+        <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
+        <div class="ct" style="font-size:${xs}px;">
           ${d.phone?`<span>📞 ${s(d.phone)}</span>`:''}${d.email?`<span>✉ ${s(d.email)}</span>`:''}
           ${d.location?`<span>📍 ${s(d.location)}</span>`:''}${d.linkedin?`<span>🔗 ${s(d.linkedin)}</span>`:''}
         </div>
@@ -2728,7 +3059,9 @@ function buildT2(data, col, spacing, fs, sectionOrder) {
 }
 
 // ─── TEMPLATE 3: EXECUTIVE ──────────────────────────────
-function buildT3(data, col, spacing, fs, sectionOrder) {
+function buildT3(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz) {
+  nmSz=nmSz||24; ttlSz=ttlSz||14; shSz=shSz||13; subSz=subSz||13;
+  const sm=+(fs*0.88).toFixed(1), xs=+(fs*0.82).toFixed(1);
   const d = data.personal;
   const showFather = data.extras.father !== false;
   const ph = data.photo && data.extras.photo;
@@ -2737,35 +3070,37 @@ function buildT3(data, col, spacing, fs, sectionOrder) {
   const validS=data.skills.filter(sk=>sk.name), validC=data.certs.filter(c=>c.name);
   const secOrder = sectionOrder || ['summary','experience','education','skills','certs','personal','declaration'];
   const sections = {
-    summary: d.summary?`<div class="sh">Profile</div><p style="text-align:center;color:#555;margin:0 0 14px;line-height:1.6;">${s(d.summary)}</p>`:'',
-    experience: validJ.length?`<div class="sh">Professional Experience</div>${validJ.map(j=>`
+    summary: d.summary?`<div class="sh" style="font-size:${shSz}px;">Profile</div><p style="text-align:center;color:#555;margin:0 0 14px;line-height:1.6;font-size:${fs}px;">${s(d.summary)}</p>`:'',
+    experience: validJ.length?`<div class="sh" style="font-size:${shSz}px;">Professional Experience</div>${validJ.map(j=>`
       <div style="margin-bottom:12px;">
-        <div class="jh"><strong style="font-size:11px;">${s(j.title)}</strong><span style="color:#aaa;font-size:9px;">${s(j.start)}${j.start?' – ':''}${j.current?'Present':s(j.end)}</span></div>
-        <div class="jo">${s(j.company)}${j.location?` · ${s(j.location)}`:''}</div>
-        ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:14px;color:#444;font-size:9.5px;">• ${s(r)}</div>`).join('')}
+        <div class="jh"><strong style="font-size:${subSz}px;">${s(j.title)}</strong><span style="color:#aaa;font-size:${xs}px;">${s(j.start)}${j.start?' – ':''}${j.current?'Present':s(j.end)}</span></div>
+        <div style="color:#666;font-size:${sm}px;font-style:italic;">${s(j.company)}${j.location?` · ${s(j.location)}`:''}</div>
+        ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:14px;color:#444;font-size:${fs}px;">• ${s(r)}</div>`).join('')}
       </div>`).join('')}`:'',
-    education: validE.length?`<div class="sh">Education</div>${validE.map(e=>`
-      <div style="text-align:center;margin-bottom:8px;"><strong>${s(e.degree)}</strong>
-      <div style="color:#888;font-size:9px;">${s(e.institution)}${e.location?`, ${s(e.location)}`:''} · ${s(e.endYear||e.startYear)}</div></div>`).join('')}`:'',
-    skills: validS.length?`<div class="sh">Core Skills</div><div style="text-align:center;">${validS.map(sk=>`<span style="display:inline-block;margin:2px 6px;font-size:9.5px;color:#555;">◈ ${s(sk.name)}</span>`).join('')}</div>`:'',
-    certs: validC.length?`<div class="sh">Certifications</div><div style="text-align:center;">${validC.map(c=>`<div style="font-size:9.5px;color:#555;">✦ ${s(c.name)}${c.issuedBy?` — ${s(c.issuedBy)}`:''} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}</div>`:'',
-    personal: buildPersonalSection(data,'sh',col),
-    declaration: buildDeclaration(data,'sh',d.name,col),
+    education: validE.length?`<div class="sh" style="font-size:${shSz}px;">Education</div>${validE.map(e=>`
+      <div style="text-align:center;margin-bottom:8px;"><strong style="font-size:${subSz}px;">${s(e.degree)}</strong>
+      <div style="color:#888;font-size:${sm}px;">${s(e.institution)}${e.location?`, ${s(e.location)}`:''} · ${s(e.endYear||e.startYear)}</div></div>`).join('')}`:'',
+    skills: validS.length?`<div class="sh" style="font-size:${shSz}px;">Core Skills</div><div style="text-align:center;">${validS.map(sk=>`<span style="display:inline-block;margin:2px 6px;font-size:${sm}px;color:#555;">◈ ${s(sk.name)}</span>`).join('')}</div>`:'',
+    certs: validC.length?`<div class="sh" style="font-size:${shSz}px;">Certifications</div><div style="text-align:center;">${validC.map(c=>`<div style="font-size:${sm}px;color:#555;">✦ ${s(c.name)}${c.issuedBy?` — ${s(c.issuedBy)}`:''} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}</div>`:'',
+    personal: buildPersonalSection(data,'sh',col,fs,shSz),
+    declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
   return `<div class="t3" style="padding:${pad};font-size:${fs}px;">
     <div class="hdr">
       ${ph?`<img src="${data.photo}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid ${col};display:block;margin:0 auto 8px;"/>`:''}
-      <div class="nm">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="fn">S/O: ${s(d.father)}</div>`:''}
-      <div class="ttl">${s(d.title)}</div>
-      <div class="cb">${d.phone?`<span style="margin:0 6px;">📞 ${s(d.phone)}</span>`:''}${d.email?`<span style="margin:0 6px;">✉ ${s(d.email)}</span>`:''}${d.location?`<span style="margin:0 6px;">📍 ${s(d.location)}</span>`:''}</div>
+      <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
+      ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#7f8c8d;">S/O: ${s(d.father)}</div>`:''}
+      <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
+      <div class="cb" style="font-size:${xs}px;">${d.phone?`<span style="margin:0 6px;">📞 ${s(d.phone)}</span>`:''}${d.email?`<span style="margin:0 6px;">✉ ${s(d.email)}</span>`:''}${d.location?`<span style="margin:0 6px;">📍 ${s(d.location)}</span>`:''}</div>
     </div>
     ${secOrder.map(id=>sections[id]||'').join('')}
   </div>`;
 }
 
 // ─── TEMPLATE 4: MINIMAL ────────────────────────────────
-function buildT4(data, col, spacing, fs, sectionOrder) {
+function buildT4(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz) {
+  nmSz=nmSz||24; ttlSz=ttlSz||14; shSz=shSz||13; subSz=subSz||13;
+  const sm=+(fs*0.88).toFixed(1), xs=+(fs*0.82).toFixed(1);
   const d = data.personal;
   const showFather = data.extras.father !== false;
   const ph = data.photo && data.extras.photo;
@@ -2774,35 +3109,37 @@ function buildT4(data, col, spacing, fs, sectionOrder) {
   const validS=data.skills.filter(sk=>sk.name), validC=data.certs.filter(c=>c.name);
   const secOrder = sectionOrder || ['summary','experience','education','skills','certs','personal','declaration'];
   const sections = {
-    summary: d.summary?`<div class="sh">Summary</div><p style="margin:0 0 16px;color:#444;">${s(d.summary)}</p>`:'',
-    experience: validJ.length?`<div class="sh">Experience</div>${validJ.map(j=>`
+    summary: d.summary?`<div class="sh" style="font-size:${shSz}px;">Summary</div><p style="margin:0 0 16px;color:#444;font-size:${fs}px;">${s(d.summary)}</p>`:'',
+    experience: validJ.length?`<div class="sh" style="font-size:${shSz}px;">Experience</div>${validJ.map(j=>`
       <div style="margin-bottom:14px;">
-        <div style="display:flex;justify-content:space-between;"><strong>${s(j.title)}</strong><span style="color:#aaa;font-size:9.5px;">${s(j.start)}${j.start?' – ':''}${j.current?'Present':s(j.end)}</span></div>
-        <div class="jo">${s(j.company)}${j.location?` · ${s(j.location)}`:''}</div>
-        ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:12px;color:#555;font-size:9.5px;">– ${s(r)}</div>`).join('')}
+        <div style="display:flex;justify-content:space-between;"><strong style="font-size:${subSz}px;">${s(j.title)}</strong><span style="color:#aaa;font-size:${xs}px;">${s(j.start)}${j.start?' – ':''}${j.current?'Present':s(j.end)}</span></div>
+        <div style="color:#888;font-size:${sm}px;">${s(j.company)}${j.location?` · ${s(j.location)}`:''}</div>
+        ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:12px;color:#555;font-size:${fs}px;">– ${s(r)}</div>`).join('')}
       </div>`).join('')}`:'',
-    education: validE.length?`<div class="sh">Education</div>${validE.map(e=>`
-          <div style="margin-bottom:10px;"><strong>${s(e.degree)}</strong>
-          <div style="color:#888;font-size:9.5px;">${s(e.institution)} · ${s(e.endYear||e.startYear)}</div></div>`).join('')}`:'',
-    skills: validS.length?`<div class="sh">Skills</div>${validS.map(sk=>`<div style="color:#555;font-size:9.5px;">· ${s(sk.name)}</div>`).join('')}`:'',
-    certs: validC.length?`<div class="sh" style="margin-top:10px;">Certs</div>${validC.map(c=>`<div style="font-size:9px;color:#555;">· ${s(c.name)} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:'',
-    personal: buildPersonalSection(data,'sh',col),
-    declaration: buildDeclaration(data,'sh',d.name,col),
+    education: validE.length?`<div class="sh" style="font-size:${shSz}px;">Education</div>${validE.map(e=>`
+          <div style="margin-bottom:10px;"><strong style="font-size:${subSz}px;">${s(e.degree)}</strong>
+          <div style="color:#888;font-size:${sm}px;">${s(e.institution)} · ${s(e.endYear||e.startYear)}</div></div>`).join('')}`:'',
+    skills: validS.length?`<div class="sh" style="font-size:${shSz}px;">Skills</div>${validS.map(sk=>`<div style="color:#555;font-size:${sm}px;">· ${s(sk.name)}</div>`).join('')}`:'',
+    certs: validC.length?`<div class="sh" style="margin-top:10px;font-size:${shSz}px;">Certs</div>${validC.map(c=>`<div style="font-size:${sm}px;color:#555;">· ${s(c.name)} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:'',
+    personal: buildPersonalSection(data,'sh',col,fs,shSz),
+    declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
   return `<div class="t4" style="padding:${pad};font-size:${fs}px;">
     <div style="border-bottom:3px solid ${col};padding-bottom:14px;margin-bottom:18px;">
       ${ph?`<img src="${data.photo}" style="width:68px;height:68px;border-radius:8px;object-fit:cover;float:right;margin:0 0 6px 14px;"/>`:''}
-      <div class="nm">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="fn">S/O: ${s(d.father)}</div>`:''}
-      <div class="ttl">${s(d.title)}</div>
-      <div class="ct">${d.phone?`<span>📞 ${s(d.phone)}</span>`:''}${d.email?`<span>✉ ${s(d.email)}</span>`:''}${d.location?`<span>📍 ${s(d.location)}</span>`:''}${d.linkedin?`<span>🔗 ${s(d.linkedin)}</span>`:''}</div>
+      <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
+      ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#888;">S/O: ${s(d.father)}</div>`:''}
+      <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
+      <div class="ct" style="font-size:${xs}px;">${d.phone?`<span>📞 ${s(d.phone)}</span>`:''}${d.email?`<span>✉ ${s(d.email)}</span>`:''}${d.location?`<span>📍 ${s(d.location)}</span>`:''}${d.linkedin?`<span>🔗 ${s(d.linkedin)}</span>`:''}</div>
     </div>
     ${secOrder.map(id=>sections[id]||'').join('')}
   </div>`;
 }
 
 // ─── TEMPLATE 5: SKILLED WORKER ─────────────────────────
-function buildT5(data, col, spacing, fs, sectionOrder) {
+function buildT5(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz) {
+  nmSz=nmSz||24; ttlSz=ttlSz||14; shSz=shSz||13; subSz=subSz||13;
+  const sm=+(fs*0.88).toFixed(1), xs=+(fs*0.82).toFixed(1);
   const d = data.personal;
   const showFather = data.extras.father !== false;
   const ph = data.photo && data.extras.photo;
@@ -2811,29 +3148,29 @@ function buildT5(data, col, spacing, fs, sectionOrder) {
   const padBody = spacing==='compact'?'12px 20px':'14px 24px';
   const secOrder = sectionOrder || ['skills','summary','experience','education','certs','personal','declaration'];
   const sections = {
-    skills: validS.length?`<div class="sbox" style="background:rgba(0,0,0,.04);border:1.5px solid ${col};"><div style="font-weight:800;font-size:10px;text-transform:uppercase;margin-bottom:7px;color:${col};">Key Skills</div><div>${validS.map(sk=>`<span class="tag" style="background:${col};">${s(sk.name)}</span>`).join('')}</div></div>`:'',
-    summary: d.summary?`<div class="sh" style="color:${col};border-bottom-color:${col};">About Me</div><p style="margin:0 0 10px;color:#333;line-height:1.5;">${s(d.summary)}</p>`:'',
-    experience: validJ.length?`<div class="sh" style="color:${col};border-bottom-color:${col};">Work Experience</div>${validJ.map(j=>`
+    skills: validS.length?`<div class="sbox" style="background:rgba(0,0,0,.04);border:1.5px solid ${col};padding:9px 12px;border-radius:6px;margin-bottom:12px;"><div style="font-weight:800;font-size:${shSz}px;text-transform:uppercase;margin-bottom:7px;color:${col};">Key Skills</div><div>${validS.map(sk=>`<span class="tag" style="background:${col};font-size:${xs}px;">${s(sk.name)}</span>`).join('')}</div></div>`:'',
+    summary: d.summary?`<div class="sh" style="color:${col};border-bottom-color:${col};font-size:${shSz}px;">About Me</div><p style="margin:0 0 10px;color:#333;line-height:1.5;font-size:${fs}px;">${s(d.summary)}</p>`:'',
+    experience: validJ.length?`<div class="sh" style="color:${col};border-bottom-color:${col};font-size:${shSz}px;">Work Experience</div>${validJ.map(j=>`
         <div class="job" style="border-left-color:${col};">
-          <div class="jrow"><strong style="font-size:10.5px;">${s(j.title)}</strong><span style="color:#888;font-size:9px;">${s(j.start)}${j.start?' — ':''}${j.current?'Present':s(j.end)}</span></div>
-          <div style="font-weight:700;font-size:9.5px;color:${col};">${s(j.company)}${j.location?` · ${s(j.location)}`:''}</div>
-          ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:10px;font-size:9.5px;color:#444;">• ${s(r)}</div>`).join('')}
+          <div class="jrow"><strong style="font-size:${subSz}px;">${s(j.title)}</strong><span style="color:#888;font-size:${xs}px;">${s(j.start)}${j.start?' — ':''}${j.current?'Present':s(j.end)}</span></div>
+          <div style="font-weight:700;font-size:${sm}px;color:${col};">${s(j.company)}${j.location?` · ${s(j.location)}`:''}</div>
+          ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:10px;color:#444;font-size:${fs}px;">• ${s(r)}</div>`).join('')}
         </div>`).join('')}`:'',
-    education: validE.length?`<div class="sh" style="color:${col};border-bottom-color:${col};">Education</div>${validE.map(e=>`
-        <div style="margin-bottom:6px;"><strong>${s(e.degree)}</strong>
-        <div style="color:#666;font-size:9.5px;">${s(e.institution)}${e.location?`, ${s(e.location)}`:''} ${e.endYear?`· ${s(e.endYear)}`:''}${e.grade?` · ${s(e.grade)}`:''}</div></div>`).join('')}`:'',
-    certs: validC.length?`<div class="sh" style="color:${col};border-bottom-color:${col};">Certifications</div>${validC.map(c=>`<div style="font-size:9.5px;">▸ <strong>${s(c.name)}</strong>${c.issuedBy?` — ${s(c.issuedBy)}`:''} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:'',
-    personal: buildPersonalSection(data,'sh',col),
-    declaration: buildDeclaration(data,'sh',d.name,col),
+    education: validE.length?`<div class="sh" style="color:${col};border-bottom-color:${col};font-size:${shSz}px;">Education</div>${validE.map(e=>`
+        <div style="margin-bottom:6px;"><strong style="font-size:${subSz}px;">${s(e.degree)}</strong>
+        <div style="color:#666;font-size:${sm}px;">${s(e.institution)}${e.location?`, ${s(e.location)}`:''} ${e.endYear?`· ${s(e.endYear)}`:''}${e.grade?` · ${s(e.grade)}`:''}</div></div>`).join('')}`:'',
+    certs: validC.length?`<div class="sh" style="color:${col};border-bottom-color:${col};font-size:${shSz}px;">Certifications</div>${validC.map(c=>`<div style="font-size:${sm}px;">▸ <strong>${s(c.name)}</strong>${c.issuedBy?` — ${s(c.issuedBy)}`:''} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:'',
+    personal: buildPersonalSection(data,'sh',col,fs,shSz),
+    declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
   return `<div class="t5" style="font-size:${fs}px;">
     <div class="hdr" style="background:${col};display:flex;align-items:center;gap:14px;">
       ${ph?`<img src="${data.photo}" style="width:65px;height:65px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.4);flex-shrink:0;"/>`:''}
       <div>
-        <div class="nm">${s(d.name)||'YOUR NAME'}</div>
-        ${showFather&&d.father?`<div class="fn">S/O: ${s(d.father)}</div>`:''}
-        <div class="ttl">${s(d.title)}</div>
-        <div class="ct">
+        <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
+        ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;opacity:.85;">S/O: ${s(d.father)}</div>`:''}
+        <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
+        <div class="ct" style="font-size:${xs}px;">
           ${d.phone?`<span>☎ ${s(d.phone)}</span>`:''}${d.email?`<span>✉ ${s(d.email)}</span>`:''}
           ${d.location?`<span>⌂ ${s(d.location)}</span>`:''}
         </div>
@@ -2846,7 +3183,9 @@ function buildT5(data, col, spacing, fs, sectionOrder) {
 }
 
 // ─── TEMPLATE 6: TWO-COLUMN SIDEBAR ─────────────────────
-function buildT6(data, col, spacing, fs, sectionOrder) {
+function buildT6(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz) {
+  nmSz=nmSz||24; ttlSz=ttlSz||14; shSz=shSz||13; subSz=subSz||13;
+  const sm=+(fs*0.88).toFixed(1), xs=+(fs*0.82).toFixed(1);
   const d = data.personal;
   const showFather = data.extras.father !== false;
   const ph = data.photo && data.extras.photo;
@@ -2854,39 +3193,39 @@ function buildT6(data, col, spacing, fs, sectionOrder) {
   const validS=data.skills.filter(sk=>sk.name), validC=data.certs.filter(c=>c.name);
   const secOrder = sectionOrder || ['summary','experience','education','personal','declaration'];
   const mainSections = {
-    summary: d.summary?`<div class="msh" style="color:${col};border-bottom-color:${col};">Summary</div><p style="color:#444;font-size:9.5px;line-height:1.6;margin-bottom:12px;">${s(d.summary)}</p>`:'',
-    experience: validJ.length?`<div class="msh" style="color:${col};border-bottom-color:${col};">Experience</div>${validJ.map(j=>`
+    summary: d.summary?`<div class="msh" style="color:${col};border-bottom-color:${col};font-size:${shSz}px;">Summary</div><p style="color:#444;line-height:1.6;margin-bottom:12px;font-size:${fs}px;">${s(d.summary)}</p>`:'',
+    experience: validJ.length?`<div class="msh" style="color:${col};border-bottom-color:${col};font-size:${shSz}px;">Experience</div>${validJ.map(j=>`
         <div class="job">
-          <div class="jrow"><span class="jt">${s(j.title)}</span><span class="jd">${s(j.start)}${j.start?' – ':''}${j.current?'Present':s(j.end)}</span></div>
-          <div class="jc">${s(j.company)}${j.location?` · ${s(j.location)}`:''}</div>
-          ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:10px;font-size:9.5px;color:#444;margin-top:2px;">• ${s(r)}</div>`).join('')}
+          <div class="jrow"><span style="font-weight:700;font-size:${subSz}px;">${s(j.title)}</span><span style="color:#888;font-size:${xs}px;">${s(j.start)}${j.start?' – ':''}${j.current?'Present':s(j.end)}</span></div>
+          <div style="color:${col};font-size:${sm}px;font-weight:600;">${s(j.company)}${j.location?` · ${s(j.location)}`:''}</div>
+          ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:10px;color:#444;margin-top:2px;font-size:${fs}px;">• ${s(r)}</div>`).join('')}
         </div>`).join('')}`:'',
-    education: validE.length?`<div class="msh" style="color:${col};border-bottom-color:${col};">Education</div>${validE.map(e=>`
-        <div style="margin-bottom:10px;"><strong style="font-size:10.5px;">${s(e.degree)}</strong>
-        <div class="jc">${s(e.institution)}${e.location?`, ${s(e.location)}`:''}</div>
-        <div class="jd">${s(e.endYear||e.startYear)}${e.grade?` · ${s(e.grade)}`:''}</div></div>`).join('')}`:'',
+    education: validE.length?`<div class="msh" style="color:${col};border-bottom-color:${col};font-size:${shSz}px;">Education</div>${validE.map(e=>`
+        <div style="margin-bottom:10px;"><strong style="font-size:${subSz}px;">${s(e.degree)}</strong>
+        <div style="color:${col};font-size:${sm}px;font-weight:600;">${s(e.institution)}${e.location?`, ${s(e.location)}`:''}</div>
+        <div style="color:#888;font-size:${xs}px;">${s(e.endYear||e.startYear)}${e.grade?` · ${s(e.grade)}`:''}</div></div>`).join('')}`:'',
     personal: '',
-    declaration: buildDeclaration(data,'msh',d.name,col),
+    declaration: buildDeclaration(data,'msh',d.name,col,fs,shSz),
   };
   return `<div class="t6" style="font-size:${fs}px;">
     <div class="sidebar" style="background:${col};">
       ${ph?`<img src="${data.photo}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.3);display:block;margin:0 auto 12px;"/>`:''}
-      <div class="snm">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="sfn">S/O: ${s(d.father)}</div>`:''}
-      <div class="sttl">${s(d.title)}</div>
-      <div class="ssh">Contact</div>
-      ${d.phone?`<div class="sct">📞 ${s(d.phone)}</div>`:''}
-      ${d.email?`<div class="sct">✉ ${s(d.email)}</div>`:''}
-      ${d.location?`<div class="sct">📍 ${s(d.location)}</div>`:''}
-      ${d.linkedin?`<div class="sct">🔗 ${s(d.linkedin)}</div>`:''}
-      ${validS.length?`<div class="ssh">Skills</div>${validS.map(sk=>`<span class="stag">${s(sk.name)}</span>`).join('')}`:''}
-      ${validC.length?`<div class="ssh">Certifications</div>${validC.map(c=>`<div style="font-size:8.5px;opacity:.9;margin-bottom:4px;">▸ ${s(c.name)} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:''}
-      ${data.extras.personal && d.dob ?`<div class="ssh">Personal</div>
-        ${d.dob?`<div class="sct">DOB: ${s(d.dob)}</div>`:''}
-        ${d.nation?`<div class="sct">Nationality: ${s(d.nation)}</div>`:''}
-        ${d.marital?`<div class="sct">Marital: ${s(d.marital)}</div>`:''}
-        ${d.lang?`<div class="sct">Languages: ${s(d.lang)}</div>`:''}
-        ${d.passport?`<div class="sct">Passport: ${s(d.passport)}</div>`:''}`:''
+      <div class="snm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
+      ${showFather&&d.father?`<div class="sfn" style="font-size:${sm}px;opacity:.8;">S/O: ${s(d.father)}</div>`:''}
+      <div class="sttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
+      <div class="ssh" style="font-size:${shSz}px;">Contact</div>
+      ${d.phone?`<div class="sct" style="font-size:${xs}px;">📞 ${s(d.phone)}</div>`:''}
+      ${d.email?`<div class="sct" style="font-size:${xs}px;">✉ ${s(d.email)}</div>`:''}
+      ${d.location?`<div class="sct" style="font-size:${xs}px;">📍 ${s(d.location)}</div>`:''}
+      ${d.linkedin?`<div class="sct" style="font-size:${xs}px;">🔗 ${s(d.linkedin)}</div>`:''}
+      ${validS.length?`<div class="ssh" style="font-size:${shSz}px;">Skills</div>${validS.map(sk=>`<span class="stag" style="font-size:${xs}px;">${s(sk.name)}</span>`).join('')}`:''}
+      ${validC.length?`<div class="ssh" style="font-size:${shSz}px;">Certifications</div>${validC.map(c=>`<div style="font-size:${xs}px;opacity:.9;margin-bottom:4px;">▸ ${s(c.name)} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:''}
+      ${data.extras.personal && d.dob?`<div class="ssh" style="font-size:${shSz}px;">Personal</div>
+        ${d.dob?`<div class="sct" style="font-size:${xs}px;">DOB: ${s(d.dob)}</div>`:''}
+        ${d.nation?`<div class="sct" style="font-size:${xs}px;">Nationality: ${s(d.nation)}</div>`:''}
+        ${d.marital?`<div class="sct" style="font-size:${xs}px;">Marital: ${s(d.marital)}</div>`:''}
+        ${d.lang?`<div class="sct" style="font-size:${xs}px;">Languages: ${s(d.lang)}</div>`:''}
+        ${d.passport?`<div class="sct" style="font-size:${xs}px;">Passport: ${s(d.passport)}</div>`:''}`:''
       }
     </div>
     <div class="maincol">
@@ -2896,7 +3235,9 @@ function buildT6(data, col, spacing, fs, sectionOrder) {
 }
 
 // ─── TEMPLATE 7: GOVERNMENT FORMAL ──────────────────────
-function buildT7(data, col, spacing, fs, sectionOrder) {
+function buildT7(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz) {
+  nmSz=nmSz||24; ttlSz=ttlSz||14; shSz=shSz||13; subSz=subSz||13;
+  const sm=+(fs*0.88).toFixed(1), xs=+(fs*0.82).toFixed(1);
   const d = data.personal;
   const showFather = data.extras.father !== false;
   const ph = data.photo && data.extras.photo;
@@ -2905,21 +3246,21 @@ function buildT7(data, col, spacing, fs, sectionOrder) {
   const validS=data.skills.filter(sk=>sk.name), validC=data.certs.filter(c=>c.name);
   const secOrder = sectionOrder || ['summary','experience','education','skills','certs','personal','declaration'];
   const sections = {
-    summary: d.summary?`<div class="sh">Objective / Profile</div><p style="margin:0 0 10px;color:#222;text-align:justify;line-height:1.7;">${s(d.summary)}</p>`:'',
-    experience: validJ.length?`<div class="sh">Work Experience</div>
-      <table style="width:100%;border-collapse:collapse;font-size:9.5px;">
+    summary: d.summary?`<div class="sh" style="font-size:${shSz}px;">Objective / Profile</div><p style="margin:0 0 10px;color:#222;text-align:justify;line-height:1.7;font-size:${fs}px;">${s(d.summary)}</p>`:'',
+    experience: validJ.length?`<div class="sh" style="font-size:${shSz}px;">Work Experience</div>
+      <table style="width:100%;border-collapse:collapse;font-size:${sm}px;">
         <tr style="background:#e8e8e8;"><th style="padding:4px 8px;text-align:left;border:1px solid #ccc;">Position</th><th style="padding:4px 8px;text-align:left;border:1px solid #ccc;">Organisation</th><th style="padding:4px 8px;border:1px solid #ccc;">Period</th></tr>
-        ${validJ.map(j=>`<tr><td style="padding:4px 8px;border:1px solid #ddd;vertical-align:top;">${s(j.title)}<br/>${j.responsibilities.filter(Boolean).map(r=>`<span style="font-size:9px;color:#555;">• ${s(r)}</span>`).join('<br/>')}</td><td style="padding:4px 8px;border:1px solid #ddd;">${s(j.company)}${j.location?`<br/>${s(j.location)}`:''}</td><td style="padding:4px 8px;border:1px solid #ddd;white-space:nowrap;">${s(j.start)} – ${j.current?'Present':s(j.end)}</td></tr>`).join('')}
+        ${validJ.map(j=>`<tr><td style="padding:4px 8px;border:1px solid #ddd;vertical-align:top;"><strong style="font-size:${subSz}px;">${s(j.title)}</strong><br/>${j.responsibilities.filter(Boolean).map(r=>`<span style="font-size:${xs}px;color:#555;">• ${s(r)}</span>`).join('<br/>')}</td><td style="padding:4px 8px;border:1px solid #ddd;">${s(j.company)}${j.location?`<br/>${s(j.location)}`:''}</td><td style="padding:4px 8px;border:1px solid #ddd;white-space:nowrap;font-size:${xs}px;">${s(j.start)} – ${j.current?'Present':s(j.end)}</td></tr>`).join('')}
       </table>`:'',
-    education: validE.length?`<div class="sh">Educational Qualification</div>
-      <table style="width:100%;border-collapse:collapse;font-size:9.5px;">
+    education: validE.length?`<div class="sh" style="font-size:${shSz}px;">Educational Qualification</div>
+      <table style="width:100%;border-collapse:collapse;font-size:${sm}px;">
         <tr style="background:#e8e8e8;"><th style="padding:4px 8px;text-align:left;border:1px solid #ccc;">Examination</th><th style="padding:4px 8px;text-align:left;border:1px solid #ccc;">Institution</th><th style="padding:4px 8px;border:1px solid #ccc;">Year</th><th style="padding:4px 8px;border:1px solid #ccc;">Grade</th></tr>
         ${validE.map(e=>`<tr><td style="padding:4px 8px;border:1px solid #ddd;">${s(e.degree)}</td><td style="padding:4px 8px;border:1px solid #ddd;">${s(e.institution)}${e.location?`, ${s(e.location)}`:''}</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center;">${s(e.endYear||e.startYear)}</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center;">${s(e.grade)}</td></tr>`).join('')}
       </table>`:'',
-    skills: validS.length?`<div class="sh">Skills</div><p style="font-size:9.5px;margin:0 0 10px;">${validS.map(sk=>s(sk.name)).join(' | ')}</p>`:'',
-    certs: validC.length?`<div class="sh">Certifications / Training</div>${validC.map(c=>`<div style="font-size:9.5px;margin-bottom:3px;">✓ <strong>${s(c.name)}</strong>${c.issuedBy?` — ${s(c.issuedBy)}`:''} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:'',
-    personal: data.extras.personal?`<div class="sh">Personal Details</div>
-      <table style="font-size:9.5px;">
+    skills: validS.length?`<div class="sh" style="font-size:${shSz}px;">Skills</div><p style="font-size:${sm}px;margin:0 0 10px;">${validS.map(sk=>s(sk.name)).join(' | ')}</p>`:'',
+    certs: validC.length?`<div class="sh" style="font-size:${shSz}px;">Certifications / Training</div>${validC.map(c=>`<div style="font-size:${sm}px;margin-bottom:3px;">✓ <strong>${s(c.name)}</strong>${c.issuedBy?` — ${s(c.issuedBy)}`:''} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:'',
+    personal: data.extras.personal?`<div class="sh" style="font-size:${shSz}px;">Personal Details</div>
+      <table style="font-size:${sm}px;">
         ${d.dob?`<tr><td style="padding:2px 16px 2px 0;font-weight:700;">Date of Birth</td><td>: ${s(d.dob)}</td></tr>`:''}
         ${d.nation?`<tr><td style="padding:2px 16px 2px 0;font-weight:700;">Nationality</td><td>: ${s(d.nation)}</td></tr>`:''}
         ${d.marital?`<tr><td style="padding:2px 16px 2px 0;font-weight:700;">Marital Status</td><td>: ${s(d.marital)}</td></tr>`:''}
@@ -2927,22 +3268,24 @@ function buildT7(data, col, spacing, fs, sectionOrder) {
         ${d.lang?`<tr><td style="padding:2px 16px 2px 0;font-weight:700;">Languages</td><td>: ${s(d.lang)}</td></tr>`:''}
         ${d.passport?`<tr><td style="padding:2px 16px 2px 0;font-weight:700;">Passport No.</td><td>: ${s(d.passport)}${d.passport_exp?` (Expiry: ${s(d.passport_exp)})`:''}</td></tr>`:''}
       </table>`:'',
-    declaration: buildDeclaration(data,'sh',d.name,col),
+    declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
   return `<div class="t7" style="padding:${pad};font-size:${fs}px;">
     <div class="hdr">
       ${ph?`<img src="${data.photo}" style="width:75px;height:75px;object-fit:cover;border:1px solid #333;float:right;margin:-4px 0 4px 12px;"/>`:''}
-      <div class="nm">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="fn">S/O: ${s(d.father)}</div>`:''}
-      <div class="ttl">${s(d.title)}</div>
-      <div class="ct">${d.phone?`<span>📞 ${s(d.phone)}</span>`:''}${d.email?`<span>✉ ${s(d.email)}</span>`:''}${d.location?`<span>📍 ${s(d.location)}</span>`:''}</div>
+      <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
+      ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#333;">S/O: ${s(d.father)}</div>`:''}
+      <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
+      <div class="ct" style="font-size:${xs}px;">${d.phone?`<span>📞 ${s(d.phone)}</span>`:''}${d.email?`<span>✉ ${s(d.email)}</span>`:''}${d.location?`<span>📍 ${s(d.location)}</span>`:''}</div>
     </div>
     ${secOrder.map(id=>sections[id]||'').join('')}
   </div>`;
 }
 
 // ─── TEMPLATE 8: CREATIVE ───────────────────────────────
-function buildT8(data, col, spacing, fs, sectionOrder) {
+function buildT8(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz) {
+  nmSz=nmSz||24; ttlSz=ttlSz||14; shSz=shSz||13; subSz=subSz||13;
+  const sm=+(fs*0.88).toFixed(1), xs=+(fs*0.82).toFixed(1);
   const d = data.personal;
   const showFather = data.extras.father !== false;
   const ph = data.photo && data.extras.photo;
@@ -2951,31 +3294,31 @@ function buildT8(data, col, spacing, fs, sectionOrder) {
   const validS=data.skills.filter(sk=>sk.name), validC=data.certs.filter(c=>c.name);
   const secOrder = sectionOrder || ['summary','experience','education','skills','certs','personal','declaration'];
   const sections = {
-    summary: d.summary?`<div class="sh">About Me</div><p style="margin:0 0 14px;color:#444;line-height:1.6;">${s(d.summary)}</p>`:'',
-    experience: validJ.length?`<div class="sh">Experience</div>${validJ.map(j=>`
+    summary: d.summary?`<div class="sh" style="font-size:${shSz}px;">About Me</div><p style="margin:0 0 14px;color:#444;line-height:1.6;font-size:${fs}px;">${s(d.summary)}</p>`:'',
+    experience: validJ.length?`<div class="sh" style="font-size:${shSz}px;">Experience</div>${validJ.map(j=>`
       <div class="job">
-        <div style="display:flex;justify-content:space-between;"><span class="jt">${s(j.title)}</span><span class="jd">${s(j.start)}${j.start?' – ':''}${j.current?'Present':s(j.end)}</span></div>
-        <div class="jc">${s(j.company)}${j.location?` · ${s(j.location)}`:''}</div>
-        ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:10px;font-size:9.5px;color:#444;margin-top:2px;">• ${s(r)}</div>`).join('')}
+        <div style="display:flex;justify-content:space-between;"><span style="font-weight:700;font-size:${subSz}px;">${s(j.title)}</span><span style="color:#888;font-size:${xs}px;">${s(j.start)}${j.start?' – ':''}${j.current?'Present':s(j.end)}</span></div>
+        <div style="color:${col};font-size:${sm}px;font-weight:600;">${s(j.company)}${j.location?` · ${s(j.location)}`:''}</div>
+        ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:10px;color:#444;margin-top:2px;font-size:${fs}px;">• ${s(r)}</div>`).join('')}
       </div>`).join('')}`:'',
-    education: validE.length?`<div class="sh">Education</div>${validE.map(e=>`
-          <div style="margin-bottom:10px;"><strong>${s(e.degree)}</strong>
-          <div class="jc">${s(e.institution)}${e.location?`, ${s(e.location)}`:''}</div>
-          <div class="jd">${s(e.endYear||e.startYear)}${e.grade?` · ${s(e.grade)}`:''}</div></div>`).join('')}`:'',
-    skills: validS.length?`<div class="sh">Skills</div><div>${validS.map(sk=>`<span class="chip">${s(sk.name)}</span>`).join('')}</div>`:'',
-    certs: validC.length?`<div class="sh" style="margin-top:10px;">Certs</div>${validC.map(c=>`<div style="font-size:9px;color:#555;margin-bottom:3px;">• ${s(c.name)} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:'',
-    personal: buildPersonalSection(data,'sh',col),
-    declaration: buildDeclaration(data,'sh',d.name,col),
+    education: validE.length?`<div class="sh" style="font-size:${shSz}px;">Education</div>${validE.map(e=>`
+          <div style="margin-bottom:10px;"><strong style="font-size:${subSz}px;">${s(e.degree)}</strong>
+          <div style="color:${col};font-size:${sm}px;font-weight:600;">${s(e.institution)}${e.location?`, ${s(e.location)}`:''}</div>
+          <div style="color:#888;font-size:${xs}px;">${s(e.endYear||e.startYear)}${e.grade?` · ${s(e.grade)}`:''}</div></div>`).join('')}`:'',
+    skills: validS.length?`<div class="sh" style="font-size:${shSz}px;">Skills</div><div>${validS.map(sk=>`<span class="chip" style="font-size:${xs}px;">${s(sk.name)}</span>`).join('')}</div>`:'',
+    certs: validC.length?`<div class="sh" style="margin-top:10px;font-size:${shSz}px;">Certs</div>${validC.map(c=>`<div style="font-size:${sm}px;color:#555;margin-bottom:3px;">• ${s(c.name)} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:'',
+    personal: buildPersonalSection(data,'sh',col,fs,shSz),
+    declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
   return `<div class="t8" style="padding:${pad};font-size:${fs}px;">
     <div class="hdr" style="background:linear-gradient(135deg,${col},${col}cc);margin:-${pad.split(' ')[0]} -${pad.split(' ')[1]||pad.split(' ')[0]} 18px;padding:${pad.split(' ')[0]} ${pad.split(' ')[1]||pad.split(' ')[0]};">
       <div style="display:flex;align-items:center;gap:16px;">
         ${ph?`<img src="${data.photo}" style="width:75px;height:75px;border-radius:12px;object-fit:cover;border:3px solid rgba(255,255,255,.3);flex-shrink:0;"/>`:''}
         <div>
-          <div class="nm">${s(d.name)||'YOUR NAME'}</div>
-          ${showFather&&d.father?`<div class="fn">S/O: ${s(d.father)}</div>`:''}
-          <div class="ttl">${s(d.title)}</div>
-          <div class="ct">
+          <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
+          ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;opacity:.85;">S/O: ${s(d.father)}</div>`:''}
+          <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
+          <div class="ct" style="font-size:${xs}px;">
             ${d.phone?`<span>📞 ${s(d.phone)}</span>`:''}${d.email?`<span>✉ ${s(d.email)}</span>`:''}
             ${d.location?`<span>📍 ${s(d.location)}</span>`:''}${d.linkedin?`<span>🔗 ${s(d.linkedin)}</span>`:''}
           </div>
@@ -2987,7 +3330,9 @@ function buildT8(data, col, spacing, fs, sectionOrder) {
 }
 
 // ─── TEMPLATE 9: ATS CLEAN ──────────────────────────────
-function buildT9(data, col, spacing, fs, sectionOrder) {
+function buildT9(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz) {
+  nmSz=nmSz||24; ttlSz=ttlSz||14; shSz=shSz||13; subSz=subSz||13;
+  const sm=+(fs*0.88).toFixed(1), xs=+(fs*0.82).toFixed(1);
   const d = data.personal;
   const showFather = data.extras.father !== false;
   const pad = spacing==='spacious'?'36px 42px':spacing==='compact'?'26px 32px':'32px 38px';
@@ -2995,34 +3340,36 @@ function buildT9(data, col, spacing, fs, sectionOrder) {
   const validS=data.skills.filter(sk=>sk.name), validC=data.certs.filter(c=>c.name);
   const secOrder = sectionOrder || ['summary','experience','education','skills','certs','personal','declaration'];
   const sections = {
-    summary: d.summary?`<div class="sh">PROFESSIONAL SUMMARY</div><p style="margin:0 0 12px;color:#333;">${s(d.summary)}</p>`:'',
-    experience: validJ.length?`<div class="sh">WORK EXPERIENCE</div>${validJ.map(j=>`
+    summary: d.summary?`<div class="sh" style="font-size:${shSz}px;">PROFESSIONAL SUMMARY</div><p style="margin:0 0 12px;color:#333;font-size:${fs}px;">${s(d.summary)}</p>`:'',
+    experience: validJ.length?`<div class="sh" style="font-size:${shSz}px;">WORK EXPERIENCE</div>${validJ.map(j=>`
       <div style="margin-bottom:12px;">
-        <div style="display:flex;justify-content:space-between;"><strong>${s(j.title)}</strong><span class="jp">${s(j.start)}${j.start?' to ':''}${j.current?'Present':s(j.end)}</span></div>
-        <div class="jo">${s(j.company)}${j.location?`, ${s(j.location)}`:''}</div>
-        ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:14px;color:#333;font-size:9.5px;">- ${s(r)}</div>`).join('')}
+        <div style="display:flex;justify-content:space-between;"><strong style="font-size:${subSz}px;">${s(j.title)}</strong><span style="color:#666;font-size:${xs}px;">${s(j.start)}${j.start?' to ':''}${j.current?'Present':s(j.end)}</span></div>
+        <div style="color:#444;font-size:${sm}px;">${s(j.company)}${j.location?`, ${s(j.location)}`:''}</div>
+        ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:14px;color:#333;font-size:${fs}px;">- ${s(r)}</div>`).join('')}
       </div>`).join('')}`:'',
-    education: validE.length?`<div class="sh">EDUCATION</div>${validE.map(e=>`
+    education: validE.length?`<div class="sh" style="font-size:${shSz}px;">EDUCATION</div>${validE.map(e=>`
       <div style="display:flex;justify-content:space-between;margin-bottom:7px;">
-        <div><strong>${s(e.degree)}</strong><div class="jo">${s(e.institution)}${e.location?`, ${s(e.location)}`:''}</div></div>
-        <div style="color:#666;font-size:9px;">${s(e.endYear||e.startYear)}${e.grade?` | ${s(e.grade)}`:''}</div>
+        <div><strong style="font-size:${subSz}px;">${s(e.degree)}</strong><div style="color:#444;font-size:${sm}px;">${s(e.institution)}${e.location?`, ${s(e.location)}`:''}  </div></div>
+        <div style="color:#666;font-size:${xs}px;">${s(e.endYear||e.startYear)}${e.grade?` | ${s(e.grade)}`:''}</div>
       </div>`).join('')}`:'',
-    skills: validS.length?`<div class="sh">SKILLS</div><p style="margin:0 0 10px;font-size:9.5px;">${validS.map(sk=>s(sk.name)).join(' | ')}</p>`:'',
-    certs: validC.length?`<div class="sh">CERTIFICATIONS</div>${validC.map(c=>`<div style="font-size:9.5px;margin-bottom:3px;">- ${s(c.name)}${c.issuedBy?`, ${s(c.issuedBy)}`:''} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:'',
-    personal: buildPersonalSection(data,'sh',null),
-    declaration: buildDeclaration(data,'sh',d.name,null),
+    skills: validS.length?`<div class="sh" style="font-size:${shSz}px;">SKILLS</div><p style="margin:0 0 10px;font-size:${sm}px;">${validS.map(sk=>s(sk.name)).join(' | ')}</p>`:'',
+    certs: validC.length?`<div class="sh" style="font-size:${shSz}px;">CERTIFICATIONS</div>${validC.map(c=>`<div style="font-size:${sm}px;margin-bottom:3px;">- ${s(c.name)}${c.issuedBy?`, ${s(c.issuedBy)}`:''} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:'',
+    personal: buildPersonalSection(data,'sh',null,fs,shSz),
+    declaration: buildDeclaration(data,'sh',d.name,null,fs,shSz),
   };
   return `<div class="t9" style="padding:${pad};font-size:${fs}px;">
-    <div class="nm">${s(d.name)||'YOUR NAME'}</div>
-    ${showFather&&d.father?`<div class="fn">S/O: ${s(d.father)}</div>`:''}
-    <div class="ttl">${s(d.title)}</div>
-    <div class="ct">${d.phone?`<span>📞 ${s(d.phone)}</span>`:''}${d.email?`<span>✉ ${s(d.email)}</span>`:''}${d.location?`<span>📍 ${s(d.location)}</span>`:''}${d.linkedin?`<span>🔗 ${s(d.linkedin)}</span>`:''}</div>
+    <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
+    ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#444;">S/O: ${s(d.father)}</div>`:''}
+    <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
+    <div class="ct" style="font-size:${xs}px;">${d.phone?`<span>📞 ${s(d.phone)}</span>`:''}${d.email?`<span>✉ ${s(d.email)}</span>`:''}${d.location?`<span>📍 ${s(d.location)}</span>`:''}${d.linkedin?`<span>🔗 ${s(d.linkedin)}</span>`:''}</div>
     ${secOrder.map(id=>sections[id]||'').join('')}
   </div>`;
 }
 
 // ─── TEMPLATE 10: CORPORATE ─────────────────────────────
-function buildT10(data, col, spacing, fs, sectionOrder) {
+function buildT10(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz) {
+  nmSz=nmSz||24; ttlSz=ttlSz||14; shSz=shSz||13; subSz=subSz||13;
+  const sm=+(fs*0.88).toFixed(1), xs=+(fs*0.82).toFixed(1);
   const d = data.personal;
   const showFather = data.extras.father !== false;
   const ph = data.photo && data.extras.photo;
@@ -3031,36 +3378,36 @@ function buildT10(data, col, spacing, fs, sectionOrder) {
   const bodyPad = spacing==='compact'?'14px 28px':'18px 30px';
   const secOrder = sectionOrder || ['summary','experience','education','skills','certs','personal','declaration'];
   const sections = {
-    summary: d.summary?`<div class="sh">Executive Summary</div><p style="margin:0 0 14px;color:#333;line-height:1.6;">${s(d.summary)}</p>`:'',
-    experience: validJ.length?`<div class="sh">Professional Experience</div>${validJ.map(j=>`
+    summary: d.summary?`<div class="sh" style="font-size:${shSz}px;">Executive Summary</div><p style="margin:0 0 14px;color:#333;line-height:1.6;font-size:${fs}px;">${s(d.summary)}</p>`:'',
+    experience: validJ.length?`<div class="sh" style="font-size:${shSz}px;">Professional Experience</div>${validJ.map(j=>`
         <div class="job">
-          <div style="display:flex;justify-content:space-between;"><span class="jt">${s(j.title)}</span><span class="jd">${s(j.start)}${j.start?' – ':''}${j.current?'Present':s(j.end)}</span></div>
-          <div class="jc">${s(j.company)}${j.location?` · ${s(j.location)}`:''}</div>
-          ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:12px;font-size:9.5px;color:#444;margin-top:2px;">• ${s(r)}</div>`).join('')}
+          <div style="display:flex;justify-content:space-between;"><span style="font-weight:700;font-size:${subSz}px;color:#1e3a5f;">${s(j.title)}</span><span style="color:#888;font-size:${xs}px;">${s(j.start)}${j.start?' – ':''}${j.current?'Present':s(j.end)}</span></div>
+          <div style="color:${col};font-size:${sm}px;font-weight:600;">${s(j.company)}${j.location?` · ${s(j.location)}`:''}</div>
+          ${j.responsibilities.filter(Boolean).map(r=>`<div style="padding-left:12px;color:#444;margin-top:2px;font-size:${fs}px;">• ${s(r)}</div>`).join('')}
         </div>`).join('')}`:'',
-    education: validE.length?`<div class="sh">Education</div>${validE.map(e=>`
-            <div style="margin-bottom:9px;"><strong>${s(e.degree)}</strong>
-            <div class="jc">${s(e.institution)}${e.location?`, ${s(e.location)}`:''}</div>
-            <div class="jd">${s(e.endYear||e.startYear)}${e.grade?` · ${s(e.grade)}`:''}</div></div>`).join('')}`:'',
-    skills: validS.length?`<div class="sh">Core Skills</div><div>${validS.map(sk=>`<span class="chip">${s(sk.name)}</span>`).join('')}</div>`:'',
-    certs: validC.length?`<div class="sh" style="margin-top:10px;">Certifications</div>${validC.map(c=>`<div style="font-size:9px;color:#444;margin-bottom:3px;">▸ ${s(c.name)} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:'',
-    personal: buildPersonalSection(data,'sh',col),
-    declaration: buildDeclaration(data,'sh',d.name,col),
+    education: validE.length?`<div class="sh" style="font-size:${shSz}px;">Education</div>${validE.map(e=>`
+            <div style="margin-bottom:9px;"><strong style="font-size:${subSz}px;color:#1e3a5f;">${s(e.degree)}</strong>
+            <div style="color:${col};font-size:${sm}px;font-weight:600;">${s(e.institution)}${e.location?`, ${s(e.location)}`:''}</div>
+            <div style="color:#888;font-size:${xs}px;">${s(e.endYear||e.startYear)}${e.grade?` · ${s(e.grade)}`:''}</div></div>`).join('')}`:'',
+    skills: validS.length?`<div class="sh" style="font-size:${shSz}px;">Core Skills</div><div>${validS.map(sk=>`<span class="chip" style="font-size:${xs}px;">${s(sk.name)}</span>`).join('')}</div>`:'',
+    certs: validC.length?`<div class="sh" style="margin-top:10px;font-size:${shSz}px;">Certifications</div>${validC.map(c=>`<div style="font-size:${sm}px;color:#444;margin-bottom:3px;">▸ ${s(c.name)} ${c.year?`(${s(c.year)})`:''}</div>`).join('')}`:'',
+    personal: buildPersonalSection(data,'sh',col,fs,shSz),
+    declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
   return `<div class="t10" style="font-size:${fs}px;">
     <div class="hdr" style="background:#1e3a5f;">
       ${ph?`<img src="${data.photo}" style="width:72px;height:72px;border-radius:6px;object-fit:cover;border:2px solid ${col};flex-shrink:0;"/>`:''}
       <div class="nmsec">
-        <div class="nm">${s(d.name)||'YOUR NAME'}</div>
-        ${showFather&&d.father?`<div class="fn">S/O: ${s(d.father)}</div>`:''}
-        <div class="ttl" style="color:${col};">${s(d.title)}</div>
+        <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
+        ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;opacity:.8;">S/O: ${s(d.father)}</div>`:''}
+        <div class="ttl" style="color:${col};font-size:${ttlSz}px;">${s(d.title)}</div>
       </div>
     </div>
     <div class="ctbar" style="background:${col};">
-      ${d.phone?`<span class="cti">📞 ${s(d.phone)}</span>`:''}
-      ${d.email?`<span class="cti">✉ ${s(d.email)}</span>`:''}
-      ${d.location?`<span class="cti">📍 ${s(d.location)}</span>`:''}
-      ${d.linkedin?`<span class="cti">🔗 ${s(d.linkedin)}</span>`:''}
+      ${d.phone?`<span class="cti" style="font-size:${xs}px;">📞 ${s(d.phone)}</span>`:''}
+      ${d.email?`<span class="cti" style="font-size:${xs}px;">✉ ${s(d.email)}</span>`:''}
+      ${d.location?`<span class="cti" style="font-size:${xs}px;">📍 ${s(d.location)}</span>`:''}
+      ${d.linkedin?`<span class="cti" style="font-size:${xs}px;">🔗 ${s(d.linkedin)}</span>`:''}
     </div>
     <div class="body" style="padding:${bodyPad};">
       ${secOrder.map(id=>sections[id]||'').join('')}
@@ -3069,38 +3416,42 @@ function buildT10(data, col, spacing, fs, sectionOrder) {
 }
 
 // ── SHARED HELPERS ────────────────────────────────────────
-function buildPersonalSection(data, shClass, col) {
+function buildPersonalSection(data, shClass, col, fs, shSz) {
   if (!data.extras.personal) return '';
+  fs=fs||12; shSz=shSz||13;
+  const xs=+(fs*0.82).toFixed(1);
   const d = data.personal;
   const fields = [
-    d.dob     && `<div><span style="color:#888;font-size:8.5px;">Date of Birth:</span> <strong>${s(d.dob)}</strong></div>`,
-    d.nation  && `<div><span style="color:#888;font-size:8.5px;">Nationality:</span> <strong>${s(d.nation)}</strong></div>`,
-    d.marital && `<div><span style="color:#888;font-size:8.5px;">Marital Status:</span> <strong>${s(d.marital)}</strong></div>`,
-    d.religion&& `<div><span style="color:#888;font-size:8.5px;">Religion:</span> <strong>${s(d.religion)}</strong></div>`,
-    d.lang    && `<div style="grid-column:1/-1"><span style="color:#888;font-size:8.5px;">Languages:</span> <strong>${s(d.lang)}</strong></div>`,
-    d.passport&& `<div style="grid-column:1/-1"><span style="color:#888;font-size:8.5px;">Passport No.:</span> <strong>${s(d.passport)}${d.passport_exp?` (Expiry: ${s(d.passport_exp)})`:''}</strong></div>`,
+    d.dob     && `<div><span style="color:#888;font-size:${xs}px;">Date of Birth:</span> <strong>${s(d.dob)}</strong></div>`,
+    d.nation  && `<div><span style="color:#888;font-size:${xs}px;">Nationality:</span> <strong>${s(d.nation)}</strong></div>`,
+    d.marital && `<div><span style="color:#888;font-size:${xs}px;">Marital Status:</span> <strong>${s(d.marital)}</strong></div>`,
+    d.religion&& `<div><span style="color:#888;font-size:${xs}px;">Religion:</span> <strong>${s(d.religion)}</strong></div>`,
+    d.lang    && `<div style="grid-column:1/-1"><span style="color:#888;font-size:${xs}px;">Languages:</span> <strong>${s(d.lang)}</strong></div>`,
+    d.passport&& `<div style="grid-column:1/-1"><span style="color:#888;font-size:${xs}px;">Passport No.:</span> <strong>${s(d.passport)}${d.passport_exp?` (Expiry: ${s(d.passport_exp)})`:''}</strong></div>`,
   ].filter(Boolean);
   if (!fields.length) return '';
   const colorStyle = col ? `color:${col};border-bottom-color:${col};` : '';
-  return `<div class="${shClass}" style="margin-top:10px;${colorStyle}">Personal Details</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px 20px;font-size:9px;margin-bottom:6px;">${fields.join('')}</div>`;
+  return `<div class="${shClass}" style="margin-top:10px;font-size:${shSz}px;${colorStyle}">Personal Details</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px 20px;font-size:${xs}px;margin-bottom:6px;">${fields.join('')}</div>`;
 }
 
-function buildDeclaration(data, shClass, name, col) {
+function buildDeclaration(data, shClass, name, col, fs, shSz) {
   if (!data.extras.decl) return '';
+  fs=fs||12; shSz=shSz||13;
+  const xs=+(fs*0.82).toFixed(1);
   const colorStyle = col ? `color:${col};border-bottom-color:${col};` : '';
   const today = new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
-  return `<div class="${shClass}" style="margin-top:10px;${colorStyle}">Declaration</div>
-    <p style="color:#555;font-size:9px;line-height:1.55;margin-bottom:10px;">I hereby declare that the information provided above is true, correct and complete to the best of my knowledge and belief. I understand that any false information may result in disqualification or termination.</p>
+  return `<div class="${shClass}" style="margin-top:10px;font-size:${shSz}px;${colorStyle}">Declaration</div>
+    <p style="color:#555;font-size:${xs}px;line-height:1.55;margin-bottom:10px;">I hereby declare that the information provided above is true, correct and complete to the best of my knowledge and belief. I understand that any false information may result in disqualification or termination.</p>
     <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:12px;">
       <div>
-        <div style="font-size:8.5px;color:#888;margin-bottom:2px;">Place &amp; Date:</div>
-        <div style="font-size:9px;color:#555;">_________________ / ${today}</div>
+        <div style="font-size:${xs}px;color:#888;margin-bottom:2px;">Place &amp; Date:</div>
+        <div style="font-size:${xs}px;color:#555;">_________________ / ${today}</div>
       </div>
       <div style="text-align:center;">
         <div style="width:110px;border-bottom:1.5px solid #333;margin-bottom:3px;height:24px;"></div>
-        <div style="font-size:9px;font-weight:700;">${s(name)||'________________'}</div>
-        <div style="font-size:8px;color:#888;">Signature</div>
+        <div style="font-size:${xs}px;font-weight:700;">${s(name)||'________________'}</div>
+        <div style="font-size:${+(xs*0.88).toFixed(1)}px;color:#888;">Signature</div>
       </div>
     </div>`;
 }
@@ -3257,6 +3608,19 @@ window.addEventListener('load', () => {
     el.addEventListener('input', () => autoSave());
     el.addEventListener('change', () => autoSave());
   });
+  // Sync font size input defaults on first load
+  const bodyInput = document.getElementById('fs-body');
+  if (bodyInput) bodyInput.value = currentFontSize;
+  const nmInput = document.getElementById('fs-name');
+  if (nmInput) nmInput.value = currentNameSize;
+  const shInput = document.getElementById('fs-section');
+  if (shInput) shInput.value = currentSectionHeaderSize;
+  const ttInput2 = document.getElementById('fs-toptitle');
+  if (ttInput2) ttInput2.value = currentTopTitleSize;
+  const subInput2 = document.getElementById('fs-subheader');
+  if (subInput2) subInput2.value = currentSubHeaderSize;
+  syncTypoPresetUI();
+  syncFontFamilyUI();
 
   updateSummaryCount();
   loadPageLayout();
