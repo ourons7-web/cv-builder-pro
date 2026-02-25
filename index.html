@@ -565,6 +565,20 @@ input:checked+.slider::after{transform:translateX(22px);}
         <button class="add-entry-btn" onclick="addCert()">+ Add Certificate</button>
       </div>
     </div>
+  <!-- CUSTOM SECTIONS -->
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-header-left"><span class="card-icon">✨</span><span class="card-title">Custom Sections</span></div>
+        <span class="chevron up">▾</span>
+      </div>
+      <div class="card-body">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:12px;background:var(--primary-light);border:1px solid rgba(15,118,110,.2);border-radius:8px;padding:10px;">
+          💡 Add any section — <strong>Interests, Hobbies, Languages, Achievements, Volunteer Work, Projects, Awards</strong> etc. Each section gets its own heading, entries with sub-titles, dates, and bullet points — just like Experience.
+        </div>
+        <div id="custom-sections-container"></div>
+        <button class="add-entry-btn" onclick="addCustomSection()">+ Add Custom Section</button>
+      </div>
+    </div>
   </div>
 
   <!-- EXTRAS -->
@@ -773,6 +787,9 @@ input:checked+.slider::after{transform:translateX(22px);}
       </div>
       <div class="card-body">
         <div class="info-box" style="margin-bottom:12px;">📌 Control section order in your CV. P1 sections appear first (start of CV), P2 sections in the middle, P3 sections last. Smart page-breaking ensures clean cuts — no text is ever split mid-sentence.</div>
+        <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+          <button onclick="resetPageLayout()" style="padding:5px 12px;background:#FEF2F2;color:#EF4444;border:1.5px solid #FECACA;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;" title="Reset all sections back to defaults">↺ Reset Layout</button>
+        </div>
         <div id="page-layout-ui"></div>
         <div style="margin-top:14px;padding:10px;background:#F0FDF4;border-radius:8px;border:1px solid #86EFAC;">
           <div style="font-size:11px;font-weight:700;color:#166534;margin-bottom:6px;">📐 Margin Settings</div>
@@ -1254,7 +1271,7 @@ let currentSpacing = 'compact', currentFontSize = 12, currentNameSize = 24, curr
 let currentTopTitleSize = 14, currentSubHeaderSize = 13;
 let currentFontFamily = 'default';
 let photoData = null;
-let jobs = [], edus = [], skills = [], certs = [];
+let jobs = [], edus = [], skills = [], certs = [], customSections = [];
 let libTargetJob = 0, libTargetField = 'responsibilities';
 let libActiveCat = Object.keys(BULLET_LIB)[0];
 let demoTpl = 1;
@@ -1267,7 +1284,7 @@ let mobilePreviewOpen = false;
 function saveSlot(slot) {
   const data = {
     personal: getFormData(),
-    jobs, edus, skills, certs,
+    jobs, edus, skills, certs, customSections,
     photo: photoData,
     extras: {
       decl: document.getElementById('tog_decl')?.checked || false,
@@ -1301,6 +1318,18 @@ function loadSlot(slot) {
       edus = d.edus || [{degree:'',institution:'',location:'',startYear:'',endYear:'',grade:''}];
       skills = d.skills || [{name:'',level:'Advanced'}];
       certs = d.certs || [];
+      // Load custom sections + migrate old 'entries' structure to new 'items' structure
+      customSections = (d.customSections || []).map(sec => {
+        if (sec.items) return sec; // already new format
+        // Migrate old format: entries:[{subTitle,org,location,start,end,current,bullets}]
+        const items = (sec.entries || []).map(e => ({
+          name:    e.subTitle || '',
+          detail:  (e.org||'') + (e.org && e.location ? ', ' : '') + (e.location||''),
+          dates:   e.start ? (e.start + (e.end||e.current?' – ':'') + (e.current?'Present':(e.end||''))) : (e.end||''),
+          bullets: e.bullets || ['']
+        }));
+        return { id:sec.id, title:sec.title||'', items:items.length ? items : [{name:'',detail:'',dates:'',bullets:['']}] };
+      });
       photoData = d.photo || null;
       currentTemplate = d.template || 2;
       currentColor = d.color || '#0F766E';
@@ -1343,7 +1372,9 @@ function loadSlot(slot) {
   if (subInput) subInput.value = currentSubHeaderSize;
   syncTypoPresetUI();
   syncFontFamilyUI();
+  syncCustomSectionsToLayout();
   renderAll();
+  renderCustomSections();
   updatePhotoUI();
   schedulePreview();
 }
@@ -1353,11 +1384,212 @@ function resetState() {
   edus = [{degree:'',institution:'',location:'',startYear:'',endYear:'',grade:''}];
   skills = [{name:'',level:'Advanced'}];
   certs = [];
+  customSections = [];
   photoData = null;
   currentTemplate = 2; currentColor = '#0F766E'; currentSpacing = 'compact'; currentFontSize = 12;
   currentNameSize = 24; currentSectionHeaderSize = 13; currentTopTitleSize = 14; currentSubHeaderSize = 13;
   currentTypoPreset = 'professional';
   fillForm({});
+}
+
+// ══════════════════════════════════════════════════════════
+// CUSTOM SECTIONS
+// Structure: [{id, title, items:[{name, detail, dates, bullets:[]}]}]
+// ══════════════════════════════════════════════════════════
+
+function csBlankItem() {
+  return { name:'', detail:'', dates:'', bullets:[''] };
+}
+
+function addCustomSection() {
+  const id = 'custom_' + Date.now();
+  customSections.push({ id, title:'', items:[csBlankItem()] });
+  pageLayout.push({ id, label:'Custom: (New)', icon:'✨', page:1 });
+  renderCustomSections();
+  renderPageLayout();
+  // CRITICAL: save page layout so this section persists on reload
+  try { localStorage.setItem('cv_page_layout', JSON.stringify(pageLayout)); } catch(e){}
+  autoSave();
+  schedulePreview();
+}
+
+function removeCustomSection(si) {
+  const sec = customSections[si];
+  if (sec) {
+    const pIdx = pageLayout.findIndex(p => p.id === sec.id);
+    if (pIdx >= 0) pageLayout.splice(pIdx, 1);
+  }
+  customSections.splice(si, 1);
+  renderCustomSections();
+  renderPageLayout();
+  // CRITICAL: update saved page layout after removal
+  try { localStorage.setItem('cv_page_layout', JSON.stringify(pageLayout)); } catch(e){}
+  autoSave();
+  schedulePreview();
+}
+
+function addCustomItem(si) {
+  customSections[si].items.push(csBlankItem());
+  renderCustomSections();
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('#csi-'+si+' .csi-name');
+    if (inputs.length) inputs[inputs.length-1].focus();
+  }, 60);
+}
+
+function removeCustomItem(si, ii) {
+  customSections[si].items.splice(ii, 1);
+  if (!customSections[si].items.length) customSections[si].items = [csBlankItem()];
+  renderCustomSections();
+  autoSave();
+}
+
+function addCustomBullet(si, ii) {
+  customSections[si].items[ii].bullets.push('');
+  renderCustomSections();
+  setTimeout(() => {
+    const rows = document.querySelectorAll('#csb-'+si+'-'+ii+' .bullet-row input');
+    if (rows.length) rows[rows.length-1].focus();
+  }, 60);
+}
+
+function removeCustomBullet(si, ii, bi) {
+  customSections[si].items[ii].bullets.splice(bi, 1);
+  if (!customSections[si].items[ii].bullets.length) customSections[si].items[ii].bullets = [''];
+  renderCustomSections();
+  autoSave();
+}
+
+function updateCSTitle(si, val) {
+  customSections[si].title = val;
+  const p = pageLayout.find(p => p.id === customSections[si].id);
+  if (p) p.label = 'Custom: ' + (val || '(New)');
+  // Update saved page layout label
+  try { localStorage.setItem('cv_page_layout', JSON.stringify(pageLayout)); } catch(e){}
+  renderPageLayout();
+  autoSave();
+}
+
+function updateCSItem(si, ii, field, val) {
+  customSections[si].items[ii][field] = val;
+  autoSave();
+}
+
+function updateCSBullet(si, ii, bi, val) {
+  customSections[si].items[ii].bullets[bi] = val;
+  autoSave();
+}
+
+function moveCustomSection(si, dir) {
+  const ni = si + dir;
+  if (ni < 0 || ni >= customSections.length) return;
+  [customSections[si], customSections[ni]] = [customSections[ni], customSections[si]];
+  renderCustomSections();
+  autoSave();
+}
+
+function moveCustomItem(si, ii, dir) {
+  const ni = ii + dir;
+  if (ni < 0 || ni >= customSections[si].items.length) return;
+  [customSections[si].items[ii], customSections[si].items[ni]] = [customSections[si].items[ni], customSections[si].items[ii]];
+  renderCustomSections();
+  autoSave();
+}
+
+function renderCustomSections() {
+  const c = document.getElementById('custom-sections-container');
+  if (!c) return;
+  if (!customSections.length) { c.innerHTML = ''; return; }
+  c.innerHTML = customSections.map((sec, si) => `
+    <div class="entry-block" id="csi-${si}" style="border-left:3px solid var(--primary);">
+      <div class="entry-header">
+        <span class="entry-num">✨ Section #${si+1}${sec.title ? ' — '+esc(sec.title) : ''}</span>
+        <div class="entry-actions">
+          ${si>0?`<button class="icon-btn" onclick="moveCustomSection(${si},-1)">↑</button>`:''}
+          ${si<customSections.length-1?`<button class="icon-btn" onclick="moveCustomSection(${si},1)">↓</button>`:''}
+          <button class="icon-btn danger" onclick="removeCustomSection(${si})">✕</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Section Heading <span class="req">*</span></label>
+        <input type="text" class="csi-title" placeholder="e.g. Interests · Hobbies · Languages · Projects · Awards…"
+          value="${esc(sec.title)}"
+          oninput="updateCSTitle(${si},this.value)"
+          style="font-weight:700;font-size:14px;"/>
+      </div>
+
+      ${sec.items.map((item, ii) => `
+        <div class="entry-block" style="background:#F8FAFC;margin-bottom:8px;border:1px solid #E2E8F0;">
+          <div class="entry-header">
+            <span class="entry-num" style="font-size:11px;">Item #${ii+1}${item.name?' — '+esc(item.name):''}</span>
+            <div class="entry-actions">
+              ${ii>0?`<button class="icon-btn" onclick="moveCustomItem(${si},${ii},-1)">↑</button>`:''}
+              ${ii<sec.items.length-1?`<button class="icon-btn" onclick="moveCustomItem(${si},${ii},1)">↓</button>`:''}
+              ${sec.items.length>1?`<button class="icon-btn danger" onclick="removeCustomItem(${si},${ii})">✕</button>`:''}
+            </div>
+          </div>
+
+          <div class="g2">
+            <div class="field">
+              <label>Title / Name <span style="color:var(--primary);font-size:10px;">(shows on CV)</span></label>
+              <input type="text" class="csi-name" placeholder="e.g. Reading · Cricket · React.js · Best Employee"
+                value="${esc(item.name)}"
+                oninput="updateCSItem(${si},${ii},'name',this.value)"
+                onblur="autoSave()"/>
+            </div>
+            <div class="field">
+              <label>Organisation / Context</label>
+              <input type="text" placeholder="e.g. Google · IIT Bombay · Self-Taught"
+                value="${esc(item.detail)}"
+                oninput="updateCSItem(${si},${ii},'detail',this.value)"
+                onblur="autoSave()"/>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Dates / Period <span style="color:var(--muted);font-size:10px;">(optional)</span></label>
+            <input type="text" placeholder="e.g. Jan 2022 – Present · 2020 · Ongoing"
+              value="${esc(item.dates)}"
+              oninput="updateCSItem(${si},${ii},'dates',this.value)"
+              onblur="autoSave()"/>
+          </div>
+
+          <div class="bullet-wrap" id="csb-${si}-${ii}">
+            <div class="bullet-label">
+              <span>Details / Bullet Points <span style="color:var(--muted);font-size:10px;">(optional)</span></span>
+              <button class="suggest-btn" onclick="addCustomBullet(${si},${ii})">+ Add Line</button>
+            </div>
+            ${item.bullets.map((b,bi) => `
+              <div class="bullet-row">
+                <input type="text" placeholder="Add a detail about this item…"
+                  value="${esc(b)}"
+                  oninput="updateCSBullet(${si},${ii},${bi},this.value)"
+                  onblur="autoSave()"/>
+                ${item.bullets.length>1?`<button class="bullet-del" onclick="removeCustomBullet(${si},${ii},${bi})">✕</button>`:''}
+              </div>`).join('')}
+          </div>
+        </div>`).join('')}
+
+      <button class="add-entry-btn" onclick="addCustomItem(${si})">+ Add Item</button>
+    </div>`).join('');
+}
+
+function syncCustomSectionsToLayout() {
+  // Remember previously saved page values for custom sections
+  const savedPages = {};
+  pageLayout.forEach(p => { if (p.id.startsWith('custom_')) savedPages[p.id] = p.page; });
+  // Remove all existing custom_ entries
+  for (let i = pageLayout.length-1; i >= 0; i--) {
+    if (pageLayout[i].id.startsWith('custom_')) pageLayout.splice(i,1);
+  }
+  const insertBefore = pageLayout.findIndex(p => p.id === 'personal');
+  customSections.forEach(sec => {
+    const savedPage = savedPages[sec.id] || 1;
+    const entry = { id:sec.id, label:'Custom: '+(sec.title||'(New)'), icon:'✨', page:savedPage };
+    if (insertBefore >= 0) pageLayout.splice(insertBefore, 0, entry);
+    else pageLayout.push(entry);
+  });
 }
 
 function autoSave() {
@@ -1479,7 +1711,7 @@ function showToast(msg) {
 // ══════════════════════════════════════════════════════════
 // RENDER FORMS
 // ══════════════════════════════════════════════════════════
-function renderAll() { renderJobs(); renderEdus(); renderSkills(); renderCerts(); }
+function renderAll() { renderJobs(); renderEdus(); renderSkills(); renderCerts(); renderCustomSections(); }
 
 function renderJobs() {
   const c = document.getElementById('jobs-container');
@@ -1936,8 +2168,7 @@ function renderPreview() {
   if (!data) return;
   const styles = getCVStyles(currentColor);
   const active = getActiveSections();
-  const orderedSectionIds = active.map(s => s.id);
-  const html = buildCV(data, currentTemplate, currentColor, currentSpacing, currentFontSize, orderedSectionIds);
+  const html = buildCV(data, currentTemplate, currentColor, currentSpacing, currentFontSize, active);
   const pageBreakCSS = `
     .page-break-line{height:12px;background:#e2e8f0;margin:0;position:relative;}
     .page-break-line::after{content:'--- Page 2 ---';position:absolute;left:50%;transform:translateX(-50%);top:-1px;font-size:8px;color:#94a3b8;background:#e2e8f0;padding:0 6px;}
@@ -1962,8 +2193,7 @@ function renderPreviewFull() {
   if (!data) return;
   const styles = getCVStyles(currentColor);
   const active = getActiveSections();
-  const orderedSectionIds = active.map(s => s.id);
-  const html = buildCV(data, currentTemplate, currentColor, currentSpacing, currentFontSize, orderedSectionIds);
+  const html = buildCV(data, currentTemplate, currentColor, currentSpacing, currentFontSize, active);
   const doc = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#fff;overflow:visible;}${styles}</style></head><body>${html}</body></html>`;
   const iframe = document.getElementById('preview-full-iframe');
   if (!iframe) return;
@@ -2018,6 +2248,28 @@ function getActiveSections() {
   });
 }
 
+function resetPageLayout() {
+  // Reset to sensible defaults: main sections on p1, personal/declaration on p2
+  pageLayout.length = 0;
+  pageLayout.push(
+    { id:'summary',     label:'Professional Summary', icon:'📝', page:1 },
+    { id:'experience',  label:'Work Experience',       icon:'💼', page:1 },
+    { id:'education',   label:'Education',             icon:'🎓', page:1 },
+    { id:'skills',      label:'Skills',                icon:'🛠', page:1 },
+    { id:'certs',       label:'Certifications',        icon:'🏅', page:1 },
+    { id:'personal',    label:'Personal Details',      icon:'👤', page:2 },
+    { id:'declaration', label:'Declaration',           icon:'✍', page:2 }
+  );
+  // Re-add any custom sections
+  customSections.forEach(sec => {
+    pageLayout.push({ id: sec.id, label: 'Custom: ' + (sec.title || '(New)'), icon: '✨', page: 1 });
+  });
+  savePageLayout();
+  renderPageLayout();
+  schedulePreview();
+  showToast('✅ Page layout reset to defaults');
+}
+
 function savePageLayout() {
   try { localStorage.setItem('cv_page_layout', JSON.stringify(pageLayout)); } catch(e){}
   autoSave();
@@ -2027,11 +2279,24 @@ function loadPageLayout() {
   try {
     const saved = JSON.parse(localStorage.getItem('cv_page_layout') || 'null');
     if (saved && Array.isArray(saved)) {
-      // Merge saved pages into our default layout (preserves new sections)
+      // Restore BOTH page assignments AND array order from saved data
+      // Step 1: update page numbers for known sections
       saved.forEach(s => {
         const found = pageLayout.find(p => p.id === s.id);
         if (found) found.page = s.page;
       });
+      // Step 2: restore array order to match saved order
+      const newOrder = [];
+      saved.forEach(s => {
+        const found = pageLayout.find(p => p.id === s.id);
+        if (found) newOrder.push(found);
+      });
+      // Append any new sections not in saved data (future-proof)
+      pageLayout.forEach(p => {
+        if (!newOrder.find(n => n.id === p.id)) newOrder.push(p);
+      });
+      pageLayout.length = 0;
+      newOrder.forEach(p => pageLayout.push(p));
     }
   } catch(e) {}
 }
@@ -2050,7 +2315,11 @@ function moveSection(id, dir) {
 
 function setSectionPage(id, page) {
   const s = pageLayout.find(s => s.id === id);
-  if (s) { s.page = parseInt(page); savePageLayout(); renderPageLayout(); schedulePreview(); }
+  if (!s) return;
+  s.page = parseInt(page);
+  // Re-sort pageLayout so sections are grouped by page (stable sort preserves within-page order)
+  pageLayout.sort((a, b) => a.page - b.page);
+  savePageLayout(); renderPageLayout(); schedulePreview();
 }
 
 function renderPageLayout() {
@@ -2105,7 +2374,10 @@ function plmDragLeave(e)     { e.currentTarget.classList.remove('drag-over'); }
 function plmDropToPage(e, pg) {
   e.preventDefault();
   e.currentTarget.classList.remove('drag-over');
-  if (_dragId) { setSectionPage(_dragId, pg); _dragId = null; }
+  if (_dragId) {
+    setSectionPage(_dragId, pg); // setSectionPage already re-sorts
+    _dragId = null;
+  }
 }
 function plmDrop(e, targetId) {
   e.preventDefault();
@@ -2122,27 +2394,67 @@ function plmDrop(e, targetId) {
 }
 function moveSectionUp(id) {
   const active = getActiveSections();
-  const pg = pageLayout.find(s=>s.id===id)?.page;
+  const sec = pageLayout.find(s=>s.id===id);
+  if (!sec) return;
+  const pg = sec.page;
   const inPage = active.filter(s=>s.page===pg);
   const posInPage = inPage.findIndex(s=>s.id===id);
-  if (posInPage <= 0) return; // can't go higher in this page
-  // swap with previous in same page
-  const prevId = inPage[posInPage-1].id;
-  const iA = pageLayout.findIndex(s=>s.id===id);
-  const iB = pageLayout.findIndex(s=>s.id===prevId);
-  [pageLayout[iA], pageLayout[iB]] = [pageLayout[iB], pageLayout[iA]];
+
+  if (posInPage > 0) {
+    // Swap with previous on same page
+    const prevId = inPage[posInPage-1].id;
+    const iA = pageLayout.findIndex(s=>s.id===id);
+    const iB = pageLayout.findIndex(s=>s.id===prevId);
+    [pageLayout[iA], pageLayout[iB]] = [pageLayout[iB], pageLayout[iA]];
+  } else {
+    // At top of page — move to bottom of previous page
+    const prevPg = pg - 1;
+    if (prevPg < 1) return;
+    sec.page = prevPg;
+    const iA = pageLayout.findIndex(s=>s.id===id);
+    pageLayout.splice(iA, 1);
+    let insertAt = -1;
+    pageLayout.forEach((s,i) => { if (s.page === prevPg) insertAt = i; });
+    if (insertAt < 0) {
+      const firstHigher = pageLayout.findIndex(s=>s.page > prevPg);
+      insertAt = firstHigher >= 0 ? firstHigher - 1 : pageLayout.length - 1;
+    }
+    pageLayout.splice(insertAt + 1, 0, sec);
+  }
   savePageLayout(); renderPageLayout(); schedulePreview();
 }
+
 function moveSectionDown(id) {
   const active = getActiveSections();
-  const pg = pageLayout.find(s=>s.id===id)?.page;
+  const sec = pageLayout.find(s=>s.id===id);
+  if (!sec) return;
+  const pg = sec.page;
   const inPage = active.filter(s=>s.page===pg);
   const posInPage = inPage.findIndex(s=>s.id===id);
-  if (posInPage >= inPage.length - 1) return;
-  const nextId = inPage[posInPage+1].id;
-  const iA = pageLayout.findIndex(s=>s.id===id);
-  const iB = pageLayout.findIndex(s=>s.id===nextId);
-  [pageLayout[iA], pageLayout[iB]] = [pageLayout[iB], pageLayout[iA]];
+
+  if (posInPage < inPage.length - 1) {
+    // Swap with next on same page
+    const nextId = inPage[posInPage+1].id;
+    const iA = pageLayout.findIndex(s=>s.id===id);
+    const iB = pageLayout.findIndex(s=>s.id===nextId);
+    [pageLayout[iA], pageLayout[iB]] = [pageLayout[iB], pageLayout[iA]];
+  } else {
+    // At bottom of page — move to top of next page
+    const nextPg = pg + 1;
+    if (nextPg > 3) return;
+    sec.page = nextPg;
+    const iA = pageLayout.findIndex(s=>s.id===id);
+    pageLayout.splice(iA, 1);
+    let insertAt = pageLayout.findIndex(s=>s.page === nextPg);
+    if (insertAt < 0) {
+      let lastLower = -1;
+      pageLayout.forEach((s,i) => { if (s.page < nextPg) lastLower = i; });
+      insertAt = lastLower >= 0 ? lastLower + 1 : pageLayout.length;
+      pageLayout.splice(insertAt, 0, sec);
+    } else {
+      pageLayout.splice(insertAt, 0, sec);
+    }
+  }
   savePageLayout(); renderPageLayout(); schedulePreview();
 }
 
@@ -2177,7 +2489,7 @@ async function _doPDFDownloadMobile() {
     const data       = collectCVData();
     const styles     = getCVStyles(currentColor);
     const active     = getActiveSections();
-    const orderedIds = active.map(sec => sec.id);
+    const orderedIds = active; // pass full objects with page info
     const html       = buildCV(data, currentTemplate, currentColor, currentSpacing, currentFontSize, orderedIds);
 
     const MB1   = parseInt(document.getElementById('margin_p1_b')?.value) || 36;
@@ -2214,7 +2526,9 @@ async function _doPDFDownloadMobile() {
     ].join('');
 
     cvDiv.appendChild(styleTag);
-    cvDiv.innerHTML += html;
+    const cvContent = document.createElement('div');
+    cvContent.innerHTML = html;
+    while (cvContent.firstChild) cvDiv.appendChild(cvContent.firstChild);
     wrapper.appendChild(cvDiv);
     document.body.appendChild(wrapper);
 
@@ -2293,7 +2607,7 @@ function _doPDFDownload() {
   const data   = collectCVData();
   const styles = getCVStyles(currentColor);
   const active = getActiveSections();
-  const orderedIds = active.map(sec => sec.id);
+  const orderedIds = active; // pass full objects with page info
   const html   = buildCV(data, currentTemplate, currentColor, currentSpacing, currentFontSize, orderedIds);
 
   // Read margin settings (px → mm: 1px = 0.2646mm at 96dpi)
@@ -2439,7 +2753,7 @@ async function downloadWatermarkPDF() {
     const data       = collectCVData();
     const styles     = getCVStyles(currentColor);
     const active     = getActiveSections();
-    const orderedIds = active.map(sec => sec.id);
+    const orderedIds = active; // pass full objects with page info
     const html       = buildCV(data, currentTemplate, currentColor, currentSpacing, currentFontSize, orderedIds);
 
     const MB1 = parseInt(document.getElementById('margin_p1_b')?.value) || 36;
@@ -2719,7 +3033,7 @@ function triggerPrintFallback() {
   const data   = collectCVData();
   const styles = getCVStyles(currentColor);
   const active = getActiveSections();
-  const orderedIds = active.map(sec => sec.id);
+  const orderedIds = active; // pass full objects with page info
   const html   = buildCV(data, currentTemplate, currentColor, currentSpacing, currentFontSize, orderedIds);
   const stylesEl   = document.getElementById('print-cv-styles');
   const contentEl  = document.getElementById('print-cv-content');
@@ -2779,7 +3093,7 @@ function demoNext() { demoNav(demoTpl+1); }
 function collectCVData() {
   return {
     personal: getFormData(),
-    jobs, edus, skills, certs,
+    jobs, edus, skills, certs, customSections,
     extras: {
       decl:     document.getElementById('tog_decl')?.checked     || false,
       personal: document.getElementById('tog_personal')?.checked || false,
@@ -2797,6 +3111,89 @@ function collectCVData() {
 // ══════════════════════════════════════════════════════════
 // CV BUILDER — ALL 10 TEMPLATES
 // ══════════════════════════════════════════════════════════
+/**
+ * Renders sections GROUPED by page number in one continuous flow.
+ * p1 sections render first, then p2, then p3 — NO forced page breaks.
+ * The browser's natural A4 pagination decides where pages split.
+ * Supports both plain string IDs and {id, page} objects.
+ */
+function renderSections(secOrder, sections) {
+  const hasPageInfo = secOrder.some(item => typeof item === 'object' && item.page != null);
+  if (!hasPageInfo) {
+    return secOrder.map(item => sections[typeof item === 'object' ? item.id : item] || '').join('');
+  }
+  // Group by page, preserving within-page order
+  const pageMap = {};
+  secOrder.forEach(item => {
+    const id   = typeof item === 'object' ? item.id   : item;
+    const page = (typeof item === 'object' && item.page) ? item.page : 1;
+    if (!pageMap[page]) pageMap[page] = [];
+    pageMap[page].push(id);
+  });
+  // Sort page groups numerically, render all sections in one continuous flow
+  const sortedPages = Object.keys(pageMap).map(Number).sort((a, b) => a - b);
+  return sortedPages.map(pg => pageMap[pg].map(id => sections[id] || '').join('')).join('');
+}
+
+// Build custom sections HTML for any template
+function buildCustomSectionsHTML(data, shSz, fs) {
+  if (!data.customSections || !data.customSections.length) return {};
+  const result = {};
+  const sm = +(fs * 0.88).toFixed(1);
+  const xs = +(fs * 0.82).toFixed(1);
+
+  data.customSections.forEach(sec => {
+    if (!sec.title) return; // skip untitled sections
+
+    let html = `<div class="sh" style="font-size:${shSz}px;">${s(sec.title)}</div>`;
+    const items = sec.items || [];
+
+    items.forEach(item => {
+      const hasName   = item.name   && item.name.trim();
+      const hasDetail = item.detail && item.detail.trim();
+      const hasDates  = item.dates  && item.dates.trim();
+      // Support both old structure (bullets:[]) and new
+      const bulletArr = (item.bullets || []).filter(b => b && b.trim());
+
+      if (!hasName && !hasDetail && !hasDates && !bulletArr.length) return; // truly empty item — skip
+
+      if (hasName || hasDetail || hasDates) {
+        html += `<div style="margin-bottom:7px;">`;
+
+        // Row 1: name + dates
+        if (hasName || hasDates) {
+          html += `<div style="display:flex;justify-content:space-between;align-items:baseline;">`;
+          html += hasName
+            ? `<strong style="font-size:${sm}px;">${s(item.name)}</strong>`
+            : `<span></span>`;
+          if (hasDates)
+            html += `<span style="color:#666;font-size:${xs}px;font-style:italic;">${s(item.dates)}</span>`;
+          html += `</div>`;
+        }
+
+        // Row 2: detail / org
+        if (hasDetail)
+          html += `<div style="color:#555;font-style:italic;font-size:${xs}px;">${s(item.detail)}</div>`;
+
+        // Bullets
+        bulletArr.forEach(b => {
+          html += `<div style="padding-left:12px;color:#333;font-size:${fs}px;">• ${s(b)}</div>`;
+        });
+
+        html += `</div>`;
+      } else {
+        // Only bullets, no name/detail/dates
+        bulletArr.forEach(b => {
+          html += `<div style="font-size:${sm}px;margin-bottom:2px;">• ${s(b)}</div>`;
+        });
+      }
+    });
+
+    result[sec.id] = html;
+  });
+  return result;
+}
+
 function buildCV(data, tplNum, color, spacing, fontSize, sectionOrder) {
   const fns = [buildT1,buildT2,buildT3,buildT4,buildT5,buildT6,buildT7,buildT8,buildT9,buildT10];
   const fn = fns[Math.min(Math.max((tplNum||2)-1,0), fns.length-1)];
@@ -2887,6 +3284,7 @@ function getCVStyles(col) {
   .t6 .ssh{font-weight:800;font-size:9.5px;text-transform:uppercase;letter-spacing:1px;border-bottom:1.5px solid rgba(255,255,255,.4);margin:13px 0 6px;padding-bottom:3px;}
   .t6 .sct{font-size:9px;opacity:.85;margin-bottom:3px;word-break:break-word;}
   .t6 .msh{font-weight:800;font-size:10.5px;text-transform:uppercase;color:${col};border-bottom:2px solid ${col};margin:12px 0 7px;padding-bottom:2px;}
+  .t6 .sh{font-weight:800;font-size:10.5px;text-transform:uppercase;color:${col};border-bottom:2px solid ${col};margin:12px 0 7px;padding-bottom:2px;}
   .t6 .job{margin-bottom:10px;}
   .t6 .jrow{display:flex;justify-content:space-between;}
   .t6 .jt{font-weight:700;font-size:10.5px;}
@@ -2943,7 +3341,7 @@ function getCVStyles(col) {
   /* ── Page break control */
   .t1 div[style*="margin-bottom:10px"],.t1 div[style*="margin-bottom:7px"]{page-break-inside:avoid;}
   .t2 .job,.t3 div,.t4 div,.t5 .job,.t6 .job,.t7 tr,.t8 .job,.t9 div,.t10 .job{page-break-inside:avoid;}
-  .t1 .sh,.t2 .sh,.t3 .sh,.t4 .sh,.t5 .sh,.t6 .msh,.t7 .sh,.t8 .sh,.t9 .sh,.t10 .sh{page-break-after:avoid;}
+  .t1 .sh,.t2 .sh,.t3 .sh,.t4 .sh,.t5 .sh,.t6 .sh,.t6 .msh,.t7 .sh,.t8 .sh,.t9 .sh,.t10 .sh{page-break-after:avoid;}
 
   /* ══ FONT FAMILY OVERRIDE ══ */
   ${(()=>{
@@ -2960,7 +3358,7 @@ function getCVStyles(col) {
   .t6 .sttl{font-size:${typeof currentTopTitleSize!=='undefined'?currentTopTitleSize:14}px!important;}
 
   /* ══ LEVEL 3: SECTION HEADERS ══ */
-  .t1 .sh,.t2 .sh,.t3 .sh,.t4 .sh,.t5 .sh,.t7 .sh,.t8 .sh,.t9 .sh,.t10 .sh{font-size:${typeof currentSectionHeaderSize!=='undefined'?currentSectionHeaderSize:13}px!important;}
+  .t1 .sh,.t2 .sh,.t3 .sh,.t4 .sh,.t5 .sh,.t6 .sh,.t7 .sh,.t8 .sh,.t9 .sh,.t10 .sh{font-size:${typeof currentSectionHeaderSize!=='undefined'?currentSectionHeaderSize:13}px!important;}
   .t6 .msh,.t6 .ssh{font-size:${typeof currentSectionHeaderSize!=='undefined'?currentSectionHeaderSize:13}px!important;}
 
   /* ══ LEVEL 4: SUB-HEADERS (job titles & degree names within sections) ══ */
@@ -3000,6 +3398,7 @@ function buildT1(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
     personal: buildPersonalSection(data,'sh',col,fs,shSz),
     declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
+  Object.assign(sections, buildCustomSectionsHTML(data, shSz, fs));
   return `<div class="t1" style="padding:${pad};font-size:${fs}px;">
     <div class="hdr">
       ${ph?`<img src="${data.photo}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;float:right;margin:0 0 8px 12px;"/>`:''}
@@ -3008,7 +3407,7 @@ function buildT1(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
       <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
       <div class="ct" style="font-size:${xs}px;">${d.phone?`<span>📞 ${s(d.phone)}</span>`:''}${d.email?`<span>✉ ${s(d.email)}</span>`:''}${d.location?`<span>📍 ${s(d.location)}</span>`:''}${d.linkedin?`<span>🔗 ${s(d.linkedin)}</span>`:''}</div>
     </div>
-    ${secOrder.map(id=>sections[id]||'').join('')}
+    ${renderSections(secOrder, sections)}
   </div>`;
 }
 
@@ -3039,6 +3438,7 @@ function buildT2(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
     personal: buildPersonalSection(data,'sh',col,fs,shSz),
     declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
+  Object.assign(sections, buildCustomSectionsHTML(data, shSz, fs));
   return `<div class="t2" style="font-size:${fs}px;">
     <div class="hdr" style="background:${col};display:flex;align-items:flex-start;gap:16px;">
       ${ph?`<img src="${data.photo}" style="width:75px;height:75px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.4);flex-shrink:0;"/>`:''}
@@ -3053,7 +3453,7 @@ function buildT2(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
       </div>
     </div>
     <div class="body" style="padding:${padBody};">
-      ${secOrder.map(id=>sections[id]||'').join('')}
+      ${renderSections(secOrder, sections)}
     </div>
   </div>`;
 }
@@ -3085,6 +3485,7 @@ function buildT3(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
     personal: buildPersonalSection(data,'sh',col,fs,shSz),
     declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
+  Object.assign(sections, buildCustomSectionsHTML(data, shSz, fs));
   return `<div class="t3" style="padding:${pad};font-size:${fs}px;">
     <div class="hdr">
       ${ph?`<img src="${data.photo}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid ${col};display:block;margin:0 auto 8px;"/>`:''}
@@ -3093,7 +3494,7 @@ function buildT3(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
       <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
       <div class="cb" style="font-size:${xs}px;">${d.phone?`<span style="margin:0 6px;">📞 ${s(d.phone)}</span>`:''}${d.email?`<span style="margin:0 6px;">✉ ${s(d.email)}</span>`:''}${d.location?`<span style="margin:0 6px;">📍 ${s(d.location)}</span>`:''}</div>
     </div>
-    ${secOrder.map(id=>sections[id]||'').join('')}
+    ${renderSections(secOrder, sections)}
   </div>`;
 }
 
@@ -3124,6 +3525,7 @@ function buildT4(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
     personal: buildPersonalSection(data,'sh',col,fs,shSz),
     declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
+  Object.assign(sections, buildCustomSectionsHTML(data, shSz, fs));
   return `<div class="t4" style="padding:${pad};font-size:${fs}px;">
     <div style="border-bottom:3px solid ${col};padding-bottom:14px;margin-bottom:18px;">
       ${ph?`<img src="${data.photo}" style="width:68px;height:68px;border-radius:8px;object-fit:cover;float:right;margin:0 0 6px 14px;"/>`:''}
@@ -3132,7 +3534,7 @@ function buildT4(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
       <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
       <div class="ct" style="font-size:${xs}px;">${d.phone?`<span>📞 ${s(d.phone)}</span>`:''}${d.email?`<span>✉ ${s(d.email)}</span>`:''}${d.location?`<span>📍 ${s(d.location)}</span>`:''}${d.linkedin?`<span>🔗 ${s(d.linkedin)}</span>`:''}</div>
     </div>
-    ${secOrder.map(id=>sections[id]||'').join('')}
+    ${renderSections(secOrder, sections)}
   </div>`;
 }
 
@@ -3163,6 +3565,7 @@ function buildT5(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
     personal: buildPersonalSection(data,'sh',col,fs,shSz),
     declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
+  Object.assign(sections, buildCustomSectionsHTML(data, shSz, fs));
   return `<div class="t5" style="font-size:${fs}px;">
     <div class="hdr" style="background:${col};display:flex;align-items:center;gap:14px;">
       ${ph?`<img src="${data.photo}" style="width:65px;height:65px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.4);flex-shrink:0;"/>`:''}
@@ -3177,7 +3580,7 @@ function buildT5(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
       </div>
     </div>
     <div class="body" style="padding:${padBody};">
-      ${secOrder.map(id=>sections[id]||'').join('')}
+      ${renderSections(secOrder, sections)}
     </div>
   </div>`;
 }
@@ -3207,6 +3610,7 @@ function buildT6(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
     personal: '',
     declaration: buildDeclaration(data,'msh',d.name,col,fs,shSz),
   };
+  Object.assign(mainSections, buildCustomSectionsHTML(data, shSz, fs));
   return `<div class="t6" style="font-size:${fs}px;">
     <div class="sidebar" style="background:${col};">
       ${ph?`<img src="${data.photo}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.3);display:block;margin:0 auto 12px;"/>`:''}
@@ -3229,7 +3633,7 @@ function buildT6(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
       }
     </div>
     <div class="maincol">
-      ${secOrder.map(id=>mainSections[id]||'').join('')}
+      ${renderSections(secOrder, mainSections)}
     </div>
   </div>`;
 }
@@ -3270,6 +3674,7 @@ function buildT7(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
       </table>`:'',
     declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
+  Object.assign(sections, buildCustomSectionsHTML(data, shSz, fs));
   return `<div class="t7" style="padding:${pad};font-size:${fs}px;">
     <div class="hdr">
       ${ph?`<img src="${data.photo}" style="width:75px;height:75px;object-fit:cover;border:1px solid #333;float:right;margin:-4px 0 4px 12px;"/>`:''}
@@ -3278,7 +3683,7 @@ function buildT7(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
       <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
       <div class="ct" style="font-size:${xs}px;">${d.phone?`<span>📞 ${s(d.phone)}</span>`:''}${d.email?`<span>✉ ${s(d.email)}</span>`:''}${d.location?`<span>📍 ${s(d.location)}</span>`:''}</div>
     </div>
-    ${secOrder.map(id=>sections[id]||'').join('')}
+    ${renderSections(secOrder, sections)}
   </div>`;
 }
 
@@ -3310,6 +3715,7 @@ function buildT8(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
     personal: buildPersonalSection(data,'sh',col,fs,shSz),
     declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
+  Object.assign(sections, buildCustomSectionsHTML(data, shSz, fs));
   return `<div class="t8" style="padding:${pad};font-size:${fs}px;">
     <div class="hdr" style="background:linear-gradient(135deg,${col},${col}cc);margin:-${pad.split(' ')[0]} -${pad.split(' ')[1]||pad.split(' ')[0]} 18px;padding:${pad.split(' ')[0]} ${pad.split(' ')[1]||pad.split(' ')[0]};">
       <div style="display:flex;align-items:center;gap:16px;">
@@ -3325,7 +3731,7 @@ function buildT8(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
         </div>
       </div>
     </div>
-    ${secOrder.map(id=>sections[id]||'').join('')}
+    ${renderSections(secOrder, sections)}
   </div>`;
 }
 
@@ -3357,12 +3763,13 @@ function buildT9(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
     personal: buildPersonalSection(data,'sh',null,fs,shSz),
     declaration: buildDeclaration(data,'sh',d.name,null,fs,shSz),
   };
+  Object.assign(sections, buildCustomSectionsHTML(data, shSz, fs));
   return `<div class="t9" style="padding:${pad};font-size:${fs}px;">
     <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
     ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#444;">S/O: ${s(d.father)}</div>`:''}
     <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
     <div class="ct" style="font-size:${xs}px;">${d.phone?`<span>📞 ${s(d.phone)}</span>`:''}${d.email?`<span>✉ ${s(d.email)}</span>`:''}${d.location?`<span>📍 ${s(d.location)}</span>`:''}${d.linkedin?`<span>🔗 ${s(d.linkedin)}</span>`:''}</div>
-    ${secOrder.map(id=>sections[id]||'').join('')}
+    ${renderSections(secOrder, sections)}
   </div>`;
 }
 
@@ -3394,6 +3801,7 @@ function buildT10(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz
     personal: buildPersonalSection(data,'sh',col,fs,shSz),
     declaration: buildDeclaration(data,'sh',d.name,col,fs,shSz),
   };
+  Object.assign(sections, buildCustomSectionsHTML(data, shSz, fs));
   return `<div class="t10" style="font-size:${fs}px;">
     <div class="hdr" style="background:#1e3a5f;">
       ${ph?`<img src="${data.photo}" style="width:72px;height:72px;border-radius:6px;object-fit:cover;border:2px solid ${col};flex-shrink:0;"/>`:''}
@@ -3410,7 +3818,7 @@ function buildT10(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz
       ${d.linkedin?`<span class="cti" style="font-size:${xs}px;">🔗 ${s(d.linkedin)}</span>`:''}
     </div>
     <div class="body" style="padding:${bodyPad};">
-      ${secOrder.map(id=>sections[id]||'').join('')}
+      ${renderSections(secOrder, sections)}
     </div>
   </div>`;
 }
@@ -3625,6 +4033,7 @@ window.addEventListener('load', () => {
   updateSummaryCount();
   loadPageLayout();
   renderPageLayout();
+  schedulePreview(); // Re-trigger preview AFTER loadPageLayout has corrected section order
 });
 
 // ══════════════════════════════════════════════════════════
