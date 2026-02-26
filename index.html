@@ -14,6 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&family=Montserrat:wght@400;600;700&family=Raleway:wght@400;600;700&family=EB+Garamond:wght@400;500;600&family=Josefin+Sans:wght@300;400;600;700&family=Nunito+Sans:wght@400;600;700&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet"/>
 <!-- jsPDF + html2canvas for watermark PDF download -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <!-- QR Code generator -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -145,8 +146,12 @@ input:checked+.slider::after{transform:translateX(22px);}
 /* ── PREVIEW ── */
 #preview-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:12px;box-shadow:var(--shadow);}
 #preview-card h3{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
-#preview-wrap{width:100%;overflow:hidden;border:1px solid var(--border);border-radius:6px;background:#fff;position:relative;max-height:500px;overflow-y:auto;}
-#preview-iframe{width:595px;height:842px;border:none;transform-origin:top left;display:block;min-height:842px;}
+#preview-wrap{width:100%;overflow-x:hidden;overflow-y:auto;border:1px solid var(--border);border-radius:6px;background:#fff;position:relative;max-height:500px;scrollbar-width:thin;scrollbar-color:var(--primary) #E2E8F0;}
+#preview-wrap::-webkit-scrollbar{width:6px;}
+#preview-wrap::-webkit-scrollbar-track{background:#E2E8F0;border-radius:3px;}
+#preview-wrap::-webkit-scrollbar-thumb{background:var(--primary);border-radius:3px;}
+#preview-wrap::-webkit-scrollbar-thumb:hover{background:var(--primary-dark);}
+#preview-iframe{width:595px;height:842px;border:none;transform-origin:top left;display:block;min-height:842px;position:absolute;top:0;left:0;}
 
 /* ── TEMPLATE PICKER ── */
 .tpl-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
@@ -187,12 +192,17 @@ input:checked+.slider::after{transform:translateX(22px);}
 /* ── BULLET LIBRARY ── */
 #lib-modal{display:none;position:fixed;inset:0;z-index:998;background:rgba(0,0,0,.5);align-items:flex-end;justify-content:center;}
 #lib-modal.show{display:flex;}
-#lib-box{background:var(--card);border-radius:16px 16px 0 0;width:100%;max-width:600px;max-height:80vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,.2);}
-.lib-handle{width:40px;height:4px;background:var(--border);border-radius:4px;margin:10px auto 0;}
-.lib-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+#lib-box{background:var(--card);border-radius:16px 16px 0 0;width:100%;max-width:600px;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,.2);min-width:0;}
+.lib-handle{width:40px;height:4px;background:var(--border);border-radius:4px;margin:10px auto 0;flex-shrink:0;}
+.lib-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
 .lib-header h3{font-size:15px;font-weight:700;}
-.lib-cats{display:flex;gap:7px;overflow-x:auto;padding:10px 14px;border-bottom:1px solid var(--border);-webkit-overflow-scrolling:touch;}
-.lib-cat{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;background:var(--bg);color:var(--muted);}
+.lib-cats-wrap{flex-shrink:0;border-bottom:1px solid var(--border);overflow:hidden;width:100%;position:relative;}
+.lib-cats{display:flex;flex-wrap:nowrap;gap:7px;padding:10px 14px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--primary) #E2E8F0;width:100%;box-sizing:border-box;}
+.lib-cats::-webkit-scrollbar{height:5px;}
+.lib-cats::-webkit-scrollbar-track{background:#E2E8F0;border-radius:3px;}
+.lib-cats::-webkit-scrollbar-thumb{background:var(--primary);border-radius:3px;}
+.lib-cat{padding:6px 15px;border-radius:20px;border:1.5px solid var(--border);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;background:var(--bg);color:var(--muted);transition:all .15s;}
+.lib-cat:hover{border-color:var(--primary);color:var(--primary);}
 .lib-cat.active{background:var(--primary);color:#fff;border-color:var(--primary);}
 #lib-bullets{overflow-y:auto;padding:12px 14px;flex:1;}
 .lib-bullet{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .1s;border:1px solid transparent;}
@@ -388,6 +398,18 @@ input:checked+.slider::after{transform:translateX(22px);}
   #print-overlay{display:block!important;width:100%;margin:0;padding:0;}
   @page{size:A4;margin:0;}
 }
+
+  /* ══ CV IMPORT PAGE ══ */
+  .import-zone{border:2px dashed var(--border);border-radius:14px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);color:var(--muted);font-size:13px;margin-bottom:4px;}
+  .import-zone:hover,.import-zone.dragover{border-color:var(--primary);background:var(--primary-light);color:var(--primary);}
+  .import-icon{font-size:40px;margin-bottom:10px;}
+  .import-progress{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:4px;}
+  .import-progress-bar{height:100%;background:var(--primary);border-radius:3px;transition:width .3s;width:0%;}
+  .import-result{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600;margin-top:4px;}
+  .import-ok{background:#F0FDF4;color:#166534;border:1px solid #86EFAC;}
+  .import-err{background:#FEF2F2;color:#991B1B;border:1px solid #FCA5A5;}
+  .import-fields{font-size:12px;line-height:2.2;color:var(--text);}
+  .info-box{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:10px 12px;font-size:12px;color:#1E40AF;margin-bottom:14px;line-height:1.6;}
 </style>
 </head>
 <body>
@@ -436,10 +458,12 @@ input:checked+.slider::after{transform:translateX(22px);}
   <div class="nav-item" onclick="showPage('experience')" data-page="experience"><span class="icon">💼</span>Experience</div>
   <div class="nav-item" onclick="showPage('education')" data-page="education"><span class="icon">🎓</span>Education</div>
   <div class="nav-item" onclick="showPage('skills')" data-page="skills"><span class="icon">🛠</span>Skills</div>
+  <div class="sidebar-section">Customise</div>
   <div class="nav-item" onclick="showPage('extras')" data-page="extras"><span class="icon">✚</span>Extras & Toggles</div>
   <div class="sidebar-section">Design</div>
   <div class="nav-item" onclick="showPage('design')" data-page="design"><span class="icon">🎨</span>Templates & Style</div>
   <div class="sidebar-section">Tools</div>
+  <div class="nav-item" onclick="showPage('cvimport')" data-page="cvimport"><span class="icon">📥</span>Import Old CV</div>
   <div class="nav-item" onclick="backupData()"><span class="icon">💾</span>Download Backup</div>
   <div class="nav-item" onclick="document.getElementById('restore-input').click()"><span class="icon">⬆</span>Restore Backup</div>
   <input type="file" id="restore-input" accept=".json" style="display:none" onchange="restoreData(this)"/>
@@ -522,7 +546,7 @@ input:checked+.slider::after{transform:translateX(22px);}
           <textarea id="p_summary" rows="4" placeholder="Write 2–4 lines about your experience, key skills, and what makes you a strong candidate..." oninput="autoSave();updateSummaryCount()"></textarea>
           <div style="text-align:right;font-size:10px;color:var(--muted);margin-top:3px;"><span id="summary-count">0</span> characters</div>
         </div>
-        <button onclick="autoGenSummary()" style="padding:8px 16px;background:var(--primary-light);border:1.5px solid var(--primary);border-radius:8px;color:var(--primary);font-weight:700;font-size:12px;cursor:pointer;">✨ Auto-Write Summary</button>
+        <button id="ai-sum-btn" onclick="autoGenSummary()" style="padding:9px 18px;background:var(--primary);border:none;border-radius:8px;color:#fff;font-weight:700;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:opacity .2s;">🤖 Generate with AI</button>
       </div>
     </div>
   </div>
@@ -793,20 +817,22 @@ input:checked+.slider::after{transform:translateX(22px);}
         <div id="page-layout-ui"></div>
         <div style="margin-top:14px;padding:10px;background:#F0FDF4;border-radius:8px;border:1px solid #86EFAC;">
           <div style="font-size:11px;font-weight:700;color:#166534;margin-bottom:6px;">📐 Margin Settings</div>
+          <div style="font-size:11px;color:#64748B;line-height:1.6;margin-bottom:10px;padding:8px 10px;background:#F0FDF4;border-radius:6px;border:1px solid #86EFAC;">📐 <strong>Millimetre precision</strong> — 10mm = standard A4. Reduce to fit more content. 0mm = edge-to-edge.</div>
           <div class="g2" style="gap:10px;">
             <div class="field" style="margin:0;">
-              <label style="font-size:11px;">Bottom margin — Page 1 (px)</label>
-              <input type="number" id="margin_p1_b" value="36" min="10" max="80" oninput="autoSave()" style="font-size:13px;"/>
+              <label style="font-size:11px;">Bottom margin — Page 1 (mm)</label>
+              <input type="number" id="margin_p1_b" value="10" min="0" max="30" step="1" oninput="autoSave()" style="font-size:13px;"/>
             </div>
             <div class="field" style="margin:0;">
-              <label style="font-size:11px;">Top margin — Page 2+ (px)</label>
-              <input type="number" id="margin_p2_t" value="36" min="10" max="80" oninput="autoSave()" style="font-size:13px;"/>
+              <label style="font-size:11px;">Top margin — Page 2+ (mm)</label>
+              <input type="number" id="margin_p2_t" value="10" min="0" max="30" step="1" oninput="autoSave()" style="font-size:13px;"/>
             </div>
           </div>
           <div class="field" style="margin:8px 0 0;">
-            <label style="font-size:11px;">Bottom margin — Page 2+ (px)</label>
-            <input type="number" id="margin_p2_b" value="36" min="10" max="80" oninput="autoSave()" style="font-size:13px;"/>
+            <label style="font-size:11px;">Bottom margin — Page 2+ (mm)</label>
+            <input type="number" id="margin_p2_b" value="10" min="0" max="30" step="1" oninput="autoSave()" style="font-size:13px;"/>
           </div>
+          <div style="margin-top:6px;font-size:10px;color:#94A3B8;">💡 0mm = full bleed  ·  10mm = A4 standard  ·  20mm = generous spacing</div>
         </div>
       </div>
     </div>
@@ -860,6 +886,70 @@ input:checked+.slider::after{transform:translateX(22px);}
   </div>
 
   <!-- BACKUP/RESTORE PAGE -->
+  <div id="page-cvimport" class="page">
+    <div class="section-title">📥 Import Old CV</div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-header-left"><span class="card-icon">📄</span><span class="card-title">Upload Your Old CV (PDF)</span></div>
+        <span class="chevron up">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="info-box">ℹ️ Upload your existing CV as a PDF. We'll read it and auto-fill your name, phone, email, jobs, education, skills and more. Works 100% offline — nothing leaves your device.</div>
+
+        <!-- Drop zone -->
+        <div id="cv-import-zone" class="import-zone"
+          onclick="document.getElementById('cv-import-input').click()"
+          ondragover="event.preventDefault();this.classList.add('dragover')"
+          ondragleave="this.classList.remove('dragover')"
+          ondrop="event.preventDefault();this.classList.remove('dragover');handleCVImportFile(event.dataTransfer.files[0])">
+          <div class="import-icon">📄</div>
+          <p style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px;">Tap to choose PDF or drag &amp; drop here</p>
+          <p>Works offline · No data leaves your device</p>
+        </div>
+        <input type="file" id="cv-import-input" accept=".pdf" style="display:none" onchange="handleCVImportFile(this.files[0])"/>
+
+        <!-- Progress bar -->
+        <div id="cv-import-progress" style="display:none;margin-top:14px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <div style="width:18px;height:18px;border:3px solid var(--primary-light);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;"></div>
+            <span id="cv-import-status" style="font-size:13px;font-weight:600;color:var(--primary);">Reading PDF...</span>
+          </div>
+          <div class="import-progress"><div class="import-progress-bar" id="cv-import-bar"></div></div>
+        </div>
+
+        <!-- Error / info result -->
+        <div id="cv-import-result" style="display:none;margin-top:12px;"></div>
+
+        <!-- Extracted preview -->
+        <div id="cv-import-preview" style="display:none;margin-top:14px;">
+          <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Extracted Data Preview</div>
+          <div id="cv-import-fields" class="import-fields"></div>
+          <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+            <button onclick="applyImportedCV()" class="tbtn tbtn-primary" style="flex:1;min-width:140px;justify-content:center;padding:13px;">✓ Apply to CV Builder</button>
+            <button onclick="resetCVImport()" class="tbtn tbtn-light" style="justify-content:center;padding:13px 18px;">✕ Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-header-left"><span class="card-icon">💡</span><span class="card-title">Tips for Best Results</span></div>
+        <span class="chevron up">▾</span>
+      </div>
+      <div class="card-body">
+        <div style="font-size:13px;color:var(--muted);line-height:2.2;">
+          <div>✅ <strong>Best:</strong> PDF made from Word, Google Docs, or any CV builder app</div>
+          <div>✅ <strong>Good:</strong> Any digitally typed PDF with selectable text</div>
+          <div>⚠️ <strong>Partial:</strong> Heavily designed / graphic CVs</div>
+          <div>❌ <strong>Won't work:</strong> Scanned paper CVs (image-only PDF)</div>
+          <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">After import, check each section and correct anything that wasn't picked up.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="page-import" class="page">
     <div class="section-title">💾 Backup & Restore</div>
     <div class="card">
@@ -953,6 +1043,14 @@ input:checked+.slider::after{transform:translateX(22px);}
       <button onclick="closeMoreMenu()" style="background:none;border:none;font-size:18px;color:var(--muted);cursor:pointer;line-height:1;">✕</button>
     </div>
     <div style="padding:8px;">
+      <button onclick="showPage('cvimport');closeMoreMenu();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 12px;border:none;background:none;border-radius:10px;font-size:14px;font-weight:600;color:#1E293B;cursor:pointer;text-align:left;">
+        <span style="font-size:22px;">📥</span>
+        <div>
+          <div style="font-weight:700;">Import Old CV</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:1px;">Upload PDF and auto-fill all fields</div>
+        </div>
+      </button>
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <button onclick="backupData();closeMoreMenu();" style="width:100%;display:flex;align-items:center;gap:14px;padding:14px 12px;border:none;background:none;border-radius:10px;font-size:14px;font-weight:600;color:#1E293B;cursor:pointer;text-align:left;">
         <span style="font-size:22px;">💾</span>
         <div>
@@ -1024,10 +1122,16 @@ input:checked+.slider::after{transform:translateX(22px);}
   <div id="lib-box">
     <div class="lib-handle"></div>
     <div class="lib-header">
-      <h3>📋 Bullet Point Library</h3>
+      <h3>💡 Responsibility Suggestions</h3>
       <button onclick="closeLib()" style="border:none;background:none;font-size:20px;cursor:pointer;color:var(--muted);">✕</button>
     </div>
-    <div class="lib-cats" id="lib-cats"></div>
+    <div style="padding:10px 14px;border-bottom:1px solid var(--border);flex-shrink:0;">
+      <input id="lib-search" type="text" placeholder="🔍  Search by job title or category…" oninput="filterLibCats(this.value)" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);color:var(--text);outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"/>
+      <div id="lib-match-hint" style="font-size:11px;color:var(--primary);font-weight:700;margin-top:5px;display:none;"></div>
+    </div>
+    <div class="lib-cats-wrap">
+      <div class="lib-cats" id="lib-cats"></div>
+    </div>
     <div id="lib-bullets"></div>
   </div>
 </div>
@@ -1253,14 +1357,135 @@ const TPL_INFO = [
 ];
 
 const BULLET_LIB = {
-  'Loco/MSV Operator':['Operated MSV equipment safely in underground tunnel construction environments','Transported materials and personnel through tunnel sections following all safety protocols','Performed daily pre-operation checks, maintenance logs and safety inspections','Coordinated with tunnel engineers for smooth and timely material movement','Operated locomotive in metro rail tunnel projects using NATM method','Maintained accurate records of shift operations and equipment status','Ensured compliance with all site safety rules and PPE requirements','Managed loading and unloading of heavy construction materials in confined spaces'],
-  'Gantry Crane':['Operated TBM Gantry Crane for material handling in metro and tunnel projects','Maintained precise crane movements in limited underground work spaces','Conducted routine crane maintenance and safety inspections before each shift','Coordinated lifts with site engineers to ensure safe and efficient operations','Ensured all crane operations met project safety and quality standards','Handled heavy precast segments and construction materials with precision','Documented all crane operations and reported defects to maintenance team'],
-  'Driver':['Operated heavy commercial vehicles safely across long-distance routes','Maintained vehicle logs, mileage records and fuel consumption reports','Performed routine vehicle checks and reported mechanical issues promptly','Delivered goods on time with zero incidents across all assignments','Followed all traffic rules, company policies and route instructions'],
-  'Construction':['Assisted in civil construction activities as per project specifications','Operated heavy machinery including excavators and concrete mixers','Followed site safety protocols and wore all mandatory PPE at all times','Worked with team to meet daily construction targets and quality standards','Assisted engineers in surveying, setting out and quality checks'],
-  'Security':['Monitored premises and ensured security of property and personnel','Conducted regular patrols and logged all security incidents accurately','Managed access control and visitor entry procedures at main gate','Responded promptly to alarms, emergencies and security breaches'],
-  'Sales / Marketing':['Achieved and exceeded monthly sales targets consistently','Built and maintained strong relationships with new and existing clients','Conducted product demonstrations and presentations to potential customers','Identified new business opportunities through market research'],
-  'Office / Admin':['Managed daily office operations including scheduling and correspondence','Maintained accurate filing systems for physical and digital documents','Handled incoming calls, emails and visitor queries professionally','Coordinated with departments to ensure smooth workflow and communication'],
-  'Accountant':['Maintained accurate books of accounts including ledgers and journals','Prepared monthly financial statements and management reports','Processed invoices, payments and bank reconciliations on time','Assisted in GST filing, TDS returns and income tax compliance'],
+  "Software Engineer": ["Designed, developed and deployed scalable web applications using React, Node.js and REST APIs", "Collaborated with product managers and designers to deliver features on time within Agile sprints", "Wrote clean, maintainable code following SOLID principles, design patterns and coding standards", "Performed thorough code reviews and provided constructive feedback to improve team code quality", "Debugged and resolved critical production issues across front-end, back-end and database layers", "Optimised application performance reducing page load times by up to 40% through caching and lazy loading", "Integrated third-party APIs, payment gateways and cloud services including AWS and Firebase", "Developed and maintained CI/CD pipelines using GitHub Actions, Jenkins and Docker", "Wrote unit, integration and end-to-end tests using Jest, Mocha and Selenium to maintain 90%+ coverage", "Participated in system design discussions and contributed to architectural decisions for new features", "Documented technical specifications, API contracts and system diagrams for internal and external teams", "Mentored junior developers through pair programming, knowledge-sharing sessions and code walkthroughs", "Worked with cross-functional teams across design, QA and DevOps to ship production-ready releases", "Managed and resolved Git merge conflicts, versioning and branching strategies for team repositories"],
+  "IT Support": ["Provided first and second-line technical support to 200+ end users across the organisation", "Diagnosed and resolved hardware, software and network issues with an average resolution time under 2 hours", "Managed and maintained IT asset inventory including laptops, desktops, printers and peripherals", "Set up and configured new user accounts, email IDs, VPN access and software installations", "Maintained helpdesk ticketing system (ServiceNow / Freshdesk) with timely escalation and closure", "Administered Active Directory, Office 365 and Google Workspace user accounts and permissions", "Assisted in network administration including LAN/WAN setup, switch configuration and Wi-Fi management", "Deployed and managed endpoint security tools including antivirus, MDM and patch management systems", "Trained new staff on IT policies, software tools and cybersecurity best practices", "Coordinated with vendors and OEMs for hardware repairs, AMC renewals and software licensing", "Maintained SLA compliance with 95%+ first-call resolution rate for routine support requests", "Assisted in setting up conference rooms, projectors and AV equipment for meetings and events", "Documented IT procedures, troubleshooting guides and network topology diagrams for reference"],
+  "Data Analyst": ["Collected, cleaned and transformed large datasets from multiple sources using Python, SQL and Excel", "Built interactive dashboards and reports in Power BI and Tableau for C-level and operations teams", "Prepared weekly, monthly and quarterly performance reports with actionable business insights", "Identified trends, patterns and anomalies in sales, operations and financial data to support decisions", "Collaborated with business stakeholders to define KPIs, metrics and reporting requirements", "Automated repetitive reporting tasks using Python (Pandas, NumPy) and SQL scripts, saving 10+ hours/week", "Conducted A/B test analysis and presented findings to product and marketing teams", "Ensured data accuracy, completeness and integrity across all reporting systems and databases", "Developed predictive models and statistical analyses to forecast demand, revenue and customer behaviour", "Managed data pipelines and ETL workflows to ensure timely availability of clean data", "Worked with engineers to design data warehousing solutions and optimise query performance", "Presented data findings to non-technical stakeholders using clear, visual storytelling techniques", "Created and maintained data dictionaries, documentation and governance standards for data assets"],
+  "Accountant": ["Maintained accurate books of accounts including ledgers, journals and trial balance in Tally/SAP", "Prepared monthly financial statements, P&L reports and balance sheets for management review", "Processed invoices, vendor payments, bank reconciliations and NEFT/RTGS transactions on time", "Filed GST returns (GSTR-1, GSTR-3B), TDS returns and income tax challans within due dates", "Assisted in statutory audit, internal audit and tax audit and liaised with CA firm for compliance", "Managed petty cash, employee expense reimbursements and travel advance settlements", "Monitored accounts receivable, generated ageing reports and followed up on overdue payments", "Prepared MIS reports, cash flow statements and fund flow statements for senior management", "Reconciled vendor statements, inter-company accounts and bank statements monthly", "Maintained fixed asset register, computed depreciation and tracked capital expenditure", "Handled payroll processing, professional tax, ESI and PF deductions and remittances", "Assisted in preparation of project cost reports, budget vs actual analysis and variance reporting", "Coordinated with banks for OD facilities, letter of credit and bank guarantee documentation"],
+  "Sales / Marketing": ["Consistently achieved and exceeded monthly and quarterly sales targets by 110-130%", "Built and nurtured strong relationships with key accounts, resulting in 30% revenue retention growth", "Conducted product demonstrations, client presentations and negotiated commercial terms successfully", "Generated and qualified new leads through cold calls, LinkedIn outreach and field visits", "Identified new business opportunities through market mapping, competitor analysis and customer referrals", "Managed CRM database (Salesforce / Zoho) and maintained accurate pipeline and deal records", "Coordinated with marketing team on campaign execution, lead nurturing and trade show participation", "Prepared weekly sales reports, forecast summaries and pipeline review decks for management", "Onboarded new clients with smooth handover to delivery and account management teams", "Responded to RFPs, prepared commercial proposals and tailored presentations to client needs", "Tracked digital marketing campaign performance on Google Ads, Meta and LinkedIn using analytics tools", "Conducted post-sale follow-ups to ensure client satisfaction and generate repeat business", "Trained and mentored junior sales team members on pitch techniques, objection handling and CRM usage"],
+  "Office / Admin": ["Managed daily office operations including scheduling, correspondence, filing and facility coordination", "Maintained accurate physical and digital records, document management systems and filing protocols", "Handled incoming calls, emails and walk-in visitor queries professionally and with prompt response", "Coordinated internal and external meetings, travel bookings, visa arrangements and accommodations", "Supported senior management with report preparation, presentations, data entry and research tasks", "Managed office supplies procurement, vendor coordination and ensured cost-effective purchasing", "Processed invoices, expense claims and petty cash with proper documentation and approvals", "Maintained confidentiality of sensitive documents and executive communications at all times", "Handled courier dispatch, mail management and document tracking across departments", "Onboarded new employees by coordinating ID cards, system access, workstation and documentation", "Ensured smooth interdepartmental communication and timely follow-up on pending action items", "Organised company events, townhalls, off-sites and staff engagement activities end to end", "Maintained office equipment including printers, scanners and EPABX systems and arranged servicing"],
+  "HR Executive": ["Managed end-to-end recruitment across multiple departments including sourcing, screening and offer rollout", "Sourced candidates through Naukri, LinkedIn, job portals and employee referral programmes", "Conducted HR interviews, salary negotiations and coordinated with hiring managers for final decisions", "Handled onboarding, induction planning and pre-joining documentation for all new joiners", "Maintained employee records, HRMS data, attendance, leave balances and contract documentation", "Processed monthly payroll for 200+ employees including salary revisions and full and final settlements", "Managed PF, ESI, professional tax, gratuity and labour law statutory compliance", "Administered performance appraisal cycles, goal-setting frameworks and promotion processes", "Handled employee grievances, disciplinary proceedings and exit interviews professionally", "Coordinated training and development programmes including skill-building and compliance training", "Prepared HR MIS reports including headcount, attrition, hiring TAT and manpower cost analysis", "Developed and updated HR policies, employee handbook and standard operating procedures", "Engaged with employees on welfare initiatives, rewards programmes and cultural activities"],
+  "Teacher / Educator": ["Delivered engaging, curriculum-aligned lessons for classes of 30-50 students across age groups", "Developed detailed lesson plans, worksheets, assessments and project-based learning activities", "Monitored student academic progress through formative and summative assessments with actionable feedback", "Differentiated instruction to accommodate diverse learning styles, abilities and needs in the classroom", "Maintained classroom discipline, created a respectful environment and managed behavioural challenges", "Communicated student performance, attendance and behavioural updates to parents via meetings and reports", "Integrated digital tools including Google Classroom, Kahoot and smart boards into teaching practice", "Participated in curriculum review, textbook committee work and school-wide academic planning", "Organised and supervised co-curricular activities, field trips, competitions and school events", "Collaborated with fellow teachers for interdisciplinary projects and shared classroom strategies", "Prepared students for board examinations, competitive exams and Olympiad-level challenges", "Provided extra support and remedial sessions for academically weaker students after school hours", "Maintained student records, attendance registers and report cards as per school administration requirements"],
+  "Nurse / Healthcare": ["Provided compassionate direct patient care including vital signs monitoring, medication administration and wound dressing", "Assisted physicians and surgeons during ward rounds, procedures, minor surgeries and emergency interventions", "Maintained accurate patient records, nursing notes, medication charts and discharge summaries in HMS software", "Educated patients and family members on diagnoses, treatment plans, medication adherence and post-discharge care", "Managed IV lines, catheters, nasogastric tubes and other clinical devices as per standard protocols", "Coordinated with multidisciplinary teams including physiotherapy, dietetics and social work for holistic care", "Responded to medical emergencies, code blues and critical deteriorations with calm and clinical precision", "Ensured strict adherence to infection control, hand hygiene and biomedical waste disposal protocols", "Supervised and guided junior nurses and nursing students during clinical rotations", "Maintained high patient satisfaction by addressing concerns, ensuring comfort and clear communication", "Administered blood transfusions, chemotherapy and specialised IV medications under physician orders", "Prepared patients for diagnostic procedures including ECG, X-ray and endoscopy with proper consent", "Conducted pre-operative and post-operative care assessments and escalated changes in patient condition promptly"],
+  "Driver": ["Operated heavy commercial vehicles (HCV/LCV) safely across local, state and long-distance routes", "Maintained accurate vehicle logbooks, trip sheets, mileage records and fuel consumption reports", "Performed daily pre-trip and post-trip vehicle safety checks and escalated defects promptly", "Delivered goods, equipment and personnel on schedule with zero accidents and near-zero delays", "Followed all RTO regulations, traffic laws and company transport policies at all times", "Managed vehicle documentation including RC, insurance, PUC and fitness certificate renewals", "Assisted with loading, unloading, strapping and securing of cargo to prevent transit damage", "Coordinated with dispatch team for route planning, delivery instructions and real-time updates", "Maintained vehicle cleanliness, basic servicing and coordinated with workshop for scheduled maintenance", "Ensured safe and professional transport of senior executives, clients and VIP guests", "Managed cash collections, delivery receipts and POD documentation for goods dispatched", "Navigated efficiently using GPS tools and local knowledge to avoid traffic delays"],
+  "Security Guard": ["Monitored and secured premises, assets, equipment and personnel during assigned 8/12-hour shifts", "Conducted regular patrol rounds across all designated zones and logged all observations and incidents", "Managed visitor access control, vehicle entry/exit and contractor badge issuance at entry gates", "Responded promptly to alarms, security breaches, trespassing and fire emergency situations", "Coordinated with local police, fire brigade and emergency services during critical incidents", "Maintained detailed shift handover reports, daily occurrence registers and incident documentation", "Operated CCTV surveillance systems, metal detectors and biometric access equipment", "Ensured all visitors complied with site security procedures and photo ID verification policies", "Monitored fire safety equipment including extinguishers, hydrants and emergency exits", "Reported suspicious activity, potential security threats and policy violations to supervisors", "Trained new security personnel on post duties, SOPs and emergency evacuation procedures", "Maintained a professional, calm and courteous approach with employees, visitors and vendors"],
+  "Construction": ["Executed civil construction activities including earthworks, formwork, concreting and masonry as per drawings", "Operated heavy machinery including excavators, concrete mixers, compactors and transit mixers safely", "Followed all site safety protocols including permit-to-work, toolbox talks and PPE compliance at all times", "Worked with site team to achieve daily productivity targets while maintaining quality standards", "Assisted engineers and surveyors in setting out, levelling, benchmarking and quality inspection activities", "Placed and vibrated concrete, laid reinforcement steel and ensured proper cover and alignment as specified", "Maintained site cleanliness and ensured safe, organised storage of construction materials and equipment", "Participated in daily safety briefings, hazard identification and near-miss reporting activities", "Erected and dismantled scaffolding, centering and shuttering safely as per site requirements", "Assisted in block work, plastering, tiling and finishing activities as required by project scope", "Supported material handling, plant operations and general site logistics for smooth project execution", "Reported progress, issues and defects to site supervisor for timely resolution and documentation"],
+  "Loco/MSV Operator": ["Operated MSV and locomotive equipment safely in underground tunnel construction environments", "Transported construction materials, precast segments and personnel through tunnel headings safely", "Performed detailed pre-operation checks, shift maintenance logs and safety inspections each day", "Coordinated with tunnel engineers and mining supervisors for timely and efficient material movement", "Operated locomotive in metro rail tunnel projects following NATM and EPBM construction methods", "Maintained accurate records of shift operations, trip counts and equipment status in logbooks", "Ensured full compliance with site safety rules, permit-to-work systems and PPE requirements", "Managed loading and unloading of heavy construction materials in confined and restricted spaces", "Assisted in TBM launch and breakthrough operations and segment ring-build activities", "Operated battery-powered locomotives and diesel engines across varying gradient tunnel profiles", "Responded to emergency situations inside tunnel including evacuation and equipment breakdown protocols", "Maintained communication with surface control room and surface plant operators during operations"],
+  "Gantry / Crane Operator": ["Operated TBM gantry crane for segment handling, grout supply and materials in metro tunnel projects", "Maintained precise and controlled crane movements in confined underground workspaces", "Conducted thorough pre-shift crane inspections, safety checks and defect reporting", "Coordinated all lifts with signal man, banksmen and site engineers for safe and efficient operations", "Handled heavy precast tunnel segments, rebar cages, formwork and site equipment with precision", "Documented daily crane operation logs, lift plans and defect reports for site records", "Ensured all lifts complied with safe working load limits, rigging standards and lifting regulations", "Operated overhead cranes, mobile cranes and gantry systems depending on project requirements", "Participated in third-party crane inspection and load testing activities and maintained certification", "Maintained wire rope, sheaves, hooks and rigging accessories in good working condition", "Guided riggers and slingers on correct slinging techniques and load balance during critical lifts", "Adhered strictly to lift plans, exclusion zones and permit-to-lift requirements on all occasions"],
+  "Electrician": ["Installed, tested and commissioned electrical wiring, distribution boards, panels and equipment", "Carried out preventive and breakdown maintenance of electrical systems, motors and machinery", "Diagnosed electrical faults using multimeters, clamp meters and insulation resistance testers", "Ensured all installations complied with IS codes, safety standards and client specifications", "Maintained records of electrical maintenance, periodic inspection reports and energy meter readings", "Installed and terminated power and control cables for HT/LT systems as per SLD drawings", "Coordinated with civil and mechanical teams during MEP works in construction and fit-out projects", "Conducted routine inspections and load tests on DG sets, UPS systems and battery banks", "Performed earthing and lightning protection system installation and testing as per standards", "Operated switchgear, contactors, relays and VFDs and carried out routine maintenance tasks", "Assisted in commissioning of LT panels, MCC panels and power factor correction equipment", "Reported unsafe electrical conditions, exposed wiring and equipment failures to supervisor immediately"],
+  "Plumber": ["Installed, tested and commissioned plumbing systems including water supply, drainage and sewage networks", "Diagnosed and resolved plumbing faults, pipe leakages, blockages and waterproofing failures efficiently", "Installed sanitary fixtures, water heaters, pumps and pressure-reducing valves as per specifications", "Read and interpreted plumbing layout drawings, isometrics and P&ID diagrams for installation", "Ensured all plumbing work complied with NBC codes, building regulations and client standards", "Installed fire suppression, sprinkler and hydrant systems as part of MEP project scope", "Carried out pressure testing, flushing and disinfection of water supply pipelines before handover", "Coordinated with civil, electrical and HVAC teams during MEP installation and fit-out works", "Maintained records of work completed, material usage, as-built drawings and pending punch items", "Assisted in installation of STP/ETP pipework, chemical dosing systems and sump pump connections", "Performed routine maintenance on overhead tanks, underground sumps and booster pump stations", "Handled CPVC, UPVC, GI, CI and PPR piping systems using appropriate jointing and threading methods"],
+  "Welder / Fabricator": ["Performed MIG, TIG, SMAW and FCAW welding on structural steel, pipes and pressure vessels", "Read and interpreted engineering drawings, weld symbols, isometrics and fabrication blueprints", "Ensured all welds met quality standards and passed visual, DPT, radiographic and UT inspections", "Operated angle grinders, plasma cutters, cutting torches and fabrication tools safely and precisely", "Maintained welding machines, cables, torches and associated equipment in good working condition", "Adhered strictly to hot work permits, fire precautions, PPE requirements and safety procedures", "Coordinated with QC inspectors during weld testing, WPS qualification and joint inspection stages", "Fabricated structural steel members including beams, columns, trusses and staircase components", "Performed pre-weld and inter-pass temperature checks and maintained preheat as per WPS requirements", "Assisted in erection and alignment of steel structures using come-alongs, jacks and rigging equipment", "Handled stainless steel, duplex, mild steel and alloy steel welding across various applications", "Prepared weld inspection records, joint registers and welder qualification documentation"],
+  "Mechanic": ["Diagnosed and repaired mechanical faults in HCV, LCV, construction equipment and industrial machinery", "Performed scheduled preventive maintenance including oil changes, filter replacements and greasing", "Overhauled engines, gearboxes, differentials, brake systems and suspension assemblies as required", "Maintained accurate job cards, maintenance logs and repair history records for all equipment", "Operated diagnostic tools (OBD scanners, pressure gauges, multimeters) to identify root causes", "Ensured timely completion of servicing schedules to minimise equipment downtime and production loss", "Managed spare parts requisitions, maintained workshop inventory and coordinated with parts suppliers", "Repaired hydraulic systems, cylinders, pumps and control valves on earthmoving equipment", "Performed electrical diagnostics and repaired starter motors, alternators and wiring harnesses", "Assisted in major plant shutdowns and overhauling of critical equipment within tight schedules", "Conducted post-repair road tests and load tests to verify equipment performance before sign-off", "Trained apprentice mechanics on safe workshop practices, tool usage and equipment care"],
+  "Civil Engineer": ["Supervised and managed civil construction activities including earthworks, RCC, masonry and finishing", "Reviewed engineering drawings, BOQs and specifications and coordinated site execution accordingly", "Ensured site activities complied with IS codes, design standards and client quality plans", "Coordinated with contractors, subcontractors, consultants and vendors for seamless project execution", "Prepared daily site progress reports, inspection records, snag lists and method statements", "Conducted quality checks on concrete cube tests, rebar placement, brick work and plaster finishing", "Carried out quantity surveying, prepared running account bills and processed subcontractor payments", "Managed land survey, setting out, levelling and alignment checks using total station and auto level", "Assisted in preparation of project schedules, baseline programmes and three-week lookahead plans", "Monitored construction safety, enforced PPE compliance and conducted weekly toolbox talks on site", "Resolved site engineering issues, clashes and design gaps in coordination with design team", "Maintained material test reports, inspection test plans and quality documentation for handover dossier"],
+  "Mechanical Engineer": ["Designed and reviewed mechanical systems including HVAC, piping, ducting and rotating equipment", "Supervised installation, testing, commissioning and pre-commissioning of mechanical systems", "Prepared technical documents including method statements, ITPs, P&IDs and engineering specifications", "Conducted root cause analysis and failure investigation for equipment breakdowns and recurring faults", "Coordinated with vendors, OEMs and sub-contractors for procurement, inspection and site activities", "Ensured compliance with ASME, IS and client engineering codes, standards and safety regulations", "Managed preventive and corrective maintenance programmes for rotating and static mechanical assets", "Prepared maintenance schedules, spare parts lists and critical equipment inventory management plans", "Assisted in selection and sizing of pumps, compressors, fans and heat exchangers for projects", "Reviewed vendor drawings, data sheets and O&M manuals and provided technical comments", "Conducted energy audits and implemented efficiency improvements reducing utility costs by 15%", "Led mechanical completion and punch-listing activities ahead of commissioning and client handover"],
+  "Project Manager": ["Led end-to-end project delivery across planning, procurement, execution, monitoring and closure phases", "Developed detailed project plans, WBS, schedules, resource plans and budgets using MS Project/Primavera", "Managed project budgets of up to ₹50 crore and ensured cost control within approved baselines", "Maintained regular stakeholder communication through progress reports, presentations and site meetings", "Identified, assessed and mitigated project risks through structured risk registers and contingency plans", "Monitored project KPIs including schedule variance, cost performance index and resource utilisation", "Coordinated cross-functional teams across design, procurement, construction and commissioning phases", "Managed change control processes, variation orders and contract amendments with clients and contractors", "Ensured projects were delivered on time, within scope and within approved budget with high quality", "Conducted weekly and monthly project reviews with senior leadership and client representatives", "Resolved critical path delays through resource reallocation, acceleration and scope re-sequencing", "Led project close-out including documentation handover, lessons learned and final account settlement"],
+  "Site Supervisor": ["Supervised daily site activities and ensured execution aligned with approved drawings and work plans", "Coordinated manpower, materials, tools and plant to maintain productivity and meet weekly milestones", "Conducted daily safety walkthroughs, enforced PPE usage and addressed unsafe acts immediately", "Reviewed work quality against ITP checkpoints and raised NCRs for non-conforming work", "Prepared daily progress reports, labour deployment records and material consumption summaries", "Briefed the workforce daily on targets, safety requirements, method of work and quality expectations", "Liaised with engineers, subcontractors, suppliers and client representatives on all site matters", "Managed subcontractor work activities, ensured scope compliance and resolved site coordination issues", "Monitored concrete pours, rebar fixing and formwork activities and ensured quality checkpoints were met", "Tracked tools, equipment and consumables on site to prevent loss, misuse and wastage", "Reported progress, manpower utilisation and equipment status daily to the project manager", "Participated in site safety audits, emergency drills and near-miss investigation exercises"],
+  "Quantity Surveyor": ["Prepared detailed Bills of Quantities, cost estimates, rate analysis and tender pricing documents", "Evaluated contractor bids, conducted bid comparisons and assisted in contract award decisions", "Managed project budgets, tracked actual expenditure and prepared cost-to-complete forecasts monthly", "Processed interim payment certificates, back-charge claims, variations and final account settlements", "Conducted site measurements, verified quantities of work completed and reconciled against drawings", "Prepared monthly cash flow projections and submitted cost reports to project and finance teams", "Managed contract administration including RFIs, site instructions and variation order documentation", "Assisted in dispute resolution, claims analysis and extension of time assessments", "Prepared material reconciliation reports and controlled wastage against BOQ allocations on site", "Coordinated with procurement team for material price comparison, sourcing and purchase orders", "Reviewed subcontractor invoices, verified against work done and certified payments accordingly", "Maintained complete contract correspondence, cost records and registers for audit and review"],
+  "Receptionist": ["Welcomed visitors, clients and employees with warmth, professionalism and a positive first impression", "Managed multi-line telephone switchboard, directed calls and handled queries with prompt, courteous responses", "Handled appointment scheduling, meeting room coordination and calendar management for senior staff", "Maintained visitor registers, issued visitor passes and ensured compliance with security entry protocols", "Coordinated courier dispatch, inbound mail management and document tracking across departments", "Managed front desk cleanliness, reception area presentation and company notice boards", "Provided administrative support including filing, photocopying, data entry and report preparation", "Handled travel booking, hotel reservations and cab arrangements for employees and guests", "Coordinated with housekeeping and facilities for visitor-readiness and event setups", "Maintained stationery and pantry inventory at front office and raised purchase requests timely", "Greeted and escorted VIP clients, investors and board members to meeting rooms and boardrooms", "Handled customer grievances at the front desk, provided accurate information and escalated when needed"],
+  "Customer Service": ["Handled 80-100 inbound customer contacts daily via phone, email and live chat with professionalism", "Resolved customer issues, complaints and escalations efficiently while achieving high CSAT scores", "Maintained accurate records of all customer interactions and resolutions in CRM (Salesforce/Freshdesk)", "Escalated complex and unresolved issues to Level 2 teams with full documentation and follow-up", "Achieved first-call resolution (FCR) rates above 85% consistently over quarterly performance reviews", "Identified patterns in customer complaints and raised process improvement suggestions to the team lead", "Provided accurate product information, order status updates and after-sales support to customers", "Cross-sold and upsold company products and services, contributing to revenue targets", "Managed refund, replacement and return requests as per company policy within TAT", "Participated in new product training, quality calibration sessions and team performance reviews", "Maintained service quality during high-volume periods including sales events and festive seasons", "Contributed to VOC (Voice of Customer) feedback collection and shared insights with product teams"],
+  "Logistics / Warehouse": ["Managed receiving, storage, picking, packing and dispatch operations in compliance with SOPs", "Operated WMS software for inventory tracking, order fulfilment, inbound and outbound management", "Conducted cycle counts, quarterly physical inventory and reconciled discrepancies with finance records", "Ensured accurate labelling, barcode scanning, packaging and documentation for all outbound shipments", "Coordinated with 3PL transport providers, fleet operators and couriers for timely deliveries", "Maintained cold chain, hazardous materials and high-value item storage as per regulatory requirements", "Supervised warehouse staff deployment, shift scheduling and daily work allocation", "Achieved 99%+ order accuracy rate through systematic pick-and-pack verification processes", "Managed reverse logistics for returns, damaged goods and vendor rejections efficiently", "Implemented 5S workplace organisation and visual management standards in the warehouse", "Prepared inventory reports, GRN reconciliations and stock ageing analysis for management review", "Reduced storage cost by 20% through optimised space utilisation and slotting strategies"],
+  "Retail / Shop": ["Assisted customers in product selection, provided tailored recommendations and ensured excellent service", "Maintained product displays, planograms, shelf arrangements and store cleanliness at all times", "Processed cash, card and UPI transactions accurately and maintained till records with zero discrepancies", "Managed stock replenishment, product returns, exchange processing and damaged item documentation", "Achieved individual and store sales targets consistently through effective product knowledge and upselling", "Handled customer complaints courteously and escalated issues to store manager when required", "Participated in weekly stock-taking, bi-annual inventory audits and seasonal promotional campaigns", "Received and verified incoming stock, matched with purchase orders and updated inventory records", "Ensured store compliance with safety, hygiene, display and brand standards at all times", "Cross-sold and recommended complementary products to increase average transaction value", "Maintained knowledge of current offers, promotions, loyalty programmes and new product launches", "Trained new sales staff on customer handling, billing systems and store operating procedures"],
+  "Cook / Chef": ["Prepared and cooked a range of dishes as per standardised recipes, portion sizes and presentation standards", "Maintained high standards of food hygiene, FSSAI compliance and kitchen cleanliness at all times", "Managed prep schedules, mise en place and kitchen workflow to ensure timely service during peak hours", "Monitored ingredient inventory, raised requisitions and minimised food wastage through FIFO practices", "Assisted head chef in menu planning, seasonal dish development and recipe cost standardisation", "Trained and supervised commis chefs and kitchen helpers on techniques, hygiene and station responsibilities", "Operated all kitchen equipment safely including ovens, fryers, grills, mixers and blast chillers", "Ensured consistent food quality, taste, temperature and plating standards across all service periods", "Managed daily cleaning schedules, deep cleaning activities and pest control coordination in the kitchen", "Handled special dietary requirements, allergen awareness and guest customisation requests professionally", "Participated in buffet setup, live counter management and banquet catering operations", "Maintained kitchen records including temperature logs, oil usage records and production reports"],
+  "Hotel / Hospitality": ["Delivered outstanding guest experiences consistently in line with hotel brand standards and SOPs", "Managed guest check-in, check-out, room assignments, early arrivals and late checkouts efficiently", "Handled reservations, billing, guest folio review and cashiering with accuracy and attention to detail", "Resolved guest complaints, service failures and escalations promptly and with empathy", "Coordinated with housekeeping, engineering and F&B teams for seamless guest experience delivery", "Achieved high guest satisfaction scores (GSS/TripAdvisor) through personalised and attentive service", "Upsold room upgrades, dining packages and hotel facilities to enhance revenue and guest experience", "Managed VIP arrivals, repeat guest recognition and personalised amenity setups", "Handled group check-ins, tour operator billing and MICE guest coordination efficiently", "Maintained up-to-date knowledge of hotel facilities, room categories, local attractions and dining", "Trained new front office and guest services team members on systems and service standards", "Prepared shift handover reports, guest feedback summaries and occupancy/revenue briefing for management"],
+  "Banking / Finance": ["Processed customer transactions including deposits, withdrawals, NEFT, RTGS and IMPS efficiently", "Handled account opening, KYC documentation, CKYC updates and customer onboarding processes", "Managed fixed deposits, recurring deposits, loan disbursals and pre-closure requests accurately", "Resolved customer queries, complaints and service requests within defined TAT and service standards", "Ensured strict compliance with RBI guidelines, AML/KYC norms, FEMA and bank internal audit policies", "Maintained accurate cash balances, currency chest operations and end-of-day reconciliation reports", "Cross-sold banking products including savings accounts, credit cards, insurance and mutual funds", "Assisted in preparation of credit appraisal notes, loan documentation and disbursement processes", "Managed branch operations during peak hours with efficiency, accuracy and customer friendliness", "Coordinated with back-office teams for trade finance, NRI services and government scheme operations", "Prepared branch MIS reports, regulatory returns and management dashboards for review", "Participated in financial literacy camps, customer awareness programmes and digital banking adoption drives"],
+  "Pharmacist": ["Dispensed prescription and OTC medications accurately, verifying dosage, strength and patient details", "Counselled patients on drug usage, dosage schedules, drug interactions and side effect management", "Maintained pharmacy records, prescription registers, controlled drug logs and narcotic ledgers", "Conducted regular stock audits, expiry checks and ensured proper cold-chain storage of medicines", "Coordinated with doctors and clinical staff for prescription clarifications, substitutions and queries", "Ensured full compliance with Pharmacy Act, Drug Control regulations and licensing requirements", "Managed pharmacy inventory, placed purchase orders and maintained minimum par stock at all times", "Processed insurance claims, co-payment collection and pharmacy billing accurately", "Participated in hospital formulary management, drug shortage analysis and therapeutic substitution", "Educated nursing staff on medication storage, reconstitution and administration best practices", "Maintained pharmacovigilance records and submitted adverse drug reaction reports as required", "Handled patient medication history, allergy documentation and high-alert medication protocols"],
+  "Lab Technician": ["Performed haematology, biochemistry, microbiology and serology tests as per laboratory SOPs", "Collected and processed blood, urine, sputum and other biological specimens accurately and safely", "Maintained calibration schedules for all laboratory instruments including auto-analysers and centrifuges", "Recorded and verified test results in LIS and reported critical values to clinical staff immediately", "Followed strict biosafety Level 2 protocols including PPE usage, spill management and waste disposal", "Managed laboratory inventory including reagent kits, consumables and controls with FIFO adherence", "Assisted in preparation for NABL accreditation, internal audits and external quality assessment programmes", "Performed QC checks including Levey-Jennings chart monitoring and corrective action documentation", "Maintained equipment maintenance logs, temperature records and SOP version control registers", "Processed samples for outsourced tests and coordinated with referral laboratories for result collection", "Assisted in microbiology culture plating, sensitivity testing and AFB smear examination procedures", "Supported pathologist and senior technologists in reporting and slide preparation for histopathology"],
+  "Graphic Designer": ["Created compelling designs for social media, digital ads, emailers, brochures and print collaterals", "Developed brand identities including logos, brand guides, colour palettes and typography systems", "Collaborated with clients and marketing teams to understand design briefs and deliver creative solutions", "Produced high-quality artwork using Adobe Photoshop, Illustrator, InDesign and Figma", "Managed 5-10 concurrent design projects while consistently meeting tight deadlines", "Ensured brand consistency across all design touchpoints and digital and print platforms", "Designed responsive web graphics, UI elements, banners and landing page assets for digital campaigns", "Created motion graphics and animated social media content using Adobe After Effects and Canva", "Incorporated client feedback through iterative design review cycles with clear revision tracking", "Prepared print-ready artwork with correct bleed, resolution, colour mode and file specifications", "Developed creative concepts for product packaging, point-of-sale materials and outdoor advertising", "Maintained organised asset libraries, brand files and source file archives for all project deliverables"],
+  "Content Writer": ["Researched and created SEO-optimised content for websites, blogs, landing pages and product descriptions", "Produced long-form articles, whitepapers, case studies and email campaigns for B2B and B2C brands", "Conducted keyword research using SEMrush, Ahrefs and Google Keyword Planner for content strategy", "Maintained consistent brand voice and tone across all content formats and communication channels", "Collaborated with designers, SEO teams and marketing managers to align content with campaign goals", "Developed content calendars and managed publishing schedules across WordPress, HubSpot and social media", "Proofread and edited content for grammar, accuracy, readability and brand voice alignment", "Created social media copies, ad scripts and video content briefs for performance marketing campaigns", "Analysed content performance using Google Analytics and Search Console and refined strategy based on data", "Interviewed subject matter experts and distilled technical information into reader-friendly content", "Achieved 30% organic traffic growth through consistent content publishing and on-page SEO improvements", "Built and managed a content repository and style guide to ensure quality and consistency across writers"],
+  "Tailor / Garment": ["Operated industrial sewing machines including overlock, flatbed and button-holing machines with precision", "Read and interpreted technical sketches, patterns, size charts and measurement specifications accurately", "Completed daily production targets of 80-120 pieces while maintaining consistent quality standards", "Performed in-process quality checks on stitching, measurement and finishing of each garment", "Assisted in fabric cutting, trimming, ironing, button attachment and garment packing activities", "Reported machine defects, thread breakages and fabric faults to production supervisor immediately", "Maintained workstation cleanliness and followed all factory safety and housekeeping procedures", "Trained new tailoring staff on machine operation, basic stitching techniques and quality standards", "Handled alterations, rework and repair of defective garments identified during QC inspection", "Managed thread, needle and accessory inventory at workstation to avoid production stoppages", "Worked on a variety of garment types including shirts, trousers, kurtas, uniforms and formal wear", "Coordinated with floor supervisor on production priorities, batch changes and urgent order fulfilment"],
+  "Farmer / Agriculture": ["Planned and managed seasonal crop cycles including sowing, irrigation, fertilisation and harvesting", "Operated agricultural equipment including tractors, tillers, sprayers and combine harvesters safely", "Applied fertilisers, pesticides and organic inputs as per recommended agronomic schedules", "Managed drip and sprinkler irrigation systems and ensured efficient water use across all crop areas", "Monitored crop health, identified pest and disease infestations and took timely corrective action", "Maintained farm records including input usage, yield data, cost per acre and seasonal profit analysis", "Coordinated with APMC agents, mandi traders and FPOs for timely and profitable produce sale", "Implemented soil health management practices including soil testing, organic manuring and crop rotation", "Managed post-harvest operations including cleaning, grading, storage and cold chain as applicable", "Participated in Krishi Vigyan Kendra programmes, government schemes and FPO training sessions", "Managed farm labour, seasonal workers and daily wage supervision during peak agricultural seasons", "Maintained irrigation infrastructure, bund repair and farm equipment through regular maintenance"],
+  "Delivery / Courier": ["Delivered parcels, e-commerce orders and documents to 60-100 customers daily within promised timelines", "Planned efficient delivery routes using apps (Dunzo, Shadowfax, Porter) to maximise drops per shift", "Collected proof of delivery (POD), customer signatures, OTP verification and cash-on-delivery payments", "Maintained real-time delivery status updates in the company app for tracking and operations visibility", "Handled customer queries, failed delivery resolutions and rescheduling requests with professionalism", "Ensured safe handling of fragile, high-value, temperature-sensitive and time-critical shipments", "Maintained zero-accident, zero-shortage delivery record consistently throughout the tenure", "Coordinated with hub operations team for pick-up, sorting and load allocation before each shift", "Maintained two-wheeler or three-wheeler in clean condition and reported mechanical issues promptly", "Achieved daily performance targets and maintained 4.5+ customer rating on delivery app platforms", "Assisted in reverse logistics pick-up, return processing and label scanning at customer doorstep", "Managed daily trip sheets, cash reconciliation and undelivered shipment handback to hub accurately"],
+  "Housekeeping": ["Maintained cleanliness, hygiene and presentation standards across all assigned hotel floors and areas", "Cleaned and serviced guest rooms, bathrooms, corridors and public areas as per brand SOPs", "Restocked room amenities, minibars, linens and toiletries accurately and within checkout turnaround time", "Reported maintenance defects, room damage, lost property and safety hazards to supervisor promptly", "Followed COSHH guidelines for safe handling, dilution and storage of cleaning chemicals and equipment", "Managed housekeeping trolley inventory and maintained par levels throughout the shift", "Delivered guest special requests including extra pillows, rollaway beds and baby cots with efficiency", "Participated in deep cleaning programmes, pest control schedules and carpet shampooing activities", "Maintained laundry dispatch, linen count and soiled linen management as per shift procedures", "Assisted in turndown service, VIP room setups and event room preparation as required", "Achieved consistent rooms-per-hour targets while maintaining high quality check scores", "Trained new housekeeping attendants on SOP, room inspection standards and chemical safety"],
+  "Peon / Office Boy": ["Managed document delivery, file movement, photocopying and distribution across all office departments", "Assisted staff with printing, scanning, spiral binding and courier dispatch of official documents", "Maintained cleanliness of office floors, workstations, meeting rooms and pantry areas throughout the day", "Prepared and served tea, coffee, water and refreshments to staff, clients and senior management", "Managed mail dispatch, courier collection, registered post and internal document circulation", "Ran official errands including banking, government offices, purchase of stationery and office supplies", "Assisted in arrangement of furniture, AV equipment and stationery for meetings and conferences", "Maintained pantry stock, cleaning supplies and reported replenishment requirements to administration", "Supported reception team during high footfall periods with visitor management and seating", "Handled sensitive documents with confidentiality and ensured proper filing and record maintenance", "Assisted in relocation, shifting of equipment and office reorganisation activities as required", "Maintained a presentable appearance and professional conduct while representing the organisation"],
+  "Product Manager": ["Defined product vision, roadmap and quarterly OKRs in alignment with business and customer goals", "Gathered and prioritised product requirements through customer interviews, surveys and data analysis", "Collaborated with engineering, design and marketing teams to deliver product features on time", "Wrote detailed product requirement documents (PRDs), user stories and acceptance criteria", "Managed the product backlog, sprint planning and release cycles in Jira and Confluence", "Analysed product metrics using Mixpanel, Amplitude and Google Analytics to drive informed decisions", "Conducted competitor analysis, market research and opportunity sizing for new feature investments", "Facilitated cross-functional alignment across stakeholders through regular steering reviews and demos", "Launched 3 major product features increasing user engagement by 25% and retention by 18%", "Coordinated beta testing, user acceptance testing and feedback collection before full product release", "Defined and monitored product KPIs including DAU, MAU, conversion rate, churn and NPS", "Built go-to-market strategy in partnership with sales, marketing and customer success teams", "Presented product updates, roadmap reviews and business impact reports to leadership and investors"],
+  "Business Analyst": ["Gathered, documented and validated business requirements through stakeholder interviews and workshops", "Translated business needs into functional specifications, use cases and process flow diagrams", "Conducted AS-IS and TO-BE process analysis and identified gaps, bottlenecks and improvement opportunities", "Prepared Business Requirement Documents (BRDs), Functional Requirement Documents (FRDs) and UAT plans", "Facilitated requirement sign-off sessions and managed scope changes through formal change control", "Coordinated between business stakeholders and development teams to ensure shared understanding", "Performed data analysis using Excel, SQL and Power BI to support process improvement recommendations", "Conducted UAT, created test scenarios and tracked defects to ensure system meets business expectations", "Created and maintained RACI matrices, project trackers and business process documentation", "Supported ERP implementation projects including SAP and Oracle, driving configuration and training", "Identified automation opportunities and supported RPA and digital transformation initiatives", "Prepared executive dashboards, business case presentations and ROI analysis for proposed solutions", "Worked with agile teams in sprint ceremonies and continuously refined backlog with the product owner"],
+  "DevOps / Cloud Engineer": ["Designed and managed CI/CD pipelines using Jenkins, GitHub Actions and GitLab CI for automated deployments", "Deployed and maintained containerised applications using Docker and Kubernetes on AWS/Azure/GCP", "Managed cloud infrastructure using Terraform, CloudFormation and Ansible for infrastructure-as-code", "Monitored system health, performance and availability using Prometheus, Grafana and Datadog", "Configured and managed AWS services including EC2, S3, RDS, Lambda, VPC and IAM policies", "Implemented auto-scaling, load balancing and disaster recovery mechanisms for high-availability systems", "Collaborated with development teams to improve deployment frequency and reduce release cycle time by 60%", "Managed secrets, certificates and access control using Vault, AWS Secrets Manager and KMS", "Performed capacity planning, cost optimisation and cloud spend analysis reducing bills by 30%", "Established logging, alerting and incident management workflows with PagerDuty and OpsGenie", "Conducted security audits, vulnerability scanning and patching across cloud and on-prem infrastructure", "Maintained documentation of architecture diagrams, runbooks and deployment procedures for the team"],
+  "Cybersecurity Analyst": ["Monitored security events and alerts using SIEM tools (Splunk, IBM QRadar) to detect threats in real time", "Investigated and responded to security incidents, performed root cause analysis and produced incident reports", "Conducted vulnerability assessments and penetration tests on internal systems, networks and web applications", "Managed endpoint protection, EDR tools and antivirus policies across the organisation", "Implemented and enforced security policies, access controls and least-privilege principles", "Performed phishing simulation campaigns and conducted security awareness training for employees", "Reviewed firewall rules, IDS/IPS configurations and network traffic for anomalous activity", "Assisted in ISO 27001, SOC 2 and GDPR compliance assessments and control implementation", "Managed identity and access management (IAM) including Active Directory, SSO and MFA rollouts", "Coordinated with vendors and third parties on security assessments, patch management and remediation", "Prepared monthly security dashboards, threat intelligence reports and risk assessment summaries", "Participated in red team/blue team exercises and tabletop simulations for incident preparedness"],
+  "UI/UX Designer": ["Designed user-centred interfaces for web and mobile applications based on research and usability testing", "Created wireframes, interactive prototypes and high-fidelity mockups using Figma, Adobe XD and Sketch", "Conducted user research through interviews, surveys, heatmaps and usability testing sessions", "Developed user personas, customer journey maps, task flows and information architecture diagrams", "Collaborated with product managers and developers to ensure design feasibility and smooth handoff", "Built and maintained a design system with reusable components, tokens and documented guidelines", "Improved checkout conversion rate by 22% through UX research-driven redesign of the purchase flow", "Designed responsive interfaces optimised for desktop, tablet and mobile device experiences", "Facilitated design thinking workshops and ideation sessions with cross-functional stakeholders", "Translated brand identity guidelines into consistent, scalable and accessible UI design patterns", "Performed accessibility audits against WCAG 2.1 standards and implemented inclusive design improvements", "Iterated on designs rapidly based on A/B test results, analytics and qualitative user feedback"],
+  "Digital Marketing": ["Planned and executed digital marketing campaigns across Google Ads, Meta Ads and LinkedIn Ads", "Managed monthly ad budgets of ₹5-20 lakhs and optimised campaigns for ROAS, CPL and CPA targets", "Developed SEO strategies including technical audits, keyword targeting and link-building resulting in 40% organic growth", "Managed social media content calendars, community engagement and brand presence across platforms", "Created and optimised email marketing campaigns using Mailchimp, HubSpot and Klaviyo", "Set up and managed conversion tracking, Google Tag Manager, Google Analytics 4 and Meta Pixel", "Conducted competitive analysis, audience research and market positioning for campaign strategies", "Designed and executed A/B tests on ad creatives, landing pages and CTAs to improve conversion rates", "Collaborated with content writers, graphic designers and videographers for campaign asset production", "Prepared weekly and monthly performance reports with insights on impressions, CTR, CPL and ROAS", "Managed influencer marketing collaborations, affiliate programmes and brand partnership activations", "Drove 35% growth in qualified leads quarter-on-quarter through integrated digital campaign execution"],
+  "Social Media Manager": ["Developed and executed monthly social media content strategy across Instagram, LinkedIn, YouTube and X", "Created engaging organic content including graphics, reels, carousels and short-form videos", "Grew Instagram following from 5K to 50K in 8 months through consistent posting and engagement strategies", "Managed paid social campaigns on Meta and LinkedIn and optimised for reach, engagement and conversions", "Monitored brand mentions, responded to comments and DMs and maintained community relationships", "Tracked and reported platform analytics including reach, engagement rate, follower growth and CTR", "Collaborated with influencers and content creators for brand collaborations and sponsored content", "Developed platform-specific content strategies aligned with brand voice and seasonal campaigns", "Managed social media crisis communication and brand reputation monitoring proactively", "Coordinated with design and video teams for timely creation and scheduling of all content assets", "Stayed current on platform algorithm changes, trending formats and competitor social activities", "Conducted regular social media audits and presented performance insights and recommendations to leadership"],
+  "Operations Manager": ["Oversaw day-to-day business operations across departments to ensure efficiency, quality and compliance", "Developed and implemented standard operating procedures (SOPs) to streamline processes and reduce errors", "Led cross-functional teams of 20-50 staff across operations, logistics, customer service and administration", "Monitored operational KPIs and prepared weekly dashboards for leadership review and decision-making", "Identified process inefficiencies and implemented automation and improvement initiatives saving 15% cost", "Managed vendor relationships, service-level agreements and contract renewals for operational continuity", "Coordinated with finance for budget preparation, cost control and monthly operational expense review", "Resolved operational escalations, cross-team conflicts and process gaps with structured problem-solving", "Led recruitment, onboarding, performance management and capability building for operations teams", "Ensured regulatory compliance, safety standards and audit readiness across all operational areas", "Drove operational excellence through Lean, Six Sigma and Kaizen process improvement frameworks", "Managed business continuity planning, disaster recovery and crisis response for operational disruptions"],
+  "Supply Chain Manager": ["Managed end-to-end supply chain operations including procurement, inventory, logistics and vendor management", "Developed and maintained supplier relationships and negotiated contracts achieving 12% cost reduction", "Implemented demand forecasting models improving inventory accuracy and reducing stockouts by 30%", "Oversaw import/export documentation, customs clearance and freight forwarding operations", "Managed procurement processes including RFQ, bid evaluation, purchase orders and vendor onboarding", "Monitored supply chain KPIs including lead time, fill rate, inventory turnover and on-time delivery", "Coordinated with production, sales and finance teams for S&OP planning and inventory alignment", "Led implementation of ERP modules (SAP/Oracle) for procurement, inventory and logistics management", "Managed 3PL and 4PL provider relationships and ensured contract SLA compliance and performance reviews", "Developed risk mitigation strategies for supply disruptions, geopolitical events and raw material shortage", "Drove sustainability and ESG initiatives in the supply chain including supplier audits and carbon tracking", "Prepared monthly supply chain reports, cost analysis and improvement roadmaps for senior management"],
+  "Quality Control (QC)": ["Conducted incoming material inspection, in-process checks and final inspection as per quality plans", "Performed dimensional checks using vernier callipers, micrometers, gauges and CMM instruments", "Documented inspection results, raised non-conformance reports (NCRs) and tracked corrective actions", "Maintained inspection test plans (ITPs), control plans and quality records for traceability", "Reviewed and interpreted engineering drawings, GD&T symbols and material specifications", "Conducted root cause analysis using Ishikawa diagrams, 5-Why and 8D problem-solving methods", "Managed calibration records for all measuring instruments and coordinated with NABL-accredited labs", "Assisted in preparation for third-party audits, customer inspections and ISO 9001 surveillance audits", "Reviewed supplier quality documentation including test certificates, MTC and CoC before acceptance", "Monitored process parameters and statistical process control (SPC) charts on the production floor", "Prepared quality reports, rejection summaries and PPM trend analysis for management review", "Participated in PPAP, FAI and product qualification activities for new products and components"],
+  "Financial Analyst": ["Prepared detailed financial models, valuation analyses and investment appraisals for business decisions", "Developed annual budgets, rolling forecasts and multi-year financial projections for leadership review", "Analysed monthly P&L, balance sheet and cash flow statements and provided variance commentary", "Supported M&A, fundraising and strategic planning with financial due diligence and scenario analysis", "Built DCF, comparable company and precedent transaction valuation models for investment decisions", "Prepared investor presentations, board packs and quarterly earnings analysis reports", "Monitored working capital, cash conversion cycle and liquidity ratios against internal benchmarks", "Automated financial reporting processes using Excel macros and Power BI reducing reporting time by 50%", "Coordinated with business units for budget submissions, reforecast updates and capital expenditure review", "Conducted sensitivity and scenario analysis to quantify business risk and support management decisions", "Managed treasury operations including cash forecasting, FX hedging and bank relationship management", "Supported fundraising rounds including preparation of financial data room, cap table and financial projections"],
+  "Data Scientist": ["Built and deployed machine learning models for classification, regression, clustering and NLP applications", "Developed predictive models using Python (Scikit-learn, XGBoost, TensorFlow) improving forecast accuracy by 25%", "Performed exploratory data analysis (EDA), feature engineering and data preprocessing on large datasets", "Deployed ML models via REST APIs using Flask, FastAPI and containerised them with Docker on cloud", "Collaborated with business stakeholders to define problem statements, data requirements and success metrics", "Designed and analysed A/B experiments with statistical rigour to validate product and business hypotheses", "Built data pipelines and ETL workflows using Apache Spark, Airflow and cloud-native tools", "Developed recommendation engines, churn prediction and customer segmentation models for business use", "Presented model findings, business impact and technical methodology to both technical and non-technical audiences", "Used NLP techniques for sentiment analysis, topic modelling and text classification on unstructured data", "Monitored model performance in production, detected drift and retrained models to maintain accuracy", "Published Jupyter notebooks, model cards and technical documentation for all deployed solutions"],
+  "Network Engineer": ["Designed, deployed and maintained LAN/WAN, MPLS and SD-WAN network infrastructure across locations", "Configured and managed enterprise routers, switches and firewalls (Cisco, Juniper, Palo Alto, Fortinet)", "Implemented network security policies, VLANs, ACLs and firewall rules to ensure perimeter protection", "Monitored network performance using SolarWinds, PRTG and Nagios and resolved degradation issues", "Managed BGP, OSPF, EIGRP routing protocols and troubleshot Layer 2/3 connectivity issues", "Supported VPN configurations including site-to-site IPSec VPN and remote access SSL VPN setups", "Coordinated with ISPs, MPLS providers and data centre teams for link provisioning and SLA management", "Performed network capacity planning, traffic analysis and bandwidth optimisation activities", "Assisted in data centre networking including spine-leaf architecture, server virtualisation and SAN connectivity", "Responded to P1/P2 network incidents and led troubleshooting to restore service within defined RTO", "Maintained network diagrams, IP address management (IPAM) records and configuration backups", "Implemented wireless LAN infrastructure including Cisco Meraki and Aruba access point deployments"],
+  "Doctor / MBBS": ["Examined, diagnosed and treated patients across OPD, IPD and emergency settings with clinical accuracy", "Recorded detailed patient history, performed clinical examination and ordered appropriate investigations", "Prescribed evidence-based treatment plans and medications in line with standard treatment protocols", "Managed acute medical emergencies including resuscitation, stabilisation and escalation to specialists", "Performed procedures including wound suturing, IV cannulation, lumbar puncture and pleural tapping", "Counselled patients and families on diagnosis, prognosis, treatment options and lifestyle modifications", "Maintained accurate medical records, discharge summaries and documentation in HMS/EMR systems", "Collaborated with multidisciplinary teams including nursing, pharmacy and allied health professionals", "Participated in mortality and morbidity reviews, case conferences and clinical audit activities", "Supervised interns, resident doctors and nursing staff in clinical decision-making and ward management", "Contributed to preventive health campaigns, vaccination programmes and community health outreach", "Ensured adherence to medical ethics, patient confidentiality and hospital clinical governance standards"],
+  "CA / Chartered Accountant": ["Led statutory audits, tax audits and internal audits for clients across manufacturing, BFSI and IT sectors", "Prepared and reviewed financial statements as per IndAS, IGAAP and IFRS reporting frameworks", "Filed income tax returns, handled assessments, appeals and represented clients before tax authorities", "Managed GST registration, monthly filings (GSTR-1, GSTR-3B, GSTR-9) and GST audit for clients", "Conducted due diligence, business valuation and financial modelling for M&A and investment transactions", "Advised clients on tax planning, transfer pricing, FEMA compliance and structuring for tax efficiency", "Managed a portfolio of 30+ clients across industries and ensured compliance with all statutory deadlines", "Prepared and reviewed Board reports, Director reports, CARO reports and related party disclosures", "Handled ROC filings, secretarial compliance and company law advisory under Companies Act 2013", "Assisted in NCLT matters, insolvency proceedings and resolution plan preparation under IBC framework", "Supervised article assistants, managed engagement teams and ensured quality of audit deliverables", "Liaised with SEBI, RBI, IRDAI and other regulators for filings, approvals and compliance matters"],
+  "Legal / Paralegal": ["Drafted, reviewed and negotiated a wide range of commercial contracts, NDAs and vendor agreements", "Conducted legal research on statutes, regulations, case law and regulatory updates relevant to client matters", "Managed contract lifecycle including drafting, review, execution, amendments and renewals", "Assisted in litigation support including preparation of pleadings, affidavits, written submissions and briefs", "Coordinated with external counsel, courts and regulatory bodies for filing and hearing management", "Provided legal opinions and advisory on employment law, IP, data privacy and consumer protection matters", "Managed document review, due diligence and legal document management for M&A and fundraising deals", "Ensured corporate compliance including board resolutions, statutory registers and ROC filings", "Monitored regulatory developments and updated internal teams on compliance requirements and changes", "Handled labour law compliance including factory act, shops and establishments and industrial disputes", "Assisted in NCLT, NCLAT, High Court matters including preparation of applications and responses", "Maintained legal MIS, contract tracker, litigation register and compliance calendar for the organisation"],
+  "Architect": ["Designed architectural concepts, space planning layouts and 3D visualisations for residential and commercial projects", "Prepared detailed architectural drawings, BOQs, material schedules and specifications using AutoCAD and Revit", "Coordinated with structural, MEP and interior design consultants for integrated and clash-free design delivery", "Managed project design from schematic design through design development, working drawings and site supervision", "Prepared design presentations, walkthroughs and client presentations using SketchUp and Lumion", "Ensured designs complied with NBC, development control regulations, zoning bylaws and fire safety norms", "Coordinated with local authorities for plan approval, OC and CC submissions and regulatory clearances", "Conducted site visits, quality inspections and resolved design-to-construction discrepancies on site", "Managed project documentation including drawing registers, RFI logs, design change records and as-built drawings", "Led design reviews, coordination meetings and ensured stakeholder alignment on design intent and specifications", "Developed sustainable design strategies including passive cooling, daylight optimisation and green building features", "Mentored junior architects and draftsmen and reviewed drawing outputs for quality and coordination compliance"],
+  "Interior Designer": ["Designed innovative interior concepts for residential, commercial, retail and hospitality projects", "Prepared detailed design drawings, furniture layouts, elevation drawings and material boards", "Developed mood boards, colour palettes, material specifications and finish schedules for client presentations", "Coordinated with architects, MEP consultants and structural engineers for integrated interior design delivery", "Managed project execution from concept through design development, working drawings and site supervision", "Sourced and specified furniture, fixtures, fittings, lighting and décor from premium vendors", "Prepared BOQs, scope-of-work documents and design specifications for contractor tendering", "Conducted regular site inspections to ensure workmanship, material and finish quality met design intent", "Managed client relationships, design presentations and incorporated feedback through revision cycles", "Worked proficiently in AutoCAD, SketchUp, 3DS Max, V-Ray and Adobe Creative Suite", "Ensured designs met accessibility, safety, acoustic and ergonomic requirements for the project type", "Managed project timelines, vendor coordination and procurement to ensure on-schedule interior delivery"],
+  "Real Estate Agent": ["Assisted buyers and sellers in residential and commercial property transactions end to end", "Developed and maintained a portfolio of 50+ active listings across the city with accurate property details", "Conducted property market research, comparative market analysis and advised clients on pricing strategy", "Managed client relationships, understood investment goals and matched requirements to suitable properties", "Negotiated sale and rental agreements, coordinated legal documentation and ensured smooth deal closure", "Generated new leads through digital marketing, referrals, site visits, builder tie-ups and networking events", "Achieved monthly revenue targets by closing 8-12 transactions consistently in competitive markets", "Coordinated property inspections, site visits and accompanied clients on personalised property tours", "Maintained up-to-date knowledge of RERA regulations, stamp duty, registration and property tax rules", "Provided post-sale support including documentation, registration, loan processing and handover coordination", "Managed builder and developer relationships to offer clients exclusive pre-launch and inventory deals", "Maintained a strong online presence through 99acres, MagicBricks, Housing and social media platforms"],
+  "Event Manager": ["Planned, coordinated and executed corporate events, product launches, conferences and exhibitions end to end", "Managed event budgets ranging from ₹5 lakhs to ₹2 crore and ensured delivery within approved costs", "Sourced and negotiated with venues, caterers, AV vendors, decorators and entertainment agencies", "Coordinated logistics including registrations, travel, accommodation, guest management and on-site operations", "Developed event concepts, themes, runsheets and production schedules aligned with client vision", "Managed 10-30 member event teams on ground and ensured all stakeholders were briefed and aligned", "Handled client presentations, proposal preparations and creative concept pitches for new event mandates", "Coordinated with government authorities for permissions, NOCs and security arrangements for large events", "Managed virtual and hybrid event productions including Zoom, Hopin and streaming platform coordination", "Executed post-event reporting including attendance, feedback, cost analysis and lessons learned documentation", "Built and maintained a strong vendor network enabling competitive pricing and high service quality", "Delivered flawless events for 500-5000 attendees maintaining strict timelines and quality standards"],
+  "Air Hostess / Cabin Crew": ["Delivered exceptional in-flight passenger service on domestic and international routes per airline standards", "Conducted comprehensive pre-flight safety demonstrations and ensured passenger compliance with safety norms", "Performed thorough safety checks on equipment, galley readiness and cabin condition before each flight", "Managed in-flight sales, duty-free services and meal service for economy and business class passengers", "Responded to medical emergencies, air turbulence incidents and passenger distress with composure", "Coordinated with cockpit crew on safety announcements, seat allocation and boarding management", "Delivered personalised service to premium passengers, frequent flyers and unaccompanied minors", "Maintained DGCA and airline-mandated compliance for safety procedures, grooming and conduct standards", "Participated in recurrent safety training, emergency drills and first aid certification programmes", "Managed passenger complaints, service disruptions and irregular operations with professionalism", "Contributed to positive passenger feedback scores and received commendations for service excellence", "Assisted in crew coordination, briefing sessions and collaborated as part of a multicultural cabin team"],
+  "Fresher / Graduate": ["Completed graduation with a strong academic record and active participation in co-curricular activities", "Developed foundational skills in [your subject] through coursework, projects and academic assignments", "Participated in internship programmes gaining hands-on exposure to real-world professional environments", "Completed live projects, case study competitions and group assignments demonstrating analytical ability", "Demonstrated strong communication, teamwork and problem-solving skills through group projects and presentations", "Actively participated in technical workshops, seminars, hackathons and skill-development programmes", "Self-learned industry-relevant tools and technologies to supplement academic knowledge", "Volunteered in college events, social initiatives and NSS activities demonstrating leadership potential", "Pursued certifications in relevant fields including digital marketing, coding, finance and communication", "Maintained a consistent academic performance ranking within the top 20% of the department batch", "Completed capstone project focusing on real industry problem solving with measurable outcomes", "Demonstrated eagerness to learn, adapt quickly and contribute positively in team environments"],
+  "Fitness Trainer / Gym Instructor": ["Designed personalised workout programmes for clients based on fitness goals, health conditions and assessments", "Conducted one-on-one PT sessions, group fitness classes and circuit training for 20-50 clients daily", "Performed initial fitness assessments including body composition, flexibility and cardiovascular capacity tests", "Monitored client progress, updated programmes periodically and provided continuous motivation and feedback", "Provided guidance on nutrition, hydration, recovery and supplementation aligned with fitness objectives", "Maintained gym equipment functionality and ensured safe, clean training environment at all times", "Ensured clients maintained correct form and technique to prevent injuries during all exercise sessions", "Organised fitness events, transformation challenges and group bootcamp programmes for client engagement", "Built strong client retention through personalised attention, result-driven training and community building", "Held relevant certifications including ISSA, ACE, ACSM or equivalent national fitness certifications", "Grew personal training client base from 10 to 40+ through referrals and social media presence", "Assisted members with onboarding, gym orientation and tailoring membership plans to individual goals"],
+  "Beautician / Salon Professional": ["Provided a full range of beauty services including haircuts, styling, colouring, facials and waxing", "Consulted with clients to understand preferences, skin type and desired results before each service", "Performed advanced hair treatments including keratin, smoothening, rebonding and balayage colouring", "Conducted skin analysis and recommended suitable facials, clean-ups and skincare treatment plans", "Performed bridal makeup, party makeup and special occasion hair and beauty packages", "Maintained strict hygiene standards including sterilisation of tools and sanitation of workstations", "Managed client bookings, upsold premium services and maintained a loyal repeat clientele", "Stayed updated on the latest beauty trends, techniques and product launches through training", "Handled nail art, manicure, pedicure, gel extensions and nail care services with precision", "Managed stock of salon products, recommended professional retail products to clients for home care", "Achieved monthly service revenue targets and contributed to salon growth through client referrals", "Trained junior beauticians on techniques, client handling and hygiene standards"],
+};
+// Build keyword map for auto-matching job title to category
+const LIB_KEYWORDS = {
+  "Software Engineer": ["software", "developer", "programmer", "coder", "web", "frontend", "backend", "fullstack", "react", "node", "java", "python", "angular", "devops", "engineer", "swe", "sde"],
+  "IT Support": ["it support", "helpdesk", "tech support", "desktop", "network", "system admin", "sysadmin", "technical support", "service desk"],
+  "Data Analyst": ["data analyst", "data scientist", "analytics", "business intelligence", "bi analyst", "reporting", "sql", "tableau", "power bi", "data"],
+  "Accountant": ["accountant", "accounts", "finance", "bookkeeper", "audit", "taxation", "gst", "tally", "ca", "cpa", "financial analyst", "finance executive"],
+  "Sales / Marketing": ["sales", "marketing", "business development", "bd", "bdm", "relationship manager", "territory manager", "field sales", "brand", "sales executive"],
+  "Office / Admin": ["admin", "administrator", "coordinator", "office", "executive assistant", "secretary", "back office", "data entry", "operations", "admin executive"],
+  "HR Executive": ["hr", "human resource", "talent acquisition", "recruiter", "recruitment", "people ops", "payroll", "hrbp", "hr executive", "hr manager"],
+  "Teacher / Educator": ["teacher", "lecturer", "professor", "educator", "faculty", "tutor", "instructor", "coach", "trainer", "school", "teaching"],
+  "Nurse / Healthcare": ["nurse", "nursing", "staff nurse", "icu", "ot", "operation theatre", "healthcare", "patient care", "ward", "clinical", "rn"],
+  "Driver": ["driver", "chauffeur", "vehicle operator", "cab driver", "truck driver", "bus driver", "transport", "heavy vehicle"],
+  "Security Guard": ["security", "guard", "watchman", "bouncer", "surveillance", "cctv", "access control", "security officer"],
+  "Construction": ["construction", "site worker", "labour", "mason", "carpenter", "painter", "civil work", "labourer"],
+  "Loco/MSV Operator": ["loco", "msv", "locomotive", "tunnel", "metro", "rail operator", "train operator", "tunnel operator"],
+  "Gantry / Crane Operator": ["crane", "gantry", "tbm", "hoist", "rigger", "lifting", "winch", "crane operator"],
+  "Electrician": ["electrician", "electrical", "wiring", "panel", "switchgear", "lineman", "ehs electrical", "electrical technician"],
+  "Plumber": ["plumber", "plumbing", "pipefitter", "pipe", "sanitary", "drainage", "mep", "plumbing technician"],
+  "Welder / Fabricator": ["welder", "welding", "fabricat", "fitter", "mig", "tig", "arc", "structural welder"],
+  "Mechanic": ["mechanic", "automotive", "vehicle repair", "workshop", "diesel", "engine", "automobile", "auto mechanic"],
+  "Civil Engineer": ["civil engineer", "site engineer", "structural", "rcc", "concrete", "rebar", "survey", "civil"],
+  "Mechanical Engineer": ["mechanical engineer", "hvac", "piping", "rotating", "maintenance engineer", "mech engineer"],
+  "Project Manager": ["project manager", "pm", "pmo", "project lead", "delivery manager", "programme", "project management"],
+  "Site Supervisor": ["site supervisor", "foreman", "gang leader", "supervisor", "site in-charge", "field supervisor"],
+  "Quantity Surveyor": ["quantity surveyor", "qs", "estimator", "cost engineer", "billing engineer", "boe", "qs engineer"],
+  "Receptionist": ["receptionist", "front desk", "front office", "guest relation", "concierge", "front office executive"],
+  "Customer Service": ["customer service", "customer care", "customer support", "call centre", "helpline", "csr", "customer success"],
+  "Logistics / Warehouse": ["logistics", "warehouse", "store", "storekeeper", "inventory", "supply chain", "dispatch", "procurement", "material"],
+  "Retail / Shop": ["retail", "shop", "store assistant", "sales assistant", "cashier", "counter", "showroom", "retail executive"],
+  "Cook / Chef": ["cook", "chef", "kitchen", "culinary", "food preparation", "sous chef", "commi", "head chef"],
+  "Hotel / Hospitality": ["hotel", "hospitality", "f&b", "food beverage", "restaurant", "housekeeping manager", "front office manager", "hospitality executive"],
+  "Banking / Finance": ["bank", "banking", "teller", "relationship banker", "loan officer", "credit", "insurance", "mutual fund", "bank executive"],
+  "Pharmacist": ["pharmacist", "pharmacy", "chemist", "drug", "dispensing", "medicine", "clinical pharmacist"],
+  "Lab Technician": ["lab", "laboratory", "technician", "pathology", "radiology", "blood", "sample", "diagnostic", "lab tech"],
+  "Graphic Designer": ["graphic designer", "graphic", "designer", "visual", "illustrator", "photoshop", "creative", "ui", "ux", "visual designer"],
+  "Content Writer": ["content", "writer", "copywriter", "blogger", "seo", "journalist", "editor", "content creator"],
+  "Tailor / Garment": ["tailor", "sewing", "garment", "stitching", "textile", "fabric", "fashion", "apparel"],
+  "Farmer / Agriculture": ["farmer", "agriculture", "farming", "crop", "horticulture", "agri", "agricultural"],
+  "Delivery / Courier": ["delivery", "courier", "last mile", "logistics rider", "bike delivery", "shipping", "delivery executive"],
+  "Housekeeping": ["housekeeping", "housekeeper", "room attendant", "cleaner", "sanitation", "janitorial", "housekeeping attendant"],
+  "Peon / Office Boy": ["peon", "office boy", "attender", "helper", "support staff", "bell boy", "office helper"],
+  "Product Manager": ["product manager", "product owner", "pm", "po", "product lead", "product head", "product management"],
+  "Business Analyst": ["business analyst", "ba", "systems analyst", "functional consultant", "process analyst", "requirement analyst"],
+  "DevOps / Cloud Engineer": ["devops", "cloud", "aws", "azure", "gcp", "kubernetes", "docker", "ci/cd", "infrastructure", "sre", "platform engineer"],
+  "Cybersecurity Analyst": ["cybersecurity", "security analyst", "infosec", "soc", "penetration", "ethical hacker", "network security", "information security"],
+  "UI/UX Designer": ["ui", "ux", "user experience", "user interface", "product designer", "interaction designer", "figma", "wireframe"],
+  "Digital Marketing": ["digital marketing", "performance marketing", "seo", "sem", "ppc", "google ads", "meta ads", "growth", "digital"],
+  "Social Media Manager": ["social media", "instagram", "facebook", "content creator", "community manager", "social media manager", "influencer"],
+  "Operations Manager": ["operations manager", "ops manager", "general manager", "business operations", "operations head"],
+  "Supply Chain Manager": ["supply chain", "scm", "procurement manager", "sourcing", "purchasing", "logistics manager", "materials manager"],
+  "Quality Control (QC)": ["quality", "qc", "quality control", "inspector", "qce", "quality engineer", "quality assurance", "qa"],
+  "Financial Analyst": ["financial analyst", "finance analyst", "fp&a", "corporate finance", "investment analyst", "treasury", "financial planning"],
+  "Data Scientist": ["data scientist", "ml", "machine learning", "ai", "deep learning", "nlp", "data science", "artificial intelligence"],
+  "Network Engineer": ["network engineer", "networking", "cisco", "ccna", "ccnp", "lan", "wan", "network admin", "noc"],
+  "Doctor / MBBS": ["doctor", "mbbs", "physician", "general practitioner", "resident", "medical officer", "intern", "gp", "mo", "rmo"],
+  "CA / Chartered Accountant": ["chartered accountant", "ca", "cfa", "icai", "audit partner", "tax consultant", "ca finalist"],
+  "Legal / Paralegal": ["lawyer", "legal", "advocate", "paralegal", "legal counsel", "company secretary", "cs", "legal executive", "solicitor"],
+  "Architect": ["architect", "architecture", "revit", "autocad", "urban planner", "landscape architect", "building design"],
+  "Interior Designer": ["interior", "interior designer", "space designer", "decor", "3ds max", "vray", "interior decoration"],
+  "Real Estate Agent": ["real estate", "property", "broker", "realtor", "property consultant", "site sales", "leasing"],
+  "Event Manager": ["event", "event manager", "event planner", "wedding planner", "conference", "exhibition", "event coordinator"],
+  "Air Hostess / Cabin Crew": ["air hostess", "cabin crew", "flight attendant", "stewardess", "inflight", "airline", "aviation crew"],
+  "Fresher / Graduate": ["fresher", "graduate", "entry level", "new graduate", "student", "trainee", "junior", "campus"],
+  "Fitness Trainer / Gym Instructor": ["fitness trainer", "gym instructor", "personal trainer", "pt", "fitness coach", "strength coach", "yoga"],
+  "Beautician / Salon Professional": ["beautician", "salon", "makeup artist", "hairdresser", "beauty therapist", "nail technician", "spa", "stylist"],
 };
 
 // ══════════════════════════════════════════════════════════
@@ -1752,7 +1977,7 @@ function renderJobs() {
       <div class="bullet-wrap">
         <div class="bullet-label">
           <span>Responsibilities</span>
-          <button class="suggest-btn" onclick="openLib(${ji},'responsibilities')">📋 Suggestions</button>
+          <button class="suggest-btn" onclick="openLib(${ji},'responsibilities')">💡 Suggestions</button>
         </div>
         <div id="resp_${ji}">
           ${j.responsibilities.map((r,ri)=>`
@@ -2064,17 +2289,53 @@ function updatePhotoUI() {
 // ══════════════════════════════════════════════════════════
 // AUTO SUMMARY
 // ══════════════════════════════════════════════════════════
+let _sumIdx = -1;
 function autoGenSummary() {
-  const name = v('p_name') || 'the applicant';
-  const title = v('p_title') || 'professional';
+  const title = (v('p_title') || 'Professional').trim();
   const validJobs = jobs.filter(j => j.company);
-  const years = validJobs.length > 0 ? `${validJobs.length * 2}+` : 'several';
-  const loc = v('p_location') || 'India';
-  const skillList = skills.filter(s => s.name).slice(0,3).map(s => s.name).join(', ');
-  const summary = `Experienced ${title} with ${years} years of hands-on experience in the field. Proven track record of delivering quality work across multiple organizations${loc ? ' in ' + loc : ''}. ${skillList ? 'Key skills include ' + skillList + '.' : ''} Known for reliability, attention to safety protocols, and strong teamwork. Available for immediate joining and open to relocation.`;
-  setv('p_summary', summary);
-  autoSave();
-  updateSummaryCount();
+  const hasExp = validJobs.length > 0;
+  const skillList = skills.filter(sk => sk.name).slice(0, 4).map(sk => sk.name);
+  const skillLine = skillList.length ? `Core competencies include ${skillList.join(', ')}.` : '';
+  const prevCo = hasExp ? validJobs[0].company : '';
+  const yrsNum = validJobs.length * 2;
+  const expLine = yrsNum >= 2 ? `${yrsNum}+ years of` : (validJobs.length === 1 ? '2+ years of' : '');
+
+  const expTemplates = [
+    `A results-driven ${title} with ${expLine} progressive industry experience and a consistent record of delivering quality outcomes. ${prevCo ? `Previous tenure at ${prevCo} provided deep domain exposure and real-world expertise. ` : ''}${skillLine} Recognised for strong problem-solving ability, attention to detail, and effective collaboration across teams. Ready to contribute immediately and drive meaningful impact.`,
+    `An accomplished ${title} with ${expLine} hands-on experience and a proven ability to perform under pressure. ${skillLine}${prevCo ? ` Built a strong professional foundation at ${prevCo}, developing skills that translate directly to results. ` : ' '}Known for reliability, clear communication, and a relentless focus on delivering work that exceeds expectations. Seeking a challenging opportunity to grow and lead.`,
+    `A dedicated ${title} bringing ${expLine} industry expertise and a track record of consistent professional growth. ${prevCo ? `Significant contributions made during tenure at ${prevCo} shaped a versatile and adaptive approach to work. ` : ''}${skillLine} Combines technical proficiency with strong interpersonal skills to deliver results in fast-paced environments. Open to relocation and available for immediate joining.`,
+    `A dynamic ${title} with ${expLine} comprehensive experience spanning multiple projects and organisational contexts. ${skillLine}${prevCo ? ` Experience at ${prevCo} honed the ability to manage competing priorities and deliver on time. ` : ' '}Highly dependable with a proactive mindset and a genuine commitment to quality. Looking to bring proven skills to a forward-thinking organisation.`,
+    `A highly motivated ${title} with ${expLine} solid professional experience and a deep commitment to continuous improvement. ${prevCo ? `Demonstrated value during tenure at ${prevCo} through consistent performance and a solution-oriented mindset. ` : ''}${skillLine} Adept at building strong working relationships, adapting to new environments, and exceeding set targets. Available and eager to make an immediate contribution.`
+  ];
+
+  const fresherTemplates = [
+    `An enthusiastic and career-focused ${title} graduate with a strong academic foundation and a genuine drive to contribute from day one. ${skillLine} Known for a sharp learning curve, disciplined work ethic, and the ability to adapt quickly to new environments. Eager to translate academic knowledge into real-world results within a growth-oriented organisation.`,
+    `A motivated ${title} fresher with solid theoretical grounding and a proactive approach to professional development. ${skillLine} Demonstrated ability to collaborate effectively, manage responsibilities independently, and deliver within deadlines. Passionate about building a long-term career and adding tangible value from the very beginning.`,
+    `A goal-driven ${title} graduate ready to take on professional challenges with focus and dedication. ${skillLine} Brings a fresh perspective, strong analytical thinking, and the ability to learn rapidly under experienced mentorship. Committed to growing alongside the organisation and making meaningful contributions at every stage.`,
+    `An ambitious and detail-oriented ${title} fresher with a strong academic record and a clear professional vision. ${skillLine} Highly organised, dependable, and genuinely passionate about the field. Looking for an entry-level opportunity to apply foundational knowledge, grow consistently, and become a trusted long-term team member.`,
+    `A self-motivated ${title} graduate equipped with current academic knowledge, a strong work ethic, and an eagerness to learn. ${skillLine} Thrives in collaborative settings and handles new challenges with a calm, structured approach. Seeking a platform to develop professionally, deliver real results, and build a successful career.`
+  ];
+
+  const pool = hasExp ? expTemplates : fresherTemplates;
+  _sumIdx = (_sumIdx + 1) % pool.length;
+  const text = pool[_sumIdx];
+
+  const ta = document.getElementById('p_summary');
+  const btn = document.getElementById('ai-sum-btn');
+  if (!ta) { setv('p_summary', text); autoSave(); updateSummaryCount(); return; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Writing...'; }
+  ta.value = '';
+  let i = 0;
+  const speed = Math.max(8, Math.round(2200 / text.length));
+  const timer = setInterval(() => {
+    ta.value += text[i++];
+    updateSummaryCount();
+    if (i >= text.length) {
+      clearInterval(timer);
+      if (btn) { btn.disabled = false; btn.textContent = 'Generate with AI'; }
+      autoSave();
+    }
+  }, speed);
 }
 
 // ══════════════════════════════════════════════════════════
@@ -2123,15 +2384,77 @@ function updateStrengthScore() {
 // ══════════════════════════════════════════════════════════
 function openLib(ji, field) {
   libTargetJob = ji; libTargetField = field;
+  libAddedBullets = new Set();
+  // Pre-mark bullets that are already in the job's responsibilities
+  if (ji >= 0 && ji < jobs.length && jobs[ji][field]) {
+    jobs[ji][field].forEach(existing => {
+      Object.keys(BULLET_LIB).forEach(cat => {
+        BULLET_LIB[cat].forEach((b, bi) => {
+          if (b === existing) libAddedBullets.add(cat + '::' + bi);
+        });
+      });
+    });
+  }
+  // Auto-match: try to detect category from job title
+  const jobTitle = (jobs[ji] && jobs[ji].title || '').toLowerCase();
+  let matched = null;
+  if (jobTitle) {
+    for (const [cat, keywords] of Object.entries(LIB_KEYWORDS)) {
+      if (keywords.some(kw => jobTitle.includes(kw))) { matched = cat; break; }
+    }
+  }
+  if (matched && BULLET_LIB[matched]) {
+    libActiveCat = matched;
+    const hint = document.getElementById('lib-match-hint');
+    if (hint) { hint.textContent = '⚡ Auto-matched to: ' + matched; hint.style.display = 'block'; }
+  } else {
+    libActiveCat = Object.keys(BULLET_LIB)[0];
+    const hint = document.getElementById('lib-match-hint');
+    if (hint) hint.style.display = 'none';
+  }
+  const searchEl = document.getElementById('lib-search');
+  if (searchEl) searchEl.value = '';
+  libFilteredCats = null;
   renderLibCats(); renderLibBullets();
   document.getElementById('lib-modal').classList.add('show');
+}
+let libFilteredCats = null;
+function filterLibCats(query) {
+  const hint = document.getElementById('lib-match-hint');
+  if (!query.trim()) {
+    libFilteredCats = null;
+    if (hint) hint.style.display = 'none';
+    renderLibCats(); renderLibBullets(); return;
+  }
+  const q = query.toLowerCase();
+  // Search by category name
+  const byName = Object.keys(BULLET_LIB).filter(cat => cat.toLowerCase().includes(q));
+  // Search by keyword map
+  const byKw = Object.keys(LIB_KEYWORDS).filter(cat =>
+    LIB_KEYWORDS[cat].some(kw => kw.includes(q)) && BULLET_LIB[cat]
+  );
+  // Search inside bullet text
+  const byBullet = Object.keys(BULLET_LIB).filter(cat =>
+    BULLET_LIB[cat].some(b => b.toLowerCase().includes(q))
+  );
+  const merged = [...new Set([...byName, ...byKw, ...byBullet])];
+  libFilteredCats = merged.length ? merged : null;
+  if (merged.length === 1) libActiveCat = merged[0];
+  else if (merged.length > 0 && !merged.includes(libActiveCat)) libActiveCat = merged[0];
+  if (hint) hint.style.display = 'none';
+  renderLibCats(); renderLibBullets();
 }
 function closeLib() { const el = document.getElementById('lib-modal'); if (el) el.classList.remove('show'); }
 function renderLibCats() {
   const c = document.getElementById('lib-cats');
   if (!c) return;
-  c.innerHTML = Object.keys(BULLET_LIB).map(cat =>
-    `<div class="lib-cat ${cat===libActiveCat?'active':''}" onclick="libSetCat('${cat}')">${cat}</div>`).join('');
+  const cats = libFilteredCats || Object.keys(BULLET_LIB);
+  c.innerHTML = cats.map(cat =>
+    `<div class="lib-cat ${cat===libActiveCat?'active':''}" onclick="libSetCat('${cat.replace(/'/g,"\\'")}')">${cat}</div>`
+  ).join('') || `<div style="padding:8px 4px;font-size:12px;color:var(--muted);">No match found</div>`;
+  // Scroll active pill into view
+  const active = c.querySelector('.lib-cat.active');
+  if (active) active.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
 }
 function libSetCat(cat) { libActiveCat = cat; renderLibCats(); renderLibBullets(); }
 function renderLibBullets() {
@@ -2158,6 +2481,298 @@ function addLibBullet(text) {
 // ══════════════════════════════════════════════════════════
 // PREVIEW (IFRAME BASED)
 // ══════════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════════
+// 📥 CV IMPORT — PDF.js offline extraction + smart auto-fill
+// Works 100% offline. Nothing leaves your device.
+// ══════════════════════════════════════════════════════════
+let _importedData = null;
+
+function handleCVImportFile(file) {
+  if (!file) return;
+  if (file.type !== 'application/pdf') {
+    showCVImportResult('error', '❌ Please upload a PDF file only.');
+    return;
+  }
+  resetCVImport(true);
+  document.getElementById('cv-import-progress').style.display = 'block';
+  setCVImportStatus('Reading PDF...', 10);
+
+  if (typeof pdfjsLib === 'undefined') {
+    showCVImportResult('error', '❌ PDF reader not loaded. Please check your internet connection once and try again.');
+    document.getElementById('cv-import-progress').style.display = 'none';
+    return;
+  }
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try {
+      setCVImportStatus('Extracting text...', 25);
+      const pdf = await pdfjsLib.getDocument({ data: e.target.result }).promise;
+      let fullText = '';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        // Preserve line structure by grouping items by Y position
+        const byY = {};
+        content.items.forEach(item => {
+          const y = Math.round(item.transform[5]);
+          if (!byY[y]) byY[y] = [];
+          byY[y].push(item.str);
+        });
+        const sortedYs = Object.keys(byY).map(Number).sort((a, b) => b - a);
+        sortedYs.forEach(y => { fullText += byY[y].join(' ') + '\n'; });
+        setCVImportStatus(`Reading page ${i} of ${pdf.numPages}...`, 25 + Math.round((i / pdf.numPages) * 45));
+      }
+
+      if (!fullText.trim()) {
+        document.getElementById('cv-import-progress').style.display = 'none';
+        showCVImportResult('error', '❌ No readable text found. This PDF may be a scanned image. Please use a digitally typed PDF.');
+        return;
+      }
+
+      setCVImportStatus('Analysing CV data...', 80);
+      _importedData = parseCVText(fullText);
+      setCVImportStatus('Done!', 100);
+
+      setTimeout(() => {
+        document.getElementById('cv-import-progress').style.display = 'none';
+        showCVImportPreview(_importedData);
+      }, 350);
+
+    } catch (err) {
+      document.getElementById('cv-import-progress').style.display = 'none';
+      showCVImportResult('error', '❌ Could not read this PDF. Make sure it is a valid, non-password-protected PDF.');
+    }
+  };
+  reader.onerror = () => {
+    document.getElementById('cv-import-progress').style.display = 'none';
+    showCVImportResult('error', '❌ Failed to read file. Please try again.');
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function setCVImportStatus(msg, pct) {
+  const s = document.getElementById('cv-import-status');
+  const b = document.getElementById('cv-import-bar');
+  if (s) s.textContent = msg;
+  if (b) b.style.width = pct + '%';
+}
+
+function parseCVText(text) {
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+
+  // ── PHONE ──
+  const phoneM = text.match(/(?:\+91[-\s]?)?[6-9]\d{9}|\+?[\d][\d\s\-().]{8,14}\d/);
+  const phone = phoneM ? phoneM[0].trim() : '';
+
+  // ── EMAIL ──
+  const emailM = text.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/);
+  const email = emailM ? emailM[0] : '';
+
+  // ── LINKEDIN ──
+  const linkedinM = text.match(/linkedin\.com\/in\/[a-zA-Z0-9\-_%]+/i);
+  const linkedin = linkedinM ? linkedinM[0] : '';
+
+  // ── NAME — find first short line that isn't a heading keyword ──
+  const headingKw = /^(curriculum vitae|resume|cv|profile|contact|address|phone|email|mobile|objective|summary|experience|education|skills|about|declaration|passport|nationality|marital|dob|date)/i;
+  let name = '';
+  for (const line of lines.slice(0, 10)) {
+    const clean = line.replace(/[^a-zA-Z\s.]/g, '').trim();
+    if (clean.length >= 3 && clean.length <= 45 && !headingKw.test(clean) && !/\d/.test(line) && !line.includes('@') && !line.includes('http')) {
+      name = clean; break;
+    }
+  }
+
+  // ── JOB TITLE ──
+  const titleKw = /engineer|developer|manager|officer|analyst|designer|consultant|executive|operator|supervisor|technician|specialist|coordinator|architect|director|associate|assistant|head|lead|senior|junior|intern|trainee|driver|accountant|teacher|professor|nurse|doctor|admin|clerk|officer|mechanic|electrician|plumber|welder|mason|operator|pilot|sailor/i;
+  let title = '';
+  for (const line of lines.slice(0, 20)) {
+    if (titleKw.test(line) && line.length < 70 && !line.includes('@') && !/^\d/.test(line)) {
+      title = line.replace(/[^a-zA-Z\s\/\-,&()]/g, '').trim().replace(/\s+/g, ' ');
+      if (title.length > 3) break;
+    }
+  }
+
+  // ── LOCATION ──
+  const locM = text.match(/([A-Z][a-zA-Z\s]+,\s*(?:India|UAE|Qatar|Saudi Arabia|Kuwait|Bahrain|Oman|USA|UK|Canada|Australia|Singapore|Malaysia|Germany|France|[A-Z][a-z]{2,}))/) ;
+  const location = locM ? locM[0].trim() : '';
+
+  // ── FATHER NAME ──
+  const fatherM = text.match(/(?:father(?:'?s)?\s*(?:name)?|s\/o\.?|d\/o\.?|son of|daughter of)\s*[:\-]?\s*([A-Z][a-zA-Z\s]{2,35})/i);
+  const father = fatherM ? fatherM[1].trim() : '';
+
+  // ── DOB ──
+  const dobM = text.match(/(?:dob|date of birth|born)\s*[:\-]?\s*(\d{1,2}[\s\/\-.][a-zA-Z0-9]+[\s\/\-.]\d{2,4})/i);
+  const dob = dobM ? dobM[1].trim() : '';
+
+  // ── NATIONALITY ──
+  const natM = text.match(/(?:nationality|citizen(?:ship)?)\s*[:\-]?\s*([a-zA-Z]+)/i);
+  const nation = natM ? natM[1].trim() : '';
+
+  // ── MARITAL STATUS ──
+  const marM = text.match(/(?:marital\s*(?:status)?)\s*[:\-]?\s*(single|married|divorced|widowed|unmarried)/i);
+  const marital = marM ? marM[1].trim() : '';
+
+  // ── RELIGION ──
+  const relM = text.match(/(?:religion)\s*[:\-]?\s*([a-zA-Z]+)/i);
+  const religion = relM ? relM[1].trim() : '';
+
+  // ── LANGUAGES ──
+  const langM = text.match(/(?:languages?\s*(?:known)?)\s*[:\-]?\s*([^\n]{3,80})/i);
+  const lang = langM ? langM[1].trim() : '';
+
+  // ── PASSPORT ──
+  const passM = text.match(/(?:passport\s*(?:no\.?|number)?)\s*[:\-]?\s*([A-Z]\d{7})/i);
+  const passport = passM ? passM[1].trim() : '';
+
+  const passExpM = text.match(/(?:passport\s*expiry|expiry\s*date|valid\s*(?:till|up\s*to))\s*[:\-]?\s*([^\n]{3,20})/i);
+  const passport_exp = passExpM ? passExpM[1].trim() : '';
+
+  // ── SUMMARY ──
+  let summary = '';
+  const sumM = text.match(/(?:(?:professional\s*)?(?:summary|objective|profile|about\s*me))\s*[:\-]?\s*\n([^]*?)(?=\n(?:[A-Z][A-Z\s]{3,}:|experience|work|employment|education|skills|qualification|declaration)|$)/i);
+  if (sumM) summary = sumM[1].replace(/\s+/g, ' ').trim().slice(0, 700);
+
+  // ── JOBS ──
+  const jobsArr = [];
+  const expM = text.match(/(?:work\s*experience|experience|employment\s*history|career\s*history)\s*[:\-]?\n([^]*?)(?=\n(?:education|qualification|skills|certif|declaration|personal|reference)|$)/i);
+  if (expM) {
+    const expBlock = expM[1];
+    const dateRe = /(\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\.?\s*)?(\d{4})\s*[-–to]+\s*((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\.?\s*\d{4}|present|till\s*date|current)/gi;
+    let dateMatch;
+    const datePositions = [];
+    while ((dateMatch = dateRe.exec(expBlock)) !== null) {
+      datePositions.push({ idx: dateMatch.index, full: dateMatch[0], start: (dateMatch[1]||'').trim() + dateMatch[2], end: dateMatch[3] });
+    }
+    for (let i = 0; i < datePositions.length && jobsArr.length < 6; i++) {
+      const pos = datePositions[i];
+      const nextPos = datePositions[i + 1] ? datePositions[i + 1].idx : expBlock.length;
+      const block = expBlock.slice(Math.max(0, pos.idx - 200), nextPos).split('\n').map(l => l.trim()).filter(Boolean);
+      const current = /present|current|till\s*date/i.test(pos.end);
+      const jTitle = block.find(l => titleKw.test(l) && l.length < 70) || block[0] || '';
+      const jCompany = block.find(l => l !== jTitle && l.length > 2 && l.length < 60 && !/^\d/.test(l) && !dateRe.test(l)) || '';
+      const resps = block.filter(l => l.length > 15 && l !== jTitle && l !== jCompany && !/^\d{4}/.test(l)).slice(0, 5);
+      if (jTitle || jCompany) {
+        jobsArr.push({ title: jTitle, company: jCompany, location: '', start: pos.start, end: current ? '' : pos.end, current, type: 'Full-time', responsibilities: resps.length ? resps : [''] });
+      }
+    }
+  }
+
+  // ── EDUCATION ──
+  const edusArr = [];
+  const eduM = text.match(/(?:education|qualification|academic(?:\s*background)?)\s*[:\-]?\n([^]*?)(?=\n(?:skills|experience|work|certif|declaration|personal|reference)|$)/i);
+  if (eduM) {
+    const eduBlock = eduM[1];
+    const degreeRe = /b\.?tech|m\.?tech|b\.?e\.?|m\.?e\.?|b\.?sc|m\.?sc|b\.?com|m\.?com|mba|bba|b\.?a\.?|m\.?a\.?|ph\.?d|diploma|10th|12th|ssc|hsc|matriculation|intermediate|higher\s*secondary|secondary/gi;
+    const eduLines = eduBlock.split('\n').map(l => l.trim()).filter(Boolean);
+    for (let i = 0; i < eduLines.length && edusArr.length < 5; i++) {
+      if (degreeRe.test(eduLines[i])) {
+        degreeRe.lastIndex = 0;
+        const yearM2 = (eduLines[i] + ' ' + (eduLines[i+1]||'')).match(/\b(19|20)\d{2}\b/);
+        const gradeM = (eduLines[i] + ' ' + (eduLines[i+1]||'')).match(/(\d{2,3}\.?\d*\s*%|[0-9.]+\s*cgpa|first|second|third|distinction|pass)/i);
+        const inst = eduLines[i+1] && !degreeRe.test(eduLines[i+1]) && eduLines[i+1].length < 80 ? eduLines[i+1] : '';
+        edusArr.push({ degree: eduLines[i].replace(/\b(19|20)\d{2}\b.*/,'').trim(), institution: inst, location: '', startYear: '', endYear: yearM2 ? yearM2[0] : '', grade: gradeM ? gradeM[0] : '' });
+        degreeRe.lastIndex = 0;
+      }
+    }
+  }
+
+  // ── SKILLS ──
+  const skillsArr = [];
+  const skillM = text.match(/(?:(?:technical\s*|key\s*|core\s*)?skills?)\s*[:\-]?\n([^]*?)(?=\n(?:experience|education|certif|work|declaration|reference|personal)|$)/i);
+  if (skillM) {
+    const extracted = skillM[1].split(/[,\n•·\-|\/▸➢►✓✔]/).map(s => s.replace(/\d+\s*(?:year|yr)s?/gi,'').trim()).filter(s => s.length > 1 && s.length < 45 && !/^\d+$/.test(s) && !/^https?/i.test(s));
+    extracted.slice(0, 20).forEach(sk => skillsArr.push({ name: sk, level: 'Intermediate' }));
+  }
+
+  // ── CERTS ──
+  const certsArr = [];
+  const certM = text.match(/(?:certif(?:ications?|icates?)|training|courses?)\s*[:\-]?\n([^]*?)(?=\n(?:declaration|skills|experience|education|personal|reference)|$)/i);
+  if (certM) {
+    certM[1].split('\n').map(l => l.trim()).filter(l => l.length > 3 && l.length < 120).slice(0, 8).forEach(c => {
+      const yearM3 = c.match(/\b(20\d{2})\b/);
+      certsArr.push({ name: c.replace(/\b20\d{2}\b/,'').replace(/^[-•·▸➢►]/,'').trim(), issuedBy: '', year: yearM3 ? yearM3[0] : '' });
+    });
+  }
+
+  return {
+    personal: { name, father, title, phone, email, location, linkedin, dob, nation, marital, religion, lang, passport, passport_exp, summary },
+    jobs: jobsArr.length ? jobsArr : [{ title:'', company:'', location:'', start:'', end:'', current:false, type:'Full-time', responsibilities:[''] }],
+    edus: edusArr.length ? edusArr : [{ degree:'', institution:'', location:'', startYear:'', endYear:'', grade:'' }],
+    skills: skillsArr.length ? skillsArr : [{ name:'', level:'Advanced' }],
+    certs: certsArr
+  };
+}
+
+function showCVImportPreview(data) {
+  const p = data.personal;
+  const el = document.getElementById('cv-import-fields');
+  const pv = document.getElementById('cv-import-preview');
+  if (!el || !pv) return;
+  const row = (label, val) => val ? `<div><span style="color:var(--muted);display:inline-block;min-width:110px;">${label}:</span> <strong>${val}</strong></div>` : '';
+  let html = '';
+  html += row('Name', p.name);
+  html += row('Job Title', p.title);
+  html += row('Phone', p.phone);
+  html += row('Email', p.email);
+  html += row('Location', p.location);
+  html += row('LinkedIn', p.linkedin);
+  html += row('DOB', p.dob);
+  html += row('Nationality', p.nation);
+  html += row('Marital Status', p.marital);
+  html += row('Religion', p.religion);
+  html += row('Languages', p.lang);
+  html += row('Passport', p.passport);
+  html += row('Father Name', p.father);
+  if (p.summary) html += `<div style="margin-top:4px;"><span style="color:var(--muted);">Summary:</span> <span style="color:#555;">${p.summary.slice(0,130)}…</span></div>`;
+  const jc = data.jobs.filter(j=>j.company||j.title).length;
+  const ec = data.edus.filter(e=>e.institution||e.degree).length;
+  const sc = data.skills.filter(s=>s.name).length;
+  const cc = data.certs.filter(c=>c.name).length;
+  html += `<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:6px;">`;
+  html += `<span style="background:var(--primary-light);color:var(--primary);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;">💼 ${jc} Job${jc!==1?'s':''}</span>`;
+  html += `<span style="background:#EFF6FF;color:#1D4ED8;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;">🎓 ${ec} Edu</span>`;
+  html += `<span style="background:#F0FDF4;color:#15803D;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;">🛠 ${sc} Skills</span>`;
+  if (cc) html += `<span style="background:#FFF7ED;color:#C2410C;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;">🏅 ${cc} Certs</span>`;
+  html += `</div>`;
+  el.innerHTML = html || '<div style="color:var(--muted);">Limited data extracted. Try a cleaner PDF.</div>';
+  pv.style.display = 'block';
+}
+
+function applyImportedCV() {
+  if (!_importedData) return;
+  fillForm(_importedData.personal);
+  jobs = _importedData.jobs;   renderJobs();
+  edus = _importedData.edus;   renderEdus();
+  skills = _importedData.skills.length ? _importedData.skills : [{name:'',level:'Advanced'}]; renderSkills();
+  certs = _importedData.certs; renderCerts();
+  autoSave();
+  renderPreview();
+  showToast('✅ CV imported! Review each section and make any corrections.');
+  showPage('personal');
+  resetCVImport();
+}
+
+function showCVImportResult(type, msg) {
+  document.getElementById('cv-import-progress').style.display = 'none';
+  const el = document.getElementById('cv-import-result');
+  if (!el) return;
+  el.style.display = 'block';
+  el.className = 'import-result ' + (type === 'error' ? 'import-err' : 'import-ok');
+  el.textContent = msg;
+}
+
+function resetCVImport(keepZone) {
+  _importedData = null;
+  const ids = ['cv-import-result','cv-import-preview','cv-import-progress'];
+  ids.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+  const inp = document.getElementById('cv-import-input');
+  if (inp) inp.value = '';
+}
+
+// ── End of CV Import ──
 function schedulePreview() {
   clearTimeout(previewTimer);
   previewTimer = setTimeout(renderPreview, 350);
@@ -2213,13 +2828,34 @@ function scalePreviewIframe() {
   const wrap = document.getElementById('preview-wrap');
   const iframe = document.getElementById('preview-iframe');
   if (!wrap || !iframe) return;
-  const w = wrap.clientWidth || 300;
+  const w = (wrap.clientWidth - 8) || 300;
   const scale = w / 595;
-  iframe.style.transform = `scale(${scale})`;
   iframe.style.transformOrigin = 'top left';
+  iframe.style.position = 'absolute';
+  iframe.style.top = '0';
+  iframe.style.left = '0';
+  iframe.style.transform = `scale(${scale})`;
   const iframeH = parseInt(iframe.style.height) || 842;
-  wrap.style.height = Math.ceil(iframeH * scale) + 'px';
-  wrap.style.overflow = 'hidden';
+  const scaledH = Math.ceil(iframeH * scale);
+  const maxH = 480;
+  wrap.style.height = maxH + 'px';
+  wrap.style.overflowX = 'hidden';
+  wrap.style.overflowY = 'auto';
+  // Spacer sets the real scroll height
+  let spacer = document.getElementById('preview-wrap-spacer');
+  if (!spacer) {
+    spacer = document.createElement('div');
+    spacer.id = 'preview-wrap-spacer';
+    spacer.style.cssText = 'width:1px;pointer-events:none;display:block;';
+    wrap.appendChild(spacer);
+  }
+  spacer.style.height = scaledH + 'px';
+  // Keep iframe in sync with scroll position
+  wrap.onscroll = () => {
+    iframe.style.top = wrap.scrollTop + 'px';
+    iframe.style.transform = `translateY(${-wrap.scrollTop / scale}px) scale(${scale})`;
+    iframe.style.transformOrigin = 'top left';
+  };
 }
 
 // ══════════════════════════════════════════════════════════
