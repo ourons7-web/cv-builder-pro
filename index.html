@@ -452,7 +452,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 }
 
 .card-body{padding:18px;}
-.card-body.collapsed{display:none;}
+.card-body.collapsed{display:none!important;}
 
 /* ═══════════════
    FORMS
@@ -1812,6 +1812,10 @@ button.tpl-demo-tag:focus{box-shadow:0 0 0 2px rgba(13,107,94,.25);}
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
       <span>Preview PDF</span>
     </button>
+    <button class="tbtn tbtn-light tb-hide-mobile" onclick="shareApp()" title="Share App" style="background:linear-gradient(135deg,#0D9488,#0F766E);color:#fff;border-color:#0D9488;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      <span>Share</span>
+    </button>
     <button class="tbtn tbtn-dark" onclick="downloadPDF()">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       <span>Download PDF</span>
@@ -1900,6 +1904,9 @@ button.tpl-demo-tag:focus{box-shadow:0 0 0 2px rgba(13,107,94,.25);}
           <div class="field"><label>Passport No.</label><input id="p_passport" placeholder="e.g. A1234567" oninput="autoSave()"/></div>
           <div class="field"><label>Passport Expiry</label><input id="p_passport_exp" placeholder="e.g. 27/12/2033" oninput="autoSave()"/></div>
         </div>
+        <!-- CUSTOM PERSONAL FIELDS -->
+        <div id="personal-custom-fields-container"></div>
+        <button class="add-entry-btn" onclick="addPersonalCustomField()" style="margin-top:6px;padding:10px 14px;font-size:13px;display:flex;align-items:center;gap:6px;justify-content:center;min-height:unset;height:auto;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Additional Field</button>
       </div>
     </div>
 
@@ -1996,7 +2003,7 @@ button.tpl-demo-tag:focus{box-shadow:0 0 0 2px rgba(13,107,94,.25);}
           <label class="switch"><input type="checkbox" id="tog_photo" onchange="autoSave()" checked/><span class="slider"></span></label>
         </div>
         <div class="toggle-row">
-          <div class="toggle-info"><label for="tog_father">Show Father's Name on CV</label><span>Display S/O father name on CV</span></div>
+          <div class="toggle-info"><label for="tog_father">Show Father's Name on CV</label><span>Display C/O father name on CV</span></div>
           <label class="switch"><input type="checkbox" id="tog_father" onchange="autoSave()" checked/><span class="slider"></span></label>
         </div>
       </div>
@@ -2473,6 +2480,17 @@ button.tpl-demo-tag:focus{box-shadow:0 0 0 2px rgba(13,107,94,.25);}
       </button>
     </div>
     <div class="more-body">
+      <button class="more-row" onclick="shareApp();closeMoreMenu();">
+        <div class="more-icon-wrap" style="background:linear-gradient(135deg,#0D9488,#0F766E);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </div>
+        <div class="more-text">
+          <div class="more-row-title">Share This App</div>
+          <div class="more-row-sub">Send CV Builder Pro to a friend</div>
+        </div>
+        <div class="more-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </button>
+      <div class="more-divider"></div>
       <button class="more-row" onclick="showPage('cvimport');closeMoreMenu();">
         <div class="more-icon-wrap c-teal">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -2588,8 +2606,8 @@ button.tpl-demo-tag:focus{box-shadow:0 0 0 2px rgba(13,107,94,.25);}
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
       </div>
       <h2>Download Clean PDF</h2>
-      <p class="pay-sub">Pay &#x20B9;5 &rarr; Message us on WhatsApp &rarr; Get a code &rarr; 1-Day Access</p>
-      <div class="pay-price-tag"><span class="sym">&#x20B9;</span><span class="num">5</span><span class="lbl">1-day access</span></div>
+      <p class="pay-sub">Pay &#x20B9;10 &rarr; Message us on WhatsApp &rarr; Get a code &rarr; 1-Day Access</p>
+      <div class="pay-price-tag"><span class="sym">&#x20B9;</span><span class="num">10</span><span class="lbl">1-day access</span></div>
     </div>
     <div id="pay-body">
       <div id="pay-chooser">
@@ -2598,7 +2616,7 @@ button.tpl-demo-tag:focus{box-shadow:0 0 0 2px rgba(13,107,94,.25);}
             <div class="pay-card-ico c-blue">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
             </div>
-            <h3>Pay &#x20B9;5</h3><p>New here? Pay &#x20B9;5 for full-day access</p>
+            <h3>Pay &#x20B9;10</h3><p>New here? Pay &#x20B9;10 for full-day access</p>
           </div>
           <div class="pay-card" onclick="showCodeSec()" tabindex="0">
             <div class="pay-card-ico c-green">
@@ -2622,7 +2640,7 @@ button.tpl-demo-tag:focus{box-shadow:0 0 0 2px rgba(13,107,94,.25);}
         </div>
         <div class="send-note">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          Send exactly <strong style="margin:0 3px;">&#x20B9;5</strong> — then press the button below
+          Send exactly <strong style="margin:0 3px;">&#x20B9;10</strong> — then press the button below
         </div>
         <button class="wa-btn" onclick="openWhatsApp()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.099.539 4.073 1.482 5.796L0 24l6.371-1.461A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.655-.508-5.183-1.393l-.371-.22-3.781.866.896-3.683-.242-.381A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
@@ -2639,7 +2657,7 @@ button.tpl-demo-tag:focus{box-shadow:0 0 0 2px rgba(13,107,94,.25);}
         </div>
         <div class="code-steps">
           <strong>How to get your code:</strong><br/>
-          1. Pay &#x20B9;5 to our UPI ID<br/>
+          1. Pay &#x20B9;10 to our UPI ID<br/>
           2. Send us the payment screenshot on WhatsApp<br/>
           3. We will send you a 6-letter code<br/>
           4. Type the code below and download your CV
@@ -3002,6 +3020,7 @@ let currentTopTitleSize = 14, currentSubHeaderSize = 13;
 let currentFontFamily = 'default';
 let photoData = null;
 let jobs = [], edus = [], skills = [], certs = [], customSections = [];
+let personalCustomFields = []; // [{label:'', value:''}]
 let libTargetJob = 0, libTargetField = 'responsibilities';
 let libActiveCat = Object.keys(BULLET_LIB)[0];
 let demoTpl = 1;
@@ -3014,7 +3033,7 @@ let mobilePreviewOpen = false;
 function saveSlot(slot) {
   const data = {
     personal: getFormData(),
-    jobs, edus, skills, certs, customSections,
+    jobs, edus, skills, certs, customSections, personalCustomFields,
     photo: photoData,
     extras: {
       decl: document.getElementById('tog_decl')?.checked || false,
@@ -3051,6 +3070,9 @@ function loadSlot(slot) {
       edus = d.edus || [{degree:'',institution:'',location:'',startYear:'',endYear:'',grade:''}];
       skills = d.skills || [{name:'',level:'Advanced'}];
       certs = d.certs || [];
+      // Load personalCustomFields
+      personalCustomFields = d.personalCustomFields || [];
+      renderPersonalCustomFields();
       // Load custom sections + migrate old 'entries' structure to new 'items' structure
       customSections = (d.customSections || []).map(sec => {
         if (sec.items) return sec; // already new format
@@ -3416,6 +3438,42 @@ function showPage(id) {
   window.scrollTo(0, 0);
 }
 
+// ══════════════════════════════════════════════════════════
+// PERSONAL CUSTOM FIELDS
+// ══════════════════════════════════════════════════════════
+function renderPersonalCustomFields() {
+  const c = document.getElementById('personal-custom-fields-container');
+  if (!c) return;
+  c.innerHTML = '';
+  personalCustomFields.forEach((f, fi) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'g2';
+    wrap.style.cssText = 'border:1px solid var(--border-2);border-radius:10px;padding:10px 12px;margin-bottom:8px;position:relative;background:#FAFCFF;';
+    wrap.innerHTML = `
+      <div class="field" style="margin-bottom:0;">
+        <label>Field Name</label>
+        <input value="${esc(f.label)}" placeholder="e.g. Languages Known, Nationality, Date of Birth" oninput="personalCustomFields[${fi}].label=this.value;autoSave();schedulePreview()"/>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Value</label>
+        <input value="${esc(f.value)}" placeholder="e.g. Sunita Devi" oninput="personalCustomFields[${fi}].value=this.value;autoSave();schedulePreview()"/>
+      </div>
+      <button onclick="removePersonalCustomField(${fi})" style="position:absolute;top:8px;right:8px;background:#FFF5F5;color:#DC3545;border:1px solid #FED7D7;border-radius:7px;padding:2px 8px;font-size:11px;cursor:pointer;font-weight:700;">✕</button>`;
+    c.appendChild(wrap);
+  });
+}
+function addPersonalCustomField() {
+  personalCustomFields.push({label:'',value:''});
+  renderPersonalCustomFields();
+  autoSave();
+}
+function removePersonalCustomField(i) {
+  personalCustomFields.splice(i,1);
+  renderPersonalCustomFields();
+  autoSave();
+  schedulePreview();
+}
+
 function toggleCard(header) {
   const body = header.nextElementSibling;
   const chev = header.querySelector('.chevron');
@@ -3469,7 +3527,7 @@ function showToast(msg) {
 // ══════════════════════════════════════════════════════════
 // RENDER FORMS
 // ══════════════════════════════════════════════════════════
-function renderAll() { renderJobs(); renderEdus(); renderSkills(); renderCerts(); renderCustomSections(); }
+function renderAll() { renderJobs(); renderEdus(); renderSkills(); renderCerts(); renderCustomSections(); renderPersonalCustomFields(); }
 
 function renderJobs() {
   const c = document.getElementById('jobs-container');
@@ -3549,6 +3607,8 @@ function renderEdus() {
       <div class="entry-header">
         <span class="entry-num"> Education #${ei+1}${e.institution ? ' — ' + esc(e.institution) : ''}</span>
         <div class="entry-actions">
+          ${ei > 0 ? `<button class="icon-btn" onclick="moveEdu(${ei},-1)" title="Move Up">↑</button>` : ''}
+          ${ei < edus.length-1 ? `<button class="icon-btn" onclick="moveEdu(${ei},1)" title="Move Down">↓</button>` : ''}
           <button class="icon-btn danger" onclick="removeEdu(${ei})" title="Remove education"></button>
         </div>
       </div>
@@ -3567,6 +3627,7 @@ function renderEdus() {
 }
 function addEdu() { edus.push({degree:'',institution:'',location:'',startYear:'',endYear:'',grade:''}); renderEdus(); autoSave(); }
 function removeEdu(i) { edus.splice(i,1); if(!edus.length) edus=[{degree:'',institution:'',location:'',startYear:'',endYear:'',grade:''}]; renderEdus(); autoSave(); }
+function moveEdu(i,dir) { const t=edus[i];edus[i]=edus[i+dir];edus[i+dir]=t; renderEdus(); autoSave(); }
 
 function renderSkills() {
   const c = document.getElementById('skills-container');
@@ -4056,22 +4117,50 @@ function openLib(ji, field) {
 }
 function closeLib() { const el = document.getElementById('lib-modal'); if (el) el.classList.remove('show'); }
 
-// Swipe-down to close lib modal
+// Swipe-down to close lib modal — FIXED
 (function() {
   let libTouchStartY = 0;
-  let libTouchStartScrollTop = 0;
+  let libTouchCurrentY = 0;
+  let libIsDragging = false;
   window.addEventListener('load', function() {
     const libBox = document.getElementById('lib-box');
     const libBullets = document.getElementById('lib-bullets');
     if (!libBox) return;
+
     libBox.addEventListener('touchstart', function(e) {
       libTouchStartY = e.touches[0].clientY;
-      libTouchStartScrollTop = libBullets ? libBullets.scrollTop : 0;
+      libTouchCurrentY = libTouchStartY;
+      libIsDragging = true;
     }, { passive: true });
-    libBox.addEventListener('touchend', function(e) {
-      const dy = e.changedTouches[0].clientY - libTouchStartY;
+
+    libBox.addEventListener('touchmove', function(e) {
+      if (!libIsDragging) return;
+      libTouchCurrentY = e.touches[0].clientY;
+      const dy = libTouchCurrentY - libTouchStartY;
       const atTop = !libBullets || libBullets.scrollTop <= 0;
-      if (dy > 80 && atTop) { closeLib(); }
+      // If swiping down and at top, translate the box to give visual feedback
+      if (dy > 0 && atTop) {
+        libBox.style.transform = `translateY(${Math.min(dy * 0.6, 120)}px)`;
+        libBox.style.transition = 'none';
+      }
+    }, { passive: true });
+
+    libBox.addEventListener('touchend', function(e) {
+      if (!libIsDragging) return;
+      libIsDragging = false;
+      const dy = libTouchCurrentY - libTouchStartY;
+      const atTop = !libBullets || libBullets.scrollTop <= 0;
+      libBox.style.transform = '';
+      libBox.style.transition = '';
+      if (dy > 60 && atTop) {
+        closeLib();
+      }
+    }, { passive: true });
+
+    libBox.addEventListener('touchcancel', function() {
+      libIsDragging = false;
+      libBox.style.transform = '';
+      libBox.style.transition = '';
     }, { passive: true });
   });
 })();
@@ -5473,7 +5562,7 @@ function demoNext()  { if (_activeDemoIdx < TPL_INFO.length) openInlineDemo(_act
 function collectCVData() {
   return {
     personal: getFormData(),
-    jobs, edus, skills, certs, customSections,
+    jobs, edus, skills, certs, customSections, personalCustomFields,
     extras: {
       decl:     document.getElementById('tog_decl')?.checked     || false,
       personal: document.getElementById('tog_personal')?.checked || false,
@@ -6070,7 +6159,7 @@ function buildT1(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
     <div class="hdr">
       ${ph?`<img src="${data.photo}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;float:right;margin:0 0 8px 12px;"/>`:''}
       <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#666;">S/O: ${s(d.father)}</div>`:''}
+      ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#666;">C/O: ${s(d.father)}</div>`:''}
       <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
       <div class="ct" style="font-size:${xs}px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 2px;margin-top:6px;">${d.phone?`<span style=\"display:inline-flex;align-items:center;margin-right:12px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"13\" height=\"13\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg>${s(d.phone)}</span>`:''}${d.email?`<span style=\"display:inline-flex;align-items:center;margin-right:12px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"13\" height=\"13\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;\"><path d=\"M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z\"/></svg>${s(d.email)}</span>`:''}${d.location?`<span style=\"display:inline-flex;align-items:center;margin-right:12px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"13\" height=\"13\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;\"><path d=\"M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z\"/></svg>${s(d.location)}</span>`:''}${d.linkedin?`<span style=\"display:inline-flex;align-items:center;margin-right:12px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"13\" height=\"13\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;\"><path d=\"M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z\"/></svg>${s(d.linkedin)}</span>`:''}</div>
     </div>
@@ -6111,7 +6200,7 @@ function buildT2(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
       ${ph?`<img src="${data.photo}" style="width:75px;height:75px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.4);flex-shrink:0;"/>`:''}
       <div>
         <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-        ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;opacity:.85;">S/O: ${s(d.father)}</div>`:''}
+        ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;opacity:.85;">C/O: ${s(d.father)}</div>`:''}
         <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
         <div class="ct" style="font-size:${xs}px;">
           ${d.phone?`<span style=\"display:inline-flex;align-items:center;gap:0px;background:rgba(255,255,255,0.18);border-radius:20px;padding:2px 8px 2px 6px;margin-right:6px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"11\" height=\"11\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;opacity:.9;\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg>${s(d.phone)}</span>`:''}${d.email?`<span style=\"display:inline-flex;align-items:center;gap:0px;background:rgba(255,255,255,0.18);border-radius:20px;padding:2px 8px 2px 6px;margin-right:6px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"11\" height=\"11\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;opacity:.9;\"><path d=\"M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z\"/></svg>${s(d.email)}</span>`:''}
@@ -6157,7 +6246,7 @@ function buildT3(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
     <div class="hdr">
       ${ph?`<img src="${data.photo}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid ${col};display:block;margin:0 auto 8px;"/>`:''}
       <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#7f8c8d;">S/O: ${s(d.father)}</div>`:''}
+      ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#7f8c8d;">C/O: ${s(d.father)}</div>`:''}
       <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
       <div class="cb" style="font-size:${xs}px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:2px 4px;margin-top:5px;">${d.phone?`<span style=\"display:inline-flex;align-items:center;gap:5px;margin:0 10px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:${col};flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"9\" height=\"9\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg></span>${s(d.phone)}</span>`:''}${d.email?`<span style=\"display:inline-flex;align-items:center;gap:5px;margin:0 10px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:${col};flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"9\" height=\"9\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;\"><path d=\"M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z\"/></svg></span>${s(d.email)}</span>`:''}${d.location?`<span style=\"display:inline-flex;align-items:center;gap:5px;margin:0 10px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:${col};flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"9\" height=\"9\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;\"><path d=\"M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z\"/></svg></span>${s(d.location)}</span>`:''}</div>
     </div>
@@ -6197,7 +6286,7 @@ function buildT4(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
     <div style="border-bottom:3px solid ${col};padding-bottom:14px;margin-bottom:18px;">
       ${ph?`<img src="${data.photo}" style="width:68px;height:68px;border-radius:8px;object-fit:cover;float:right;margin:0 0 6px 14px;"/>`:''}
       <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#888;">S/O: ${s(d.father)}</div>`:''}
+      ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#888;">C/O: ${s(d.father)}</div>`:''}
       <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
       <div class="ct" style="font-size:${xs}px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 2px;margin-top:5px;">${d.phone?`<span style=\"display:inline-flex;align-items:center;margin-right:12px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"13\" height=\"13\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg>${s(d.phone)}</span>`:''}${d.email?`<span style=\"display:inline-flex;align-items:center;margin-right:12px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"13\" height=\"13\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;\"><path d=\"M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z\"/></svg>${s(d.email)}</span>`:''}${d.location?`<span style=\"display:inline-flex;align-items:center;margin-right:12px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"13\" height=\"13\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;\"><path d=\"M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z\"/></svg>${s(d.location)}</span>`:''}${d.linkedin?`<span style=\"display:inline-flex;align-items:center;margin-right:12px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"13\" height=\"13\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;\"><path d=\"M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z\"/></svg>${s(d.linkedin)}</span>`:''}</div>
     </div>
@@ -6238,7 +6327,7 @@ function buildT5(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
       ${ph?`<img src="${data.photo}" style="width:65px;height:65px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.4);flex-shrink:0;"/>`:''}
       <div>
         <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-        ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;opacity:.85;">S/O: ${s(d.father)}</div>`:''}
+        ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;opacity:.85;">C/O: ${s(d.father)}</div>`:''}
         <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
         <div class="ct" style="font-size:${xs}px;">
           ${d.phone?`<span style=\"display:inline-flex;align-items:center;gap:6px;margin-right:12px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:3px;background:${col};flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"10\" height=\"10\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;filter:brightness(10);\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg></span>${s(d.phone)}</span>`:''}${d.email?`<span style=\"display:inline-flex;align-items:center;gap:6px;margin-right:12px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:3px;background:${col};flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"10\" height=\"10\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;filter:brightness(10);\"><path d=\"M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z\"/></svg></span>${s(d.email)}</span>`:''}
@@ -6282,7 +6371,7 @@ function buildT6(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
     <div class="sidebar" style="background:${col};">
       ${ph?`<img src="${data.photo}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.3);display:block;margin:0 auto 12px;"/>`:''}
       <div class="snm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="sfn" style="font-size:${sm}px;opacity:.8;">S/O: ${s(d.father)}</div>`:''}
+      ${showFather&&d.father?`<div class="sfn" style="font-size:${sm}px;opacity:.8;">C/O: ${s(d.father)}</div>`:''}
       <div class="sttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
       <div class="ssh" style="font-size:${shSz}px;">Contact</div>
       ${d.phone?`<div class=\"sct\" style=\"display:flex;align-items:center;gap:6px;margin-bottom:5px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"11\" height=\"11\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;opacity:.85;\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg>${s(d.phone)}</div>`:''}
@@ -6346,7 +6435,7 @@ function buildT7(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
     <div class="hdr">
       ${ph?`<img src="${data.photo}" style="width:75px;height:75px;object-fit:cover;border:1px solid #333;float:right;margin:-4px 0 4px 12px;"/>`:''}
       <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#333;">S/O: ${s(d.father)}</div>`:''}
+      ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#333;">C/O: ${s(d.father)}</div>`:''}
       <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
       <div class="ct" style="font-size:${xs}px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 2px;margin-top:5px;">${d.phone?`<span style=\"display:inline-flex;align-items:center;margin-right:12px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"13\" height=\"13\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg>${s(d.phone)}</span>`:''}${d.email?`<span style=\"display:inline-flex;align-items:center;margin-right:12px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"13\" height=\"13\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;\"><path d=\"M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z\"/></svg>${s(d.email)}</span>`:''}${d.location?`<span style=\"display:inline-flex;align-items:center;margin-right:12px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"13\" height=\"13\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;\"><path d=\"M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z\"/></svg>${s(d.location)}</span>`:''}</div>
     </div>
@@ -6389,7 +6478,7 @@ function buildT8(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
         ${ph?`<img src="${data.photo}" style="width:75px;height:75px;border-radius:12px;object-fit:cover;border:3px solid rgba(255,255,255,.3);flex-shrink:0;"/>`:''}
         <div>
           <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-          ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;opacity:.85;">S/O: ${s(d.father)}</div>`:''}
+          ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;opacity:.85;">C/O: ${s(d.father)}</div>`:''}
           <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
           <div class="ct" style="font-size:${xs}px;">
             ${d.phone?`<span style=\"display:inline-flex;align-items:center;gap:6px;margin-right:12px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:rgba(255,255,255,0.2);flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"9\" height=\"9\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg></span>${s(d.phone)}</span>`:''}${d.email?`<span style=\"display:inline-flex;align-items:center;gap:6px;margin-right:12px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:rgba(255,255,255,0.2);flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"9\" height=\"9\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;\"><path d=\"M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z\"/></svg></span>${s(d.email)}</span>`:''}
@@ -6433,7 +6522,7 @@ function buildT9(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz)
   Object.assign(sections, buildCustomSectionsHTML(data, shSz, fs));
   return `<div class="t9" style="padding:${pad};font-size:${fs}px;">
     <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-    ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#444;">S/O: ${s(d.father)}</div>`:''}
+    ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;color:#444;">C/O: ${s(d.father)}</div>`:''}
     <div class="ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
     <div class="ct" style="font-size:${xs}px;display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:6px;">${d.phone?`<span style=\"display:inline-flex;align-items:center;gap:0px;background:rgba(255,255,255,0.15);border-radius:20px;padding:2px 8px 2px 6px;margin-right:6px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"11\" height=\"11\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;opacity:.9;\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg>${s(d.phone)}</span>`:''}${d.email?`<span style=\"display:inline-flex;align-items:center;gap:0px;background:rgba(255,255,255,0.15);border-radius:20px;padding:2px 8px 2px 6px;margin-right:6px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"11\" height=\"11\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;opacity:.9;\"><path d=\"M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z\"/></svg>${s(d.email)}</span>`:''}${d.location?`<span style=\"display:inline-flex;align-items:center;gap:0px;background:rgba(255,255,255,0.15);border-radius:20px;padding:2px 8px 2px 6px;margin-right:6px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"11\" height=\"11\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;opacity:.9;\"><path d=\"M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z\"/></svg>${s(d.location)}</span>`:''}${d.linkedin?`<span style=\"display:inline-flex;align-items:center;gap:0px;background:rgba(255,255,255,0.15);border-radius:20px;padding:2px 8px 2px 6px;margin-right:6px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"11\" height=\"11\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;opacity:.9;\"><path d=\"M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z\"/></svg>${s(d.linkedin)}</span>`:''}</div>
     ${renderSections(secOrder, sections)}
@@ -6474,7 +6563,7 @@ function buildT10(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz
       ${ph?`<img src="${data.photo}" style="width:72px;height:72px;border-radius:6px;object-fit:cover;border:2px solid ${col};flex-shrink:0;"/>`:''}
       <div class="nmsec">
         <div class="nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-        ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;opacity:.8;">S/O: ${s(d.father)}</div>`:''}
+        ${showFather&&d.father?`<div class="fn" style="font-size:${sm}px;opacity:.8;">C/O: ${s(d.father)}</div>`:''}
         <div class="ttl" style="color:${col};font-size:${ttlSz}px;">${s(d.title)}</div>
       </div>
     </div>
@@ -6530,7 +6619,7 @@ function buildT11(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz
       <div class="t11hdrcontent">
         ${ph?`<img src="${data.photo}" style="width:70px;height:70px;border-radius:3px;object-fit:cover;border:2px solid ${col};float:right;margin:0 0 8px 16px;"/>`:''}
         <div class="t11nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-        ${showFather&&d.father?`<div class="t11fn" style="font-size:${sm}px;">S/O: ${s(d.father)}</div>`:''}
+        ${showFather&&d.father?`<div class="t11fn" style="font-size:${sm}px;">C/O: ${s(d.father)}</div>`:''}
         <div class="t11ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
         <div class="t11ct" style="font-size:${xs}px;">
           ${d.phone?`<span style=\"display:inline-flex;align-items:center;gap:5px;margin-right:14px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;background:${col};border-radius:2px;flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"9\" height=\"9\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;filter:brightness(10);\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg></span>${s(d.phone)}</span>`:''}${d.email?`<span style=\"display:inline-flex;align-items:center;gap:5px;margin-right:14px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;background:${col};border-radius:2px;flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"9\" height=\"9\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;filter:brightness(10);\"><path d=\"M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z\"/></svg></span>${s(d.email)}</span>`:''}
@@ -6580,7 +6669,7 @@ function buildT12(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz
     <div class="t12side">
       ${ph?`<img src="${data.photo}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.35);display:block;margin:0 auto 14px;"/>`:''}
       <div class="t12snm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="t12sfn" style="font-size:${sm}px;">S/O: ${s(d.father)}</div>`:''}
+      ${showFather&&d.father?`<div class="t12sfn" style="font-size:${sm}px;">C/O: ${s(d.father)}</div>`:''}
       <div class="t12sttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
       <div class="t12ssh" style="font-size:${shSz}px;">Contact</div>
       ${d.phone?`<div class=\"t12sct\" style=\"display:flex;align-items:center;gap:6px;margin-bottom:5px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"11\" height=\"11\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;opacity:.85;\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg>${s(d.phone)}</div>`:''}
@@ -6640,7 +6729,7 @@ function buildT13(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz
       <div class="t13hdr-inner">
         ${ph?`<img src="${data.photo}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.4);float:right;margin:0 0 8px 16px;"/>`:''}
         <div class="t13nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-        ${showFather&&d.father?`<div class="t13fn" style="font-size:${sm}px;">S/O: ${s(d.father)}</div>`:''}
+        ${showFather&&d.father?`<div class="t13fn" style="font-size:${sm}px;">C/O: ${s(d.father)}</div>`:''}
         <div class="t13ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
         <div class="t13ct" style="font-size:${xs}px;">
           ${d.phone?`<span style=\"display:inline-flex;align-items:center;gap:0px;background:rgba(255,255,255,0.18);border-radius:20px;padding:2px 8px 2px 6px;margin-right:6px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"11\" height=\"11\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;opacity:.9;\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg>${s(d.phone)}</span>`:''}${d.email?`<span style=\"display:inline-flex;align-items:center;gap:0px;background:rgba(255,255,255,0.18);border-radius:20px;padding:2px 8px 2px 6px;margin-right:6px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"11\" height=\"11\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;opacity:.9;\"><path d=\"M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z\"/></svg>${s(d.email)}</span>`:''}
@@ -6688,7 +6777,7 @@ function buildT14(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz
     <div class="t14hdr">
       ${ph?`<img src="${data.photo}" style="width:72px;height:72px;border-radius:4px;object-fit:cover;border:2px solid ${col};float:right;margin:0 0 4px 16px;"/>`:''}
       <div class="t14nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="t14fn" style="font-size:${sm}px;">S/O: ${s(d.father)}</div>`:''}
+      ${showFather&&d.father?`<div class="t14fn" style="font-size:${sm}px;">C/O: ${s(d.father)}</div>`:''}
       <div class="t14ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
       <div class="t14ct" style="font-size:${xs}px;">
         ${d.phone?`<span style=\"display:inline-flex;align-items:center;gap:6px;margin-right:12px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:${col}22;flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"9\" height=\"9\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg></span>${s(d.phone)}</span>`:''}${d.email?`<span style=\"display:inline-flex;align-items:center;gap:6px;margin-right:12px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:${col}22;flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"9\" height=\"9\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;\"><path d=\"M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z\"/></svg></span>${s(d.email)}</span>`:''}
@@ -6737,7 +6826,7 @@ function buildT15(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz
     <div class="t15hdr">
       ${ph?`<img src="${data.photo}" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.45);float:right;margin:0 0 8px 20px;"/>`:''}
       <div class="t15nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="t15fn" style="font-size:${sm}px;">S/O: ${s(d.father)}</div>`:''}
+      ${showFather&&d.father?`<div class="t15fn" style="font-size:${sm}px;">C/O: ${s(d.father)}</div>`:''}
       <div class="t15ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
     </div>
     <div class="t15strip">
@@ -6791,7 +6880,7 @@ function buildT16(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz
     <div class="t16hdr">
       ${ph?`<img src="${data.photo}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;border:3px solid ${col};float:right;margin:0 0 4px 16px;"/>`:''}
       <div class="t16nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="t16fn" style="font-size:${sm}px;">S/O: ${s(d.father)}</div>`:''}
+      ${showFather&&d.father?`<div class="t16fn" style="font-size:${sm}px;">C/O: ${s(d.father)}</div>`:''}
       <div class="t16ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
       <div class="t16ct" style="font-size:${xs}px;">
         ${d.phone?`<span style=\"display:inline-flex;align-items:center;gap:5px;margin-right:14px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;background:${col};border-radius:2px;flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"9\" height=\"9\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;filter:brightness(10);\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg></span>${s(d.phone)}</span>`:''}${d.email?`<span style=\"display:inline-flex;align-items:center;gap:5px;margin-right:14px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;background:${col};border-radius:2px;flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"9\" height=\"9\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;filter:brightness(10);\"><path d=\"M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z\"/></svg></span>${s(d.email)}</span>`:''}
@@ -6843,7 +6932,7 @@ function buildT17(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz
       <div class="t17toprow">
         <div class="t17nmsec">
           <div class="t17nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-          ${showFather&&d.father?`<div class="t17fn" style="font-size:${sm}px;">S/O: ${s(d.father)}</div>`:''}
+          ${showFather&&d.father?`<div class="t17fn" style="font-size:${sm}px;">C/O: ${s(d.father)}</div>`:''}
           <div class="t17ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
         </div>
         ${ph?`<img src="${data.photo}" style="width:72px;height:72px;border-radius:8px;object-fit:cover;border:3px solid ${col};flex-shrink:0;"/>`:''}
@@ -6899,7 +6988,7 @@ function buildT18(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz
   return `<div class="t18" style="padding:${pad};font-size:${fs}px;">
     ${ph?`<img src="${data.photo}" style="width:68px;height:68px;border-radius:50%;object-fit:cover;border:1px solid #ddd;float:right;margin:0 0 8px 20px;"/>`:''}
     <div class="t18nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-    ${showFather&&d.father?`<div class="t18fn" style="font-size:${sm}px;">S/O: ${s(d.father)}</div>`:''}
+    ${showFather&&d.father?`<div class="t18fn" style="font-size:${sm}px;">C/O: ${s(d.father)}</div>`:''}
     <div class="t18ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
     <div class="t18ct" style="font-size:${xs}px;">
       ${d.phone?`<span style=\"display:inline-flex;align-items:center;margin-right:18px;opacity:.82;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"11\" height=\"11\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;opacity:.7;\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg>${s(d.phone)}</span>`:''}${d.email?`<span style=\"display:inline-flex;align-items:center;margin-right:18px;opacity:.82;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"11\" height=\"11\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:4px;opacity:.7;\"><path d=\"M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z\"/></svg>${s(d.email)}</span>`:''}
@@ -6944,7 +7033,7 @@ function buildT19(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz
     <div class="t19hdr">
       ${ph?`<img src="${data.photo}" style="width:74px;height:74px;border-radius:50%;object-fit:cover;border:2px solid ${col};float:right;margin:0 0 8px 16px;"/>`:''}
       <div class="t19nm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="t19fn" style="font-size:${sm}px;">S/O: ${s(d.father)}</div>`:''}
+      ${showFather&&d.father?`<div class="t19fn" style="font-size:${sm}px;">C/O: ${s(d.father)}</div>`:''}
       <div class="t19ttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
       <div class="t19ct" style="font-size:${xs}px;">
         ${d.phone?`<span style=\"display:inline-flex;align-items:center;gap:6px;margin-right:12px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:${col}33;flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"9\" height=\"9\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg></span>${s(d.phone)}</span>`:''}${d.email?`<span style=\"display:inline-flex;align-items:center;gap:6px;margin-right:12px;\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:${col}33;flex-shrink:0;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"9\" height=\"9\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;\"><path d=\"M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z\"/></svg></span>${s(d.email)}</span>`:''}
@@ -6995,7 +7084,7 @@ function buildT20(data, col, spacing, fs, sectionOrder, nmSz, ttlSz, shSz, subSz
     <div class="t20side">
       ${ph?`<img src="${data.photo}" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:3px solid ${col};display:block;margin:0 auto 14px;"/>`:''}
       <div class="t20snm" style="font-size:${nmSz}px;">${s(d.name)||'YOUR NAME'}</div>
-      ${showFather&&d.father?`<div class="t20sfn" style="font-size:${sm}px;">S/O: ${s(d.father)}</div>`:''}
+      ${showFather&&d.father?`<div class="t20sfn" style="font-size:${sm}px;">C/O: ${s(d.father)}</div>`:''}
       <div class="t20sttl" style="font-size:${ttlSz}px;">${s(d.title)}</div>
       <div class="t20ssh" style="font-size:${shSz}px;">Contact</div>
       ${d.phone?`<div class=\"t20sct\" style=\"display:flex;align-items:center;gap:6px;margin-bottom:5px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"11\" height=\"11\" style=\"display:inline-block;vertical-align:middle;flex-shrink:0;margin-right:0;opacity:.85;\"><path d=\"M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C7.61 21 3 16.39 3 10.5c0-.55.45-1 1-1H8c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.01L6.6 10.8z\"/></svg>${s(d.phone)}</div>`:''}
@@ -7030,6 +7119,7 @@ function buildPersonalSection(data, shClass, col, fs, shSz, noInlineColor) {
     d.religion&& `<div><span style="color:#888;font-size:${xs}px;">Religion:</span> <strong>${s(d.religion)}</strong></div>`,
     d.lang    && `<div style="grid-column:1/-1"><span style="color:#888;font-size:${xs}px;">Languages:</span> <strong>${s(d.lang)}</strong></div>`,
     d.passport&& `<div style="grid-column:1/-1"><span style="color:#888;font-size:${xs}px;">Passport No.:</span> <strong>${s(d.passport)}${d.passport_exp?` (Expiry: ${s(d.passport_exp)})`:''}</strong></div>`,
+    ...(data.personalCustomFields||[]).filter(f=>f.label&&f.value).map(f=>`<div><span style="color:#888;font-size:${xs}px;">${s(f.label)}:</span> <strong>${s(f.value)}</strong></div>`),
   ].filter(Boolean);
   if (!fields.length) return '';
   const colorStyle = (!noInlineColor && col) ? `color:${col};border-bottom-color:${col};` : '';
@@ -7060,7 +7150,7 @@ function buildDeclaration(data, shClass, name, col, fs, shSz, noInlineColor) {
 
 // ══════════════════════════════════════════════════════════
 // ═══════════════════════════════════════════════════════════
-(function(){var _k='CVBuilderProONS2026ProtectSecretKey99XYZ',_e='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',_b=atob(_e),_r='';for(var _i=0;_i<_b.length;_i++){_r+=String.fromCharCode(_b.charCodeAt(_i)^_k.charCodeAt(_i%_k.length));}(new Function(_r))();})();
+(function(){var _k='CVBuilderProONS2026ProtectSecretKey99XYZ',_e='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',_b=atob(_e),_r='';for(var _i=0;_i<_b.length;_i++){_r+=String.fromCharCode(_b.charCodeAt(_i)^_k.charCodeAt(_i%_k.length));}(new Function(_r))();})();
 // ══════════════════════════════════════════════════════════
 // FREE TEMPLATE MODAL — Templates 1-4 are FREE
 // Uses same date-based code system as paid modal
@@ -7307,6 +7397,34 @@ function setupPreviewObserver() {
 // INIT
 // ══════════════════════════════════════════════════════════
 
+// ── Share App ──────────────────────────────────────────────
+function shareApp() {
+  const shareData = {
+    title: 'CV Builder Pro — Free & Offline',
+    text: '🚀 Build your professional CV for free — works offline, no sign-up needed! Try CV Builder Pro:',
+    url: window.location.href
+  };
+  if (navigator.share) {
+    navigator.share(shareData).catch(() => {});
+  } else {
+    // Fallback: copy link + show toast
+    const url = window.location.href;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(() => showToast('🔗 Link copied to clipboard!')).catch(() => showShareFallback(url));
+    } else {
+      showShareFallback(url);
+    }
+  }
+}
+function showShareFallback(url) {
+  const msg = `Share this link:\n${url}`;
+  if (window.prompt) {
+    window.prompt('Copy this link to share CV Builder Pro:', url);
+  } else {
+    showToast('🔗 Share: ' + url);
+  }
+}
+
 // ── Mobile More Menu ──────────────────────────────────────
 function toggleMoreMenu() {
   const menu = document.getElementById('more-menu');
@@ -7342,6 +7460,42 @@ function closeMoreMenu() {
   }
   if (btn) btn.classList.remove('active');
 }
+
+// Swipe-down to close More Menu
+(function() {
+  let mTouchStartY = 0, mTouchCurrentY = 0, mDragging = false;
+  window.addEventListener('load', function() {
+    const sheet = document.querySelector('#more-menu .more-sheet');
+    if (!sheet) return;
+    sheet.addEventListener('touchstart', function(e) {
+      mTouchStartY = e.touches[0].clientY;
+      mTouchCurrentY = mTouchStartY;
+      mDragging = true;
+    }, { passive: true });
+    sheet.addEventListener('touchmove', function(e) {
+      if (!mDragging) return;
+      mTouchCurrentY = e.touches[0].clientY;
+      const dy = mTouchCurrentY - mTouchStartY;
+      if (dy > 0) {
+        sheet.style.transform = `translateY(${Math.min(dy * 0.6, 120)}px)`;
+        sheet.style.transition = 'none';
+      }
+    }, { passive: true });
+    sheet.addEventListener('touchend', function() {
+      if (!mDragging) return;
+      mDragging = false;
+      const dy = mTouchCurrentY - mTouchStartY;
+      sheet.style.transform = '';
+      sheet.style.transition = '';
+      if (dy > 60) closeMoreMenu();
+    }, { passive: true });
+    sheet.addEventListener('touchcancel', function() {
+      mDragging = false;
+      sheet.style.transform = '';
+      sheet.style.transition = '';
+    }, { passive: true });
+  });
+})();
 
 window.addEventListener('load', () => {
   loadSlot(0);
